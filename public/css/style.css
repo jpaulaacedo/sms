@@ -1,0 +1,218 @@
+.title-header {
+  background-color: #cddada;
+}
+
+.title-header-dark {
+  background-color: #1d4680 !important;
+  color: white !important;
+}
+
+.theader-dark {
+  background-color: #d5fce0 !important;
+  color: black !important;
+}
+
+.theader-blue {
+  background-color: #d3e2ff !important;
+  color: black !important;
+}
+
+.card-header-dark {
+  background-color: #22856c !important;
+  color: white !important;
+}
+
+.modal-new{
+  background-color: #AFEEEE; 
+}
+
+.divider-header {
+  background-color: #d3ddd6 !important;
+  color: rgb(61, 59, 59) !important;
+  padding: 3px 3px 3px 3px!important;
+}
+
+.course-bg {
+  background-color: #92579c !important;
+  color: white !important;
+}
+
+.enroll-bg {
+  background-color: #9c5769 !important;
+  color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0em 0em !important;
+  margin-left: 0px !important;
+}
+
+#overlay {
+  background: #ffffff;
+  color: #666666;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 5000;
+  top: 0;
+  left: 0;
+  float: left;
+  text-align: center;
+  padding-top: 25%;
+  opacity: .80;
+}
+
+.spinner {
+  margin: 0 auto;
+  height: 64px;
+  width: 64px;
+  animation: rotate 0.8s infinite linear;
+  border: 5px solid firebrick;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-wide {
+  max-width: 90%;
+  margin: 2.75rem auto;
+}
+
+.dataTable thead th, table.dataTable thead td {
+  vertical-align: middle;
+}
+
+.vl {
+  border-right: 0.5px solid #18518e;
+  height: 100%;
+}
+
+.dataTables_wrapper {
+  width: 100%;
+}
+
+.swal2-container {
+  z-index: 999999;
+}
+
+.toggle.btn.btn-success {
+  width: 100px !important;
+  height: 0px;
+}
+
+.toggle.btn.btn-danger.off {
+  width: 100px !important;
+  height: 0px;
+}
+
+.btn-outline-purple {
+  color: #92579c;
+  background-color: transparent;
+  background-image: none;
+  border-color: #92579c
+}
+
+.btn-outline-purple:hover {
+  color: #fff;
+  background-color: #92579c;
+  border-color: #92579c
+}
+
+.btn-outline-purple.focus, .btn-outline-purple:focus {
+  box-shadow: 0 0 0 .2rem #92579c
+}
+
+.btn-outline-purple.disabled, .btn-outline-purple:disabled {
+  color: #92579c;
+  background-color: transparent
+}
+
+.btn-outline-purple:not(:disabled):not(.disabled).active, .btn-outline-purple:not(:disabled):not(.disabled):active, .show>.btn-outline-purple.dropdown-toggle {
+  color: #fff;
+  background-color: #92579c;
+  border-color: #92579c
+}
+
+.btn-outline-purple:not(:disabled):not(.disabled).active:focus, .btn-outline-purple:not(:disabled):not(.disabled):active:focus, .show>.btn-outline-purple.dropdown-toggle:focus {
+  box-shadow: 0 0 0 .2rem #92579c
+}
+
+.btn-purple {
+  color: #fff;
+  background-color: #9a19bb;
+  border-color: #9a19bb
+}
+
+.btn-purple:hover {
+  color: #fff;
+  background-color: #7a1594;
+  border-color: #7a1594
+}
+
+.btn-purple.focus, .btn-purple:focus {
+  box-shadow: 0 0 0 .2rem #9a19bb
+}
+
+.btn-purple.disabled, .btn-purple:disabled {
+  color: #fff;
+  background-color: #9a19bb;
+  border-color: #9a19bb
+}
+
+.btn-purple:not(:disabled):not(.disabled).active, .btn-purple:not(:disabled):not(.disabled):active, .show>.btn-purple.dropdown-toggle {
+  color: #fff;
+  background-color: #9a19bb;
+  border-color: #9a19bb
+}
+
+.btn-purple:not(:disabled):not(.disabled).active:focus, .btn-purple:not(:disabled):not(.disabled):active:focus, .show>.btn-purple.dropdown-toggle:focus {
+  box-shadow: 0 0 0 .2rem #9a19bb
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
+table.dataTable thead .sorting {
+  background: url('../plugins/dataTables-images/sort_both.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_asc {
+  background: url('../plugins/dataTables-images/sort_asc.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_desc {
+  background: url('../plugins/dataTables-images/sort_desc.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_asc_disabled {
+  background: url('../plugins/dataTables-images/sort_asc_disabled.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_desc_disabled {
+  background: url('../plugins/dataTables-images/sort_desc_disabled.png') no-repeat center right;
+}
+
