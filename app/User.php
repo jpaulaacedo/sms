@@ -36,4 +36,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function get_user($user_id)
+    {
+        $data = Self::where('id', $user_id)->first();
+        return $data->name;
+    }
+
+    public static function get_division($user_id)
+    {
+        $data = Self::where('id', $user_id)->first();
+        return $data->division;
+    }
+
+    public static function get_user_type($user_id)
+    {
+        $data = Self::where('id', $user_id)->first();
+        return $data->user_type;
+    }
 }

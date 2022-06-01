@@ -25,7 +25,7 @@
         <nav class="navbar navbar-expand-md navbar-light title-header-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand ">
-                    <img src="{{asset('images/psrti_logo.jpeg')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <img src="{{asset('images/psrti_logo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="text-lime">PSRTI</span> | <small>Vehicle and Messengerial Request System</small>
                 </a>
             </div>

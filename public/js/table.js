@@ -12,6 +12,7 @@ $(document).ready(function () {
   });
 
 
+
   $('.printTable').DataTable({
     "ordering": false,
     "lengthChange": false,
@@ -51,9 +52,24 @@ $(document).ready(function () {
     "sDom": "Blrtip",
   });
 
+  
+  oTable3 = $('.report').DataTable({
+    "ordering": false,
+    "scrollX": false,
+    "searching": true,
+    "sDom": "Blrtip",
+    "pageLength": 31,
+    buttons: [{
+      extend: 'excelHtml5',
+      text: '<i class="fa fa-file-excel"></i> Export to Excel',
+      titleAttr: 'Copy to Excel'
+    }],
+  });
+
   $('.text_search').keyup(function () {
     oTable.search($(this).val()).draw();
     oTable2.search($(this).val()).draw();
+    oTable3.search($(this).val()).draw();
   })
 
   // DTR Filter
@@ -80,9 +96,8 @@ $(document).ready(function () {
     // oTable.columns(0).search(string).draw();
     oTable.search(string).draw();
   })
+   // DTR Filter end
 
-
-  // DTR Filter end
 
 });
 

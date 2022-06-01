@@ -25,12 +25,4 @@ class HomeController extends Controller
     {
         return view('home');
     }
-
-    public function messengerial(){
-        return view('messengerial');
-        }
-       
-    public function vehicle(){
-        return view('vehicle');
-        }
 }

@@ -1,0 +1,27 @@
+2021
+Desktop Computer - 2/
+Laptop - 1/
+Network Attached Storage - 1/
+Network Switch - 2
+Printer - 2/
+Scanner - 5/
+Server - 1/
+UPS - 2/
+
+
+2020
+Data Cabinet - 3/
+Firewall - 1/
+Hard Drive Disk - 12/
+Load Balancer - 1/
+Network Attached Storage - 1/
+Printer - 1/
+Scanner - 1/
+Server - 5/
+UPS w/ Rail Kit - 3/
+
+
+
+Desktop Computer - 
+
+

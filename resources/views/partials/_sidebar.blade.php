@@ -1,49 +1,268 @@
 <nav class="mt-2">
 
-<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-    <li class="nav-item">
-      <a href="/dc_approval" class="nav-link {{ request()->is('/dc_approval') ? 'active' : '' }}">
-        <i class="nav-icon fa fa-thumbs-up"></i>
-        <p style="position:absolute;width:75%;margin-left:5px">
-          <span style="float: left;"> To Approve</span>
-          <span style="float: right;margin-top:0.35em" class="badge badge-danger">2</span>
-        </p>
-      </a>
-    </li>
-  </ul>
-
   <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-    <li class="nav-item">
-      <a href="/messengerial" class="nav-link {{ request()->is('/DC_messengerial') ? 'active' : '' }}">
-        <i class="nav-icon fa fa-envelope"></i>
-        <p style="position:absolute;width:75%;margin-left:5px">
-          <span style="float: left;"> Messengerial</span>
-          <span style="float: right;margin-top:0.35em" class="badge badge-danger">2</span>
-        </p>
-      </a>
-    </li>
-  </ul>
+    <!-- DC FOR MY APPROVAL   -->
+    @if (Auth::user()->user_type == 2)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-thumbs-up"></i>
+          <p>
+            For My Approval
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
 
-  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-    <li class="nav-item">
-      <a href="/vehicle" class="nav-link {{ request()->is('/DC_vehicle') ? 'active' : '' }}">
-        <i class="nav-icon fa fa-truck"></i>
-        <p style="position:absolute;width:75%;margin-left:5px">
-          <span style="float: left;"> Vehicle</span>
-          <span style="float: right;margin-top:0.35em" class="badge badge-danger">5</span>
-        </p>
-      </a>
-    </li>
-  </ul>
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/dc/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
 
-  <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="nav-icon fas fa-sign-out-alt"></i>
-        <p>Log Out</p>
-      </a>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-      </form>
-    </li>
-  </ul>
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/dc/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+<!-- ED DC FOR APPROVAL -->
+    @if (Auth::user()->user_type == 4)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-thumbs-up"></i>
+          <p>
+            For My Approval
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/dc/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/dc/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+
+    <!-- //CAO APPROVAL -->
+    @if (Auth::user()->user_type == 6)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-thumbs-up"></i>
+          <p>
+            For My Approval
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/cao/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/cao/approval') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+
+
+    <!-- TO ACCOMPLISH -->
+    @if (Auth::user()->user_type == 3)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-clipboard-list"></i>
+          <p>
+            To Accomplish
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/accomplish') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/accomplish') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+
+    <!--ALL MESSENGERIAL-->
+    @if (Auth::user()->user_type == 5)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-thumbs-up"></i>
+          <p>
+            All Requests
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/all') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/all') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-file-import"></i>
+          <p>
+            My Requests
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('messengerial') }}" class="nav-link {{ request()->is('dtr/clock') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ URL::to('vehicle') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+    </ul>
+
+ <!--REPORTS-->
+ @if (Auth::user()->user_type == 3)
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link ">
+          <i class="nav-icon fa fa-folder-open"></i>
+          <p>
+            Reports
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview" style="display: block;">
+          <li class="nav-item">
+            <a href="{{ URL::to('/messengerial/report') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-envelope nav-icon"></i>
+              <p>Messengerial</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ URL::to('/vehicle/report') }}" class="nav-link {{ request()->is('dtr/history') ? 'active' : '' }}">
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <i class="fa fa-truck nav-icon"></i>
+              <p>Vehicle</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    @endif
+
+    <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="nav-icon fas fa-sign-out-alt"></i>
+          <p>Log Out</p>
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+          @csrf
+        </form>
+      </li>
+    </ul>
 </nav>
