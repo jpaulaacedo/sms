@@ -62,17 +62,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 @section('content')
 <div class="card">
     <div class="card-header card-header-dark">
-        <h3><span class="fa fa-business-time"></span> Requests</h3>
+        <h3><span class="fa fa-calendar"></span> Calendar of Activities</h3>
     </div>
     <div class="card card-default">
          <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fa fa-calendar"></i>
-                        Calendar
-                </h3>
            </div>
         <div class="card-body">
-             <div id='calendar'></div>
+        <div class="calendar" id="calendar"></div>
         </div>    
     </div>
 </div>    
@@ -81,7 +77,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 @section('js')
 <script type="text/javascript" src="https://cdn.datatables.net/datetime/1.0.3/js/dataTables.dateTime.min.js"></script>
-<script src="{{asset('js/ot.js')}}"></script>
+<script src="{{asset('js/calendar.js')}}"></script>
 @endSection
 <script>
         var global_path = "{{ URL::to('') }}";

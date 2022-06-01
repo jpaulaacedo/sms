@@ -376,7 +376,7 @@ class MessengerialController extends Controller
             $today = date("Y-m-d H:i:s");
             $update->out_date = $today;
             $update->driver = $request->driver;
-            $update->save();
+            // $update->save();
 
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
@@ -388,9 +388,9 @@ class MessengerialController extends Controller
             );
 
             // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgOutForDel($data));
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgOutForDel($data));
 
-            $this->itexmo("09224847673","A new ticket is ready for out for delivery. Kindly contact Admin Aide IV for more details.","","");
+            $this->itexmo("09171259293","A new ticket is ready for out for delivery. Kindly contact Admin Aide IV for more details.","TR-PAULA259293_25NMQ","7&6k!wqg}e");
             // send SMS Notif
             // Nexmo::message()->send([
             //     'to' => '639224847673',
@@ -405,8 +405,7 @@ class MessengerialController extends Controller
         }
     }
     function itexmo($number, $message, $apicode, $passwd)
-    {
-
+    { 
         $ch = curl_init();
         $itexmo = array('1' => $number, '2' => $message, '3' => $apicode, 'passwd' => $passwd);
         curl_setopt($ch, CURLOPT_URL, "https://www.itexmo.com/php_api/api.php");
