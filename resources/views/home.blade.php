@@ -10,10 +10,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PSRTI | VAMRS</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-<!-- Google Font: Source Sans Pro -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="icon" href="{{asset('images/psrti_logo.png')}}">
+    <link rel="icon" href="{{asset('images/3x3_new.png')}}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
@@ -43,55 +45,123 @@ scratch. This page gets rid of all links and provides the needed markup only.
             color: white !important;
         }
     </style>
+
+
 </head>
-<body >
-@extends('partials._layout')
 
-@section('css')
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.0.3/css/dataTables.dateTime.min.css" />
-<link href='{{ asset("assets/lib/main.css")}}' rel='stylesheet' />
-<style>
-    .scrolledTable {
-        overflow-y: auto;
-        clear: both;
-    }
-</style>
-@endsection
+<body>
+    <div class="wrapper">
+        @include('partials._header')
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="{{ URL::to('/') }}" class="brand-link">
+                <img src="{{asset('images/psrti_logo.png')}}" alt="PSRTI Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">PSRTI | VAMRS</span>
+            </a>
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex text-white">
+                    <div class="info">
+                        <span class="nav-icon fas fa-user"> &nbsp; </span>
+                        {{ucwords(strtolower(Auth::user()->name))}} |
+                        @if(Auth::user()->division == "Office of the Executive Director")
+                        <span class="badge badge-success">OED</span>
+                        @elseif(Auth::user()->division == "Finance and Administrative Division")
+                        <span class="badge badge-primary">FAD</span>
+                        @elseif(Auth::user()->division == "Knowledge Management Division")
+                        <span class="badge badge-warning">KMD</span>
+                        @elseif(Auth::user()->division == "Research Division")
+                        <span class="badge badge-info">RD</span>
+                        @elseif(Auth::user()->division == "Training Division")
+                        <span class="badge badge-danger">TD</span>
+                        @endif
+                    </div>
+                </div>
+                @include('partials._sidebar')
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- /.navbar -->
 
-@section('content')
-<div class="card">
-    <div class="card-header card-header-dark">
-        <h3><span class="fa fa-calendar"></span> Calendar of Activities</h3>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="content">
+                <br>
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fa fa-calendar-day text-success"></i>
+                                    Calendar
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <!-- <div class="float-right d-none d-sm-inline">
+                Anything you want
+            </div> -->
+            <!-- Default to the left -->
+            <!-- <strong>Copyright &copy; 2021 <a href="">HRIS</a>.</strong> All rights reserved. -->
+        </footer>
     </div>
-    <div class="card card-default">
-         <div class="card-header">
-           </div>
-        <div class="card-body">
-        <div class="calendar" id="calendar"></div>
-        </div>    
-    </div>
-</div>    
- 
-@endsection
 
-@section('js')
-<script type="text/javascript" src="https://cdn.datatables.net/datetime/1.0.3/js/dataTables.dateTime.min.js"></script>
-<script src="{{asset('js/calendar.js')}}"></script>
-@endSection
-<script>
+    <!-- ./wrapper -->
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <!-- @yield('content') -->
+    <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+    <script src="{{asset('assets/dist/js/adminlte.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
+    <!-- <script src="{{ asset('assets/plugins/fullcalendar/main.js')}}"></script> -->
+    <script src="{{asset('assets/dist/js/demo.js')}}"></script>
+
+
+
+
+    <script src="{{ asset('assets/plugins/fastclick/fastclick.js')}}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+
+
+    <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.bundle.js')}}"></script>
+
+    <script src='{{ asset("assets/lib/main.js")}}'></script>
+
+
+
+    <script>
         var global_path = "{{ URL::to('') }}";
     </script>
     <script type="text/javascript">
         $(function() {
-
-        var calendarEl = document.getElementById('calendar');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var calendarEl = document.getElementById('calendar');
             var calEvent = '';
             $.ajax({
-                url: global_path + "/leaves/calendar/feed",
+                url: global_path + "/calendar/feed",
                 method: 'post',
                 dataType: 'json',
                 success: function(response) {
+                    console.log(response);
                     var calendar = new FullCalendar.Calendar(calendarEl, {
                         headerToolbar: {
                             left: 'prev,next today',
@@ -103,23 +173,62 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         businessHours: true, // display business hours
                         editable: true,
                         selectable: true,
-                        events: response,
                         googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
+                        events: response
+
                     });
+
                     calendar.render();
                 },
                 cache: false,
                 contentType: false,
                 processData: false
             });
-            console.log(calEvent);
 
         });
-           
-</script>
+    </script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
+    <script src="{{asset('js/table.js')}}"></script>
 
-<script src="{{asset('js/dtr.js')}}"></script>
-
+    @if (Session::has('message'))
+    <script>
+        $(document).ready(function() {
+            var session = "{{ Session::get('message') }}"
+            if (session == 'success') {
+                let timerInterval
+                Swal.fire({
+                    type: 'success',
+                    title: 'Timelog Recorded',
+                    html: 'loading..',
+                    timer: 1000,
+                    onOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            const content = Swal.getContent()
+                            if (content) {
+                                const b = content.querySelector('b')
+                                if (b) {
+                                    b.textContent = Swal.getTimerLeft()
+                                }
+                            }
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                })
+            } else {
+                Swal.fire(
+                    'DB ERROR.',
+                    session,
+                    'error'
+                )
+            }
+        });
+    </script>
+    @endif
 </body>
+
+
 </html>

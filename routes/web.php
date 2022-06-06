@@ -169,6 +169,10 @@ Route::post('/vehicle/view/vehicle', 'VehicleController@view_vehicle');
 
 Route::get('/vehicle_form/{vehicle_id}', 'VehicleController@print_vehicle');
 
+Route::post('/calendar/feed', 'HomeController@feed_calendar');
+
+Route::get('/vehicle/calendar/view', 'VehicleController@vehicle_calendar');
+
 // Route::get('/send-mail', function(){
 
 //     $details = [

@@ -36,8 +36,7 @@
                         <tbody>
 
                             @foreach($vehicle as $data)
-
-                            @if($data->status=='For Pickup' || $data->status=='On The Way' || $data->status=='Accomplished')
+                            @if($data->status=='For Pickup')
 
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
@@ -45,24 +44,89 @@
                                 <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
-                                    @if($data->status=='Filing')
-                                    <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-                                    @elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
-
-                                    @elseif($data->status == "Cancelled")
-                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-
-                                    @elseif($data->status=='Approved')
+                                    @if($data->status=='For Pickup')
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
-
-                                    @elseif($data->status == "Out For Delivery")
-                                    <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-                                    @else
-                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
+                                </td>
+                                <td>
+                                    @if($data->status!='Filing')
+                                    <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
+                                        <span class="fa fa-users"></span>
+                                    </button>
+                                    @endif
+                                    @if($data->status =='For Pickup')
+                                    <button onclick="_otw_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-truck"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status=='On The Way')
+                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->subject}}')" class="btn btn-success btn-sm">
+                                        <span class="fa fa-check"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status =='Accomplished')
+                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
+                                        <span class="fa fa-file"></span>
+                                    </button>
+                                    @endif
+                                    <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+
+                            @foreach($vehicle as $data)
+                            @if($data->status=='On The Way')
+
+                            <tr class="text-center">
+                                <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{$data->purpose}}</td>
+                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{$data->destination}}</td>
+                                <td>
+                                    <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+                                </td>
+                                <td>
+                                    @if($data->status!='Filing')
+                                    <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
+                                        <span class="fa fa-users"></span>
+                                    </button>
+                                    @endif
+                                    @if($data->status =='For Pickup')
+                                    <button onclick="_otw_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-truck"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status=='On The Way')
+                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->subject}}')" class="btn btn-success btn-sm">
+                                        <span class="fa fa-check"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status =='Accomplished')
+                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
+                                        <span class="fa fa-file"></span>
+                                    </button>
+                                    @endif
+                                    <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+
+                            @foreach($vehicle as $data)
+                            @if($data->status=='Accomplished')
+
+                            <tr class="text-center">
+                                <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{$data->purpose}}</td>
+                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{$data->destination}}</td>
+                                <td>
+                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
                                 </td>
                                 <td>
                                     @if($data->status!='Filing')
@@ -200,7 +264,7 @@
             <input type="hidden" id="vehicle_id" name="vehicle_id">
             <div class="modal-body modal-lg">
                 <div class="row">
-                    
+
                     <br>
                     <div class="col-sm">
                         <label>Upload Documents </label>

@@ -22,14 +22,14 @@
   color: white !important;
 }
 
-.modal-new{
-  background-color: #AFEEEE; 
+.modal-new {
+  background-color: #AFEEEE;
 }
 
 .divider-header {
   background-color: #d3ddd6 !important;
   color: rgb(61, 59, 59) !important;
-  padding: 3px 3px 3px 3px!important;
+  padding: 3px 3px 3px 3px !important;
 }
 
 .course-bg {
@@ -46,6 +46,18 @@
   padding: 0em 0em !important;
   margin-left: 0px !important;
 }
+
+eventDidMount: function (info)
+/* //you need to get the color from "info" argument and place it on the CSS style  */
+let eventColor=info."YourEventColor"
+
+  {
+  if (info.event) {
+    info.el.insertAdjacentHTML("afterBegin", `<p style="color:${eventColor}" >•</p>`);
+  }
+}
+
+,
 
 #overlay {
   background: #ffffff;
@@ -76,6 +88,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -86,7 +99,8 @@
   margin: 2.75rem auto;
 }
 
-.dataTable thead th, table.dataTable thead td {
+.dataTable thead th,
+table.dataTable thead td {
   vertical-align: middle;
 }
 
@@ -126,22 +140,28 @@
   border-color: #92579c
 }
 
-.btn-outline-purple.focus, .btn-outline-purple:focus {
+.btn-outline-purple.focus,
+.btn-outline-purple:focus {
   box-shadow: 0 0 0 .2rem #92579c
 }
 
-.btn-outline-purple.disabled, .btn-outline-purple:disabled {
+.btn-outline-purple.disabled,
+.btn-outline-purple:disabled {
   color: #92579c;
   background-color: transparent
 }
 
-.btn-outline-purple:not(:disabled):not(.disabled).active, .btn-outline-purple:not(:disabled):not(.disabled):active, .show>.btn-outline-purple.dropdown-toggle {
+.btn-outline-purple:not(:disabled):not(.disabled).active,
+.btn-outline-purple:not(:disabled):not(.disabled):active,
+.show>.btn-outline-purple.dropdown-toggle {
   color: #fff;
   background-color: #92579c;
   border-color: #92579c
 }
 
-.btn-outline-purple:not(:disabled):not(.disabled).active:focus, .btn-outline-purple:not(:disabled):not(.disabled):active:focus, .show>.btn-outline-purple.dropdown-toggle:focus {
+.btn-outline-purple:not(:disabled):not(.disabled).active:focus,
+.btn-outline-purple:not(:disabled):not(.disabled):active:focus,
+.show>.btn-outline-purple.dropdown-toggle:focus {
   box-shadow: 0 0 0 .2rem #92579c
 }
 
@@ -157,23 +177,29 @@
   border-color: #7a1594
 }
 
-.btn-purple.focus, .btn-purple:focus {
+.btn-purple.focus,
+.btn-purple:focus {
   box-shadow: 0 0 0 .2rem #9a19bb
 }
 
-.btn-purple.disabled, .btn-purple:disabled {
+.btn-purple.disabled,
+.btn-purple:disabled {
   color: #fff;
   background-color: #9a19bb;
   border-color: #9a19bb
 }
 
-.btn-purple:not(:disabled):not(.disabled).active, .btn-purple:not(:disabled):not(.disabled):active, .show>.btn-purple.dropdown-toggle {
+.btn-purple:not(:disabled):not(.disabled).active,
+.btn-purple:not(:disabled):not(.disabled):active,
+.show>.btn-purple.dropdown-toggle {
   color: #fff;
   background-color: #9a19bb;
   border-color: #9a19bb
 }
 
-.btn-purple:not(:disabled):not(.disabled).active:focus, .btn-purple:not(:disabled):not(.disabled):active:focus, .show>.btn-purple.dropdown-toggle:focus {
+.btn-purple:not(:disabled):not(.disabled).active:focus,
+.btn-purple:not(:disabled):not(.disabled):active:focus,
+.show>.btn-purple.dropdown-toggle:focus {
   box-shadow: 0 0 0 .2rem #9a19bb
 }
 
@@ -215,4 +241,3 @@ table.dataTable thead .sorting_asc_disabled {
 table.dataTable thead .sorting_desc_disabled {
   background: url('../plugins/dataTables-images/sort_desc_disabled.png') no-repeat center right;
 }
-

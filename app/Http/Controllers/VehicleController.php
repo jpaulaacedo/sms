@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Dotenv\Result\Success;
 use Illuminate\Support\Facades\URL;
-
+use Vonage\Message\Shortcode\Alert;
 
 class VehicleController extends Controller
 {
@@ -313,13 +313,37 @@ class VehicleController extends Controller
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlOnTheWay($data));
 
             // send SMS Notif
-            Nexmo::message()->send([
-                'to' => '639224847673',
-                'from' => '639224847673',
-                'text' => "A new ticket is ready for service vehicle. Kindly contact Admin Aide IV for more details."
-            ]);
+            // Nexmo::message()->send([
+            //     'to' => '639224847673',
+            //     'from' => '639224847673',
+            //     'text' => "A new ticket is ready for service vehicle. Kindly contact Admin Aide IV for more details."
+            // ]);
+            $chosen_driver = $update->driver;
+
+            if ($chosen_driver == "Elmo") {
+                $num = "09171259293";
+            } else {
+                $num = "09171259293";
+            }
+            $this->itexmo($num, "A new vehicle ticket is ready for service. Kindly contact Percs for more details.", "TR-PAULA259293_25NMQ", "7&6k!wqg}e");
 
             return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    function itexmo($number, $message, $apicode, $passwd)
+    {
+        try {
+            $ch = curl_init();
+            $itexmo = array('1' => $number, '2' => $message, '3' => $apicode, 'passwd' => $passwd);
+            curl_setopt($ch, CURLOPT_URL, "https://www.itexmo.com/php_api/api.php");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            return curl_exec($ch);
+            curl_close($ch);
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
         }

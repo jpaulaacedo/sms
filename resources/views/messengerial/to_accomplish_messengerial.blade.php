@@ -36,7 +36,7 @@
                         </thead>
                         <tbody>
                             @foreach($messengerial as $data)
-                            @if($data->status=='For Pickup' || $data->status=='Out For Delivery' || $data->status=='Accomplished')
+                            @if($data->status=='For Pickup')
                             <tr class="text-center">
                                 <td>{{$data->subject}}</td>
                                 <td>{{$data->control_num}}</td>
@@ -45,11 +45,89 @@
                                 <td>
                                     @if($data->status=='For Pickup')
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    @endif
+                                </td>
+                                <td>{{$data->count_rec}}</td>
+                                <td>
+                                    <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
+                                        <span class="fa fa-users"></span>
+                                        recipient
+                                    </a> |
+                                    </button>
+                                    @if($data->status =='For Pickup')
+                                    <button onclick="_outfordel_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-truck"></span>
+                                    </button>
+                                    @endif
 
-                                    @elseif($data->status == "Out For Delivery")
+                                    @if($data->status=='Out For Delivery')
+                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
+                                        <span class="fa fa-check"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status =='Accomplished')
+                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
+                                        <span class="fa fa-file"></span>
+                                    </button>
+                                    @endif
+                                    <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+
+                            @foreach($messengerial as $data)
+                            @if($data->status=='Out For Delivery')
+                            <tr class="text-center">
+                                <td>{{$data->subject}}</td>
+                                <td>{{$data->control_num}}</td>
+                                <td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
+                                <td>
+                                    @if($data->status == "Out For Delivery")
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    @endif
+                                </td>
+                                <td>{{$data->count_rec}}</td>
+                                <td>
+                                    <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
+                                        <span class="fa fa-users"></span>
+                                        recipient
+                                    </a> |
+                                    </button>
+                                    @if($data->status =='For Pickup')
+                                    <button onclick="_outfordel_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-truck"></span>
+                                    </button>
+                                    @endif
 
-                                    @elseif($data->status == "Accomplished")
+                                    @if($data->status=='Out For Delivery')
+                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
+                                        <span class="fa fa-check"></span>
+                                    </button>
+                                    @endif
+
+                                    @if($data->status =='Accomplished')
+                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
+                                        <span class="fa fa-file"></span>
+                                    </button>
+                                    @endif
+                                    <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+
+                            @foreach($messengerial as $data)
+                            @if($data->status=='Accomplished')
+                            <tr class="text-center">
+                                <td>{{$data->subject}}</td>
+                                <td>{{$data->control_num}}</td>
+                                <td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
+                                <td>
+                                    @if($data->status == "Accomplished")
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
                                 </td>

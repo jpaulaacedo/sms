@@ -13,14 +13,15 @@
   <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/main.css')}}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" /> -->
 
   <!-- calendar -->
   <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/main.css')}}">
 
   <!-- datatables -->
+  <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/jquery.dataTables.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/dataTables.bootstrap4.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   @yield('css')
   <link rel="stylesheet" href="{{asset('assets/dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{asset('css/style.css')}}">
@@ -43,7 +44,7 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex text-white">
           <div class="info">
             <span class="nav-icon fas fa-user"> &nbsp; </span>
-            {{ucwords(strtolower(Auth::user()->name))}}  |
+            {{ucwords(strtolower(Auth::user()->name))}} |
             @if(Auth::user()->division == "Office of the Executive Director")
             <span class="badge badge-success">OED</span>
             @elseif(Auth::user()->division == "Finance and Administrative Division")
@@ -103,18 +104,71 @@
   <!-- datatables -->
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
   <script src="{{ asset('assets/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
-  <!-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script> -->
 
 
 
   <script>
     var global_path = "{{ URL::to('') }}";
+  </script>
+  <script>
+    $(function() {
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      var calendarEl = document.getElementById('calendar');
+      var calEvent = '';
+      $.ajax({
+        url: global_path + "/leaves/calendar/feed",
+        method: 'post',
+        dataType: 'json',
+        success: function(response) {
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            // initialDate: '2020-09-12',
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            editable: true,
+            selectable: true,
+            events: response,
+
+            // displayEventTime: false, // don't show the time column in list view
+
+            // THIS KEY WON'T WORK IN PRODUCTION!!!
+            // To make your own Google API key, follow the directions here:
+            // http://fullcalendar.io/docs/google_calendar/
+            googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
+
+            // US Holidays
+            // events: 'en.usa#holiday@group.v.calendar.google.com',
+
+            // eventClick: function(arg) {
+            //     // opens events in a popup window
+            //     window.open(arg.event.url, 'google-calendar-event', 'width=700,height=600');
+
+            //     arg.jsEvent.preventDefault() // don't navigate in main tab
+            // },
+
+            // loading: function(bool) {
+            //     document.getElementById('loading').style.display =
+            //         bool ? 'block' : 'none';
+            // }
+
+          });
+
+          calendar.render();
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+      });
+      console.log(calEvent);
+    });
   </script>
 
   @if(Session::has('message'))
