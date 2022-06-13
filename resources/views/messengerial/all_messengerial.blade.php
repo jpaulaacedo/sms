@@ -39,7 +39,7 @@
 								<th width="15%">Requested By</th>
 								<th width="10%">Status</th>
 								<th width="10%">No. of Recipients</th>
-								<th width="20%">Action</th>
+								<th width="15%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -49,7 +49,7 @@
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -73,31 +73,12 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a>
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a>
 
-									@if($data->status!='Filing')
-									| <button class="btn btn-secondary btn-sm" onclick="">
+									<button class="btn btn-secondary btn-sm" onclick="">
 										<span class="fa fa-print"></span>
 									</button>
-									@endif
 
-									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
-									| <button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
-									</button>
-									@endif
-
-									@if($data->status=='Cancelled')
-									| <button class="btn btn-warning btn-sm" onclick="_cancelReasonMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> reason
-									</button>
-									@endif
-
-									@if($data->status=='Accomplished')
-									| <button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
-										<span class="fa fa-file"></span>
-									</button>
-									@endif
 								</td>
 							</tr>
 							@endforeach

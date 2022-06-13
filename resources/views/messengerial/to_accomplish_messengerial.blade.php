@@ -51,7 +51,7 @@
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                        recipient
+                                    
                                     </a> |
                                     </button>
                                     @if($data->status =='For Pickup')
@@ -93,7 +93,7 @@
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                        recipient
+                                    
                                     </a> |
                                     </button>
                                     @if($data->status =='For Pickup')
@@ -135,7 +135,7 @@
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                        recipient
+                                    
                                     </a> |
                                     </button>
                                     @if($data->status =='For Pickup')

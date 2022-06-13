@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-	<div class="card-header card-header-new card-header-dark">
+	<div class="card-header card-header-dark">
 		<h4 align="center"><span class="fa fa-envelope"></span>&nbsp;My Messengerial Request</h4>
 	</div>
 	<div class="card-body">
@@ -20,7 +20,7 @@
 					</div>
 
 					<div class="col-sm">
-						<button onclick="_addRequest()" class="btn btn-outline-primary float-right">
+						<button onclick="_addRequest()" class="btn btn-purple float-right">
 							<span class="fas fa-plus"></span>&nbsp;Create Request
 						</button>
 					</div>
@@ -70,7 +70,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -130,7 +130,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -194,7 +194,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -258,7 +258,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -318,7 +318,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -378,7 +378,7 @@
 								</td>
 								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span> recipient</a> |
+									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
 									@if($data->status=='Filing')
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">

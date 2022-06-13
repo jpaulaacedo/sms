@@ -65,10 +65,10 @@ class HomeController extends Controller
                     "title" => $title,
                     "start" => $data->approvedcao_date,
                     "allDay" => false,
-                    "backgroundColor" => "#18f53d",
+                    "backgroundColor" => "#218551",
                     "textColor" => "#000000",
                     "eventColor" => "#ffffff",
-                    "url" => URL::to('/vehicle/calendar/view/' . $data->id)
+                    "url" => URL::to('/vehicle')
 
                 ]
             );
@@ -81,6 +81,6 @@ class HomeController extends Controller
         $trip = Vehicle::where('vehicle_id', $vehicle_id)
             ->orderBy('id', 'desc')
             ->get();
-        return view('vehicle.vehicle_calendar', compact('trip'));
+        return view('vehicle.vehicle', compact('trip'));
     }
 }

@@ -18,7 +18,12 @@
 }
 
 .card-header-dark {
-  background-color: #22856c !important;
+  background-color: #bc4899 !important;
+  color: white !important;
+}
+
+.card-header-vhl {
+  background-color: #797ef6 !important;
   color: white !important;
 }
 
@@ -162,22 +167,35 @@ table.dataTable thead td {
 .btn-outline-purple:not(:disabled):not(.disabled).active:focus,
 .btn-outline-purple:not(:disabled):not(.disabled):active:focus,
 .show>.btn-outline-purple.dropdown-toggle:focus {
-  box-shadow: 0 0 0 .2rem #92579c
+  box-shadow: 0 0 0 .2rem #bc4899
 }
 
 .btn-purple {
-  color: #fff;
-  background-color: #9a19bb;
-  border-color: #9a19bb
+  color: #000;
+  background-color: #fff;
+  border-color: #bc4899
 }
+
+.btn-vhl {
+  color: #000;
+  background-color: #fff;
+  border-color: #797ef6
+}
+
+.btn-vhl:hover {
+  color: #fff;
+  background-color: #797ef6;
+  border-color: #797ef6
+}
+
 
 .btn-purple:hover {
   color: #fff;
-  background-color: #7a1594;
-  border-color: #7a1594
+  background-color: #bc4899;
+  border-color: #bc4899
 }
 
-.btn-purple.focus,
+/* .btn-purple.focus,
 .btn-purple:focus {
   box-shadow: 0 0 0 .2rem #9a19bb
 }
@@ -201,6 +219,11 @@ table.dataTable thead td {
 .btn-purple:not(:disabled):not(.disabled):active:focus,
 .show>.btn-purple.dropdown-toggle:focus {
   box-shadow: 0 0 0 .2rem #9a19bb
+} */
+
+#truck {
+  height: 200px;
+  width: auto;
 }
 
 .btn-circle.btn-xl {

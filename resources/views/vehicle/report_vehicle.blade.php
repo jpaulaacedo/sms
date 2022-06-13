@@ -1,7 +1,7 @@
 @extends('partials._layout')
 @section('content')
 <div class="card">
-    <div class="card-header card-header-new card-header-dark">
+    <div class="card-header card-header-vhl">
         <h4 align="center"><span class="fa fa-truck"></span>&nbsp;Vehicle Report</h4>
     </div>
     <div class="card-body">

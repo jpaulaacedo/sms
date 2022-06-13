@@ -43,7 +43,7 @@
 							@if(Auth::user()->user_type == 2 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -52,12 +52,9 @@
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
-										recipient
 									</a> |
-
 									<button type="submit" onclick="_approveDC('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
-										approve
 									</button>
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 
@@ -68,7 +65,7 @@
 							@if(Auth::user()->user_type == 4 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -77,12 +74,10 @@
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
-										recipient
 									</a> |
 
 									<button type="submit" onclick="_approveDC('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
-										approve
 									</button>
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 
@@ -93,7 +88,7 @@
 							@if($data->status=='For CAO Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									<span class="right badge badge-warning">APPROVED</span>
@@ -102,7 +97,6 @@
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
-										recipient
 									</a> |
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 

@@ -162,10 +162,15 @@ class VehicleController extends Controller
 
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-            $cao = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '6')->first();
-
-            if ($employee->division != "Finance and Administrative Division") {
-                $dc_true = 1;
+            $cao = User::select('name', 'email')->where('user_type', '6')->first();
+            if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
+                $data = array(
+                    'dc_name' => $cao->name,
+                    'emp_name' => $employee->name,
+                    'purpose' => $update->purpose,
+                    'link'  =>  URL::to('/vehicle/cao/approval')
+                );
+            } elseif ($employee->division != "Finance and Administrative Division") {
                 $data = array(
                     'dc_name' => $dc->name,
                     'emp_name' => $employee->name,
@@ -173,7 +178,6 @@ class VehicleController extends Controller
                     'link'  =>  URL::to('/vehicle/dc/approval')
                 );
             } else {
-                $dc_true = 0;
                 $data = array(
                     'dc_name' => $cao->name,
                     'emp_name' => $employee->name,

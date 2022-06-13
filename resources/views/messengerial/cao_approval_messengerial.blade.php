@@ -33,7 +33,7 @@
 								<th width="15%">Request Date</th>
 								<th width="15%">Requested By</th>
 								<th width="10%">Status</th>
-								<th width="15%">No. of Recipients</th>
+								<th width="10%">No. of Recipients</th>
 								<th width="15%">Action</th>
 							</tr>
 						</thead>
@@ -44,7 +44,7 @@
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -53,12 +53,10 @@
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
-										recipient
 									</a> |
 
 									<button type="submit" onclick="_approveCAO('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
-										approve
 									</button>
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
@@ -69,7 +67,7 @@
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{$data->created_at}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>
 									<span class="right badge badge-warning">APPROVED</span>
@@ -78,7 +76,6 @@
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
-										recipient
 									</a> |
 
 

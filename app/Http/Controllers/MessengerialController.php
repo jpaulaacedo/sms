@@ -143,13 +143,18 @@ class MessengerialController extends Controller
             }
             $update->save();
             $user_id = $update->user_id;
-
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-            $cao = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '6')->first();
+            $cao = User::select('name', 'email')->where('user_type', '6')->first();
 
-            if ($employee->division != "Finance and Administrative Division") {
-                $dc_true = 1;
+            if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
+                $data = array(
+                    'dc_name' => $cao->name,
+                    'emp_name' => $employee->name,
+                    'subject' => $update->subject,
+                    'link'  =>  URL::to('/messengerial/cao/approval')
+                );
+            } elseif ($employee->division != "Finance and Administrative Division") {
                 $data = array(
                     'dc_name' => $dc->name,
                     'emp_name' => $employee->name,
@@ -157,7 +162,6 @@ class MessengerialController extends Controller
                     'link'  =>  URL::to('/messengerial/dc/approval')
                 );
             } else {
-                $dc_true = 0;
                 $data = array(
                     'dc_name' => $cao->name,
                     'emp_name' => $employee->name,
@@ -165,7 +169,6 @@ class MessengerialController extends Controller
                     'link'  =>  URL::to('/messengerial/cao/approval')
                 );
             }
-
             // if ($dc_true == 1) {
             //     Mail::to($dc->email)->cc([$employee->email])->send(new msgCreateTicket($data));
             // } else {
@@ -514,7 +517,4 @@ class MessengerialController extends Controller
             return json_encode($e->getMessage());
         }
     }
-
-
-    
 }

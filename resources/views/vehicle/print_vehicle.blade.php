@@ -397,9 +397,19 @@
 
                             <center>
                                 @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
                                 <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
                                 @else
                                 <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+                                @endif
                                 @endif
                                 <br><small><b>Division Chief</b></small>
                             </center>
@@ -995,9 +1005,19 @@
 
                                 <center>
                                     @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                    <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
                                     <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                    <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                    <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                    <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @else
                                     <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+                                    @endif
                                     @endif
                                     <br><small><b>Division Chief</b></small>
                                 </center>
@@ -1193,7 +1213,7 @@
         <!-- page2 -->
         <br><br>
         <br><br>
-    
+
         <body>
             <div class="row">
                 <div id="header" class="row">
@@ -1281,9 +1301,19 @@
 
                                 <center>
                                     @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                    <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
                                     <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                    <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                    <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                    <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @else
                                     <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+                                    @endif
                                     @endif
                                     <br><small><b>Division Chief</b></small>
                                 </center>

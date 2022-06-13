@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-	<div class="card-header card-header-new card-header-dark">
+	<div class="card-header card-header-vhl">
 		<h4 align="center"><span class="fa fa-truck"></span>&nbsp;My Vehicle Request</h4>
 	</div>
 	<div class="card-body">
@@ -20,7 +20,7 @@
 					</div>
 
 					<div class="col-sm">
-						<button onclick="_addRequest()" class="btn btn-outline-primary float-right">
+						<button onclick="_addRequest()" class="btn btn-vhl float-right">
 							<span class="fas fa-plus"></span>&nbsp;Create Request
 						</button>
 					</div>

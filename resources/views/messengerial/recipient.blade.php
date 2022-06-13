@@ -9,11 +9,11 @@
 
 @section('content')
 <div>
-	@if(Auth::user()->user_type == 1 || Auth::user()->user_type == 4)
+	@if(Auth::user()->user_type == 1)
 	<a class="btn btn-primary" href="{{URL::to('/messengerial')}}"><span class="fa fa-reply"></span> Back</a>
 	@endif
 
-	@if(Auth::user()->user_type == 2)
+	@if(Auth::user()->user_type == 2 || Auth::user()->user_type == 4)
 	@if($messengerial->status=='For DC Approval' || $messengerial->status=='For CAO Approval')
 	<a class="btn btn-primary" href="{{URL::to('/messengerial/dc/approval')}}">
 		<span class="fa fa-reply"></span> Back
@@ -130,7 +130,7 @@
 								<th width="15%">Destination</th>
 								<th width="10%">What to Deliver</th>
 								<th width="15%">Instruction</th>
-								<th width="15%">Due Date</th>
+								<th width="10%">Due Date</th>
 								@if($messengerial->status=='Filing')
 								<th width="15%">Action</th>
 								@endif
@@ -151,9 +151,13 @@
 								<td>{{$data->instruction}}</td>
 								<td>
 									@if($messengerial->status=='For Pickup' || $messengerial->status=='Out For Delivery')
-									<b><span class="text-red">{{ date('F j, Y g:i A', strtotime($data->due_date)) }}</span></b>
+									<b><span class="text-red">{{ date('F j, Y', strtotime($data->due_date)) }}</span></b>
+									<br>
+									<b><span class="text-red">{{ date('g:i A', strtotime($data->due_date)) }}</span></b>
 									@else
-									{{ date('F j, Y g:i A', strtotime($data->due_date)) }}
+									{{ date('F j, Y', strtotime($data->due_date)) }}
+									<br>
+									{{ date('g:i A', strtotime($data->due_date)) }}
 									@endif
 								</td>
 								@if($messengerial->status=='Filing')

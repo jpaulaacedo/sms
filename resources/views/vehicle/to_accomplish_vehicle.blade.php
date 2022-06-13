@@ -1,7 +1,7 @@
 @extends('partials._layout')
 @section('content')
 <div class="card">
-    <div class="card-header card-header-new card-header-dark">
+    <div class="card-header card-header-vhl">
         <h4 align="center"><span class="fa fa-truck"></span>&nbsp;Vehicle To Accomplish</h4>
     </div>
     <div class="card-body">
@@ -28,6 +28,7 @@
                                 <th width="10%">Date Requested</th>
                                 <th width="15%">Purpose of Trip</th>
                                 <th width="10%">Date and Time Needed</th>
+                                <th width="15%">Requested By</th>
                                 <th width="15%">Destination</th>
                                 <th width="10%">Status</th>
                                 <th width="10%">Action</th>
@@ -42,6 +43,7 @@
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
                                 <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->status=='For Pickup')
@@ -84,6 +86,7 @@
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
                                 <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -124,6 +127,7 @@
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
                                 <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>

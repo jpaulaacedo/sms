@@ -29,6 +29,7 @@
 								<th width="10%">Date Requested</th>
 								<th width="15%">Purpose of Trip</th>
 								<th width="10%">Date and Time Needed</th>
+								<th width="10%">Requested By</th>
 								<th width="15%">Destination</th>
 								<th width="10%">Status</th>
 								<th width="10%">Action</th>
@@ -42,6 +43,7 @@
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
 								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -69,10 +71,9 @@
 										<span class="fa fa-users"></span>
 									</button>
 									@endif
-
+									|
 									<button type="submit" onclick="_approveCAO('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
-										approve
 									</button>
 									@if($data->status =='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
@@ -90,8 +91,9 @@
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
 								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
-								<td>									
+								<td>
 									<span class="right badge badge-warning">APPROVED</span>
 								</td>
 								<td>
@@ -100,7 +102,7 @@
 										<span class="fa fa-users"></span>
 									</button>
 									@endif
-
+									|
 									@if($data->status =='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
 										<span class="fa fa-file"></span>

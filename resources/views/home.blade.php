@@ -85,34 +85,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="content-wrapper">
             <div class="content">
                 <br>
-                <div class="row">
-                    <div class="col-md-8 offset-md-2">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">
-                                    <i class="fa fa-calendar-day text-success"></i>
-                                    Calendar
-                                </h3>
-                            </div>
-                            <div class="card-body">
-                                <div id="calendar"></div>
-                            </div>
+                <div class="col-md-8 offset-md-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fa fa-calendar-day text-success"></i>
+                                Calendar
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <small><b>Legend:</b></small>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Vehicle</small>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Messengerial</small>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="calendar"></div>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
             </div>
-            <!-- /.content -->
+            <!-- /.row -->
         </div>
+        <!-- /.content -->
         <!-- /.content-wrapper -->
         <!-- Main Footer -->
         <footer class="main-footer">
-            <!-- To the right -->
-            <!-- <div class="float-right d-none d-sm-inline">
-                Anything you want
-            </div> -->
-            <!-- Default to the left -->
-            <!-- <strong>Copyright &copy; 2021 <a href="">HRIS</a>.</strong> All rights reserved. -->
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; 2022 <a href="http://psrti.gov.ph">psrti.gov.ph</a>.</strong> All rights
+            reserved.
         </footer>
     </div>
 
@@ -129,20 +140,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
     <!-- <script src="{{ asset('assets/plugins/fullcalendar/main.js')}}"></script> -->
     <script src="{{asset('assets/dist/js/demo.js')}}"></script>
-
-
-
-
     <script src="{{ asset('assets/plugins/fastclick/fastclick.js')}}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js')}}"></script>
     <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-
-
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.bundle.js')}}"></script>
-
     <script src='{{ asset("assets/lib/main.js")}}'></script>
-
-
 
     <script>
         var global_path = "{{ URL::to('') }}";
@@ -188,7 +190,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     </script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-
     <script src="{{asset('js/table.js')}}"></script>
 
     @if (Session::has('message'))
@@ -229,6 +230,5 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script>
     @endif
 </body>
-
 
 </html>

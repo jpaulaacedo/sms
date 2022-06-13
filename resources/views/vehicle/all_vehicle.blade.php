@@ -2,7 +2,7 @@
 @section('content')
 <div class="card">
     <div class="card-header card-header-new card-header-dark">
-        <h4 align="center"><span class="fa fa-truck"></span>&nbsp;Vehicle To Accomplish</h4>
+        <h4 align="center"><span class="fa fa-truck"></span>&nbsp;All Vehicle Requests</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -28,6 +28,7 @@
                                 <th width="10%">Date Requested</th>
                                 <th width="15%">Purpose of Trip</th>
                                 <th width="10%">Date and Time Needed</th>
+                                <th width="10%">Requested By</th>
                                 <th width="15%">Destination</th>
                                 <th width="10%">Status</th>
                                 <th width="10%">Action</th>
@@ -42,6 +43,7 @@
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
                                 <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->status=='Filing')
@@ -56,7 +58,7 @@
                                     @elseif($data->status=='Approved')
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
-                                    @elseif($data->status == "Out For Delivery")
+                                    @elseif($data->status == "On The Way")
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
                                     @else
@@ -64,28 +66,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($data->status!='Filing')
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button>
-                                    @endif
-                                    @if($data->status =='For Pickup')
-                                    <button onclick="_otw_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
-                                    </button>
-                                    @endif
 
-                                    @if($data->status=='On The Way')
-                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->subject}}')" class="btn btn-success btn-sm">
-                                        <span class="fa fa-check"></span>
-                                    </button>
-                                    @endif
-
-                                    @if($data->status =='Accomplished')
-                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
-                                        <span class="fa fa-file"></span>
-                                    </button>
-                                    @endif
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -198,7 +182,7 @@
             <input type="hidden" id="vehicle_id" name="vehicle_id">
             <div class="modal-body modal-lg">
                 <div class="row">
-                    
+
                     <br>
                     <div class="col-sm">
                         <label>Upload Documents </label>
