@@ -108,6 +108,18 @@ class MessengerialController extends Controller
         return view('messengerial.recipient', compact('recipient', 'messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
     }
 
+    public function calendar_recipient($messengerial_id)
+    {
+        $messengerial = Messengerial::where('id', $messengerial_id)->first(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+
+        $recipient = MessengerialItem::where('messengerial_id', $messengerial_id)
+            ->orderBy('id', 'desc')
+            ->get();
+        $count_recipient = count($recipient);
+       
+        return view('messengerial.calendar_recipient', compact('recipient', 'messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
+    }
+
     public function print_messengerial($messengerial_id)
     {
         $messengerial = Messengerial::where('id', $messengerial_id)->first();

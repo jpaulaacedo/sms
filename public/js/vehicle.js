@@ -151,6 +151,73 @@ function _viewloadPassenger(vehicle_id) {
     })
 }
 
+function _viewPassengerCalendar(vehicle_id, date_req, date_needed) {
+    $("#passenger").val("");
+    $("#psg_vehicle_id").val(vehicle_id);
+    _viewloadPassenger1(vehicle_id);
+    _loadVehicle1(vehicle_id);
+    $("#lbl_passenger").html("Passenger(s):");
+    $("#passenger").hide();
+    $("#psg_count").html("");
+    $("#asterisk").html("");
+    $("#btn_passenger").hide();
+    $("#submit_button").hide();
+    $("#td_date_needed").html(date_needed);
+    $("#td_date_req").html(date_req);
+    $("#submit_psg_id").val("");
+}
+
+
+function _loadVehicle1(vehicle_id) {
+    var formData = new FormData();
+    formData.append('vehicle_id', vehicle_id);
+    $.ajax({
+        url: global_path + "/vehicle/view/vehicle/calendar",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $("#td_purpose").html(response.purpose);
+            $("#td_destination").html(response.destination);
+            $("#td_status").html(response.status);
+
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function _viewloadPassenger1(vehicle_id) {
+    var formData = new FormData();
+    formData.append('vehicle_id', vehicle_id);
+    $.ajax({
+        url: global_path + "/vehicle/view/passenger/calendar",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $('#passenger_modal').modal('show');
+            $("#my_tbody").empty();
+            $("#psg_count").html(response.length);
+
+
+            if (response != "null") {
+                $.each(response, function (key, value) {
+                    $("#my_tbody").append(
+                        '<tr>' +
+                        '<td width="75%">' + value.passenger + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
 function del_psg_list(vehicle_id) {
     var formData = new FormData();
     formData.append('passenger_id', vehicle_id);

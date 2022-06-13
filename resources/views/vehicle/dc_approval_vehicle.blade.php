@@ -39,7 +39,7 @@
 
 							@foreach($vehicle as $data)
 
-							@if(Auth::user()->user_type == 2 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
+							@if(Auth::user()->user_type == 2 || Auth::user()->user_type == 4 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>

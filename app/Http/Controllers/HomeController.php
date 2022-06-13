@@ -31,7 +31,7 @@ class HomeController extends Controller
 
     public function feed_calendar()
     {
-        $msg_calendar = Messengerial::get();
+        $msg_calendar = Messengerial::leftjoin('messengerial_items', 'messengerial.id', 'messengerial_items.messengerial_id')->where('status', "For Pickup")->orwhere('status', "Out For Delivery")->orwhere('status', "Accomplished")->get();
         $msg_my_array = [];
 
         foreach ($msg_calendar as $data) {
@@ -40,35 +40,33 @@ class HomeController extends Controller
             array_push(
                 $msg_my_array,
                 [
-                    "id" => 'msg',
                     "title" => $title,
-                    "start" => $data->approvedcao_date,
+                    "start" => $data->due_date,
                     "allDay" => false,
                     "backgroundColor" => "#eb4034",
                     "textColor" => "#ffffff",
                     "eventColor" => "#ffffff",
-                    "url" => URL::to('/messengerial/recipient/' . $data->id)
+                    "url" => URL::to('/messengerial/calendar_recipient/' . $data->id)
 
                 ]
             );
         }
 
-        $vhl_calendar = Vehicle::leftjoin('users', 'vehicle.user_id', 'users.id')->get();
-        $vhl_my_array = [];
+        $vhl_calendar = Vehicle::select('vehicle.*','users.*','vehicle.id as vehicle_id')
+        ->leftjoin('users', 'vehicle.user_id', 'users.id')->where('status', "For Pickup")->orwhere('status', "On The Way")->orwhere('status', "Accomplished")->get();
 
         foreach ($vhl_calendar as $data) {
             $title = $data->name;
             array_push(
                 $msg_my_array,
                 [
-                    "id" => 'vhl',
                     "title" => $title,
-                    "start" => $data->approvedcao_date,
+                    "start" => $data->date_needed,
                     "allDay" => false,
                     "backgroundColor" => "#218551",
                     "textColor" => "#000000",
                     "eventColor" => "#ffffff",
-                    "url" => URL::to('/vehicle')
+                    "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)
 
                 ]
             );

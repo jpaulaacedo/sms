@@ -71,6 +71,14 @@ class VehicleController extends Controller
         return view('vehicle.trip', compact('trip', 'vehicle')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
     }
 
+
+    public function calendar_trip($vehicle_id)
+    {
+        $vehicle = Vehicle::where('id', $vehicle_id)->get();
+        $passenger = VehiclePassenger::where('vehicle_id', $vehicle_id)->get();
+        return view('vehicle.calendar_trip', compact('vehicle', 'passenger')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
+    }
+
     // EDIT VEHICLE
     public function edit_vehicle(Request $request)
     {

@@ -33,6 +33,8 @@ Route::post('/messengerial/store', 'MessengerialController@messengerial_store');
 // View Recipient
 Route::get('/messengerial/recipient/{messengerial_id}', 'MessengerialController@get_recipient');
 
+Route::get('/messengerial/calendar_recipient/{messengerial_id}', 'MessengerialController@calendar_recipient');
+
 Route::get('/messengerial_form/{messengerial_id}', 'MessengerialController@print_messengerial');
 
 Route::post('/messengerial/recipient/store', 'MessengerialController@store_recipient');
@@ -106,6 +108,8 @@ Route::get('/vehicle', 'VehicleController@index');
 Route::post('/vehicle/store', 'VehicleController@vehicle_store');
 
 Route::get('/vehicle/all', 'VehicleController@all_vehicle');
+
+Route::get('/vehicle/calendar_trip/{vehicle_id}', 'VehicleController@calendar_trip');
 
 Route::get('/vehicle/trip/{vehicle_id}', 'VehicleController@get_trip');
 
