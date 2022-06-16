@@ -272,7 +272,7 @@
                         <span style="text-align: right;"><img id="dc_fad_signature" src=""></span>
                     </td>
                     @endif
-                    @if(App\User::get_user_type($messengerial->user_id) == 1 && $messengerial->status == "For Pickup" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @if(App\User::get_user_type($messengerial->user_id) == 1 && $messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
@@ -290,7 +290,7 @@
                         <span style="text-align: right;"><img id="dc_fad_signature" src=""></span>
                     </td>
                     @endif
-                    @if($messengerial->status == "For Pickup" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
@@ -373,7 +373,7 @@
                     </td>
                     @endif
 
-                    @if($messengerial->status == "For Pickup" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
@@ -486,7 +486,7 @@
                     @endif
 
                     @if(App\User::get_user_type($messengerial->user_id) == 6)
-                    @if($messengerial->status == "For Pickup" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;

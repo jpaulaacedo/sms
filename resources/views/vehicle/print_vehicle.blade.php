@@ -396,7 +396,7 @@
                             <br>
 
                             <center>
-                                @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                 @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                 <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                 @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -415,10 +415,10 @@
                             </center>
                         </td>
                         <td id="td2">
-                            <label style="float: left">Approved By:</label>
+                        <label style="float: left"> By:</label>
                             <br>
                             <center>
-                                @if($vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                @if($vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                 <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                 @else
                                 <span style="text-align: right;"><img id="dc_fad_signature"></span>
@@ -1004,7 +1004,7 @@
                                 <br>
 
                                 <center>
-                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                     @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                     <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -1026,7 +1026,7 @@
                                 <label style="float: left">Approved By:</label>
                                 <br>
                                 <center>
-                                    @if($vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if($vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                     <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @else
                                     <span style="text-align: right;"><img id="dc_fad_signature"></span>
@@ -1300,7 +1300,7 @@
                                 <br>
 
                                 <center>
-                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                     @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                     <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -1322,7 +1322,7 @@
                                 <label style="float: left">Approved By:</label>
                                 <br>
                                 <center>
-                                    @if($vehicle->status == "For Pickup" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if($vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
                                     <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @else
                                     <span style="text-align: right;"><img id="dc_fad_signature"></span>

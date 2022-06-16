@@ -55,7 +55,7 @@
                                     @elseif($data->status == "Cancelled")
                                     <span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-                                    @elseif($data->status=='Approved')
+                                    @elseif($data->status=='Confirmed')
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
                                     @elseif($data->status == "On The Way")

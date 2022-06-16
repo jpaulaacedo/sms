@@ -10,7 +10,7 @@
 @section('content')
 <div>
 	<a class="btn btn-primary" href="{{URL::to('/messengerial')}}">
-		<span class="fa fa-reply"></span> Back to Messengerial
+		<span class="fa fa-reply"></span> Back to Messengerial 
 	</a>
 </div>
 <br>
@@ -98,7 +98,7 @@
 								<td>{{$data->delivery_item}}</td>
 								<td>{{$data->instruction}}</td>
 								<td>
-									@if($messengerial->status=='For Pickup' || $messengerial->status=='Out For Delivery')
+									@if($messengerial->status=='Confirmed' || $messengerial->status=='Out For Delivery')
 									<b><span class="text-red">{{ date('F j, Y', strtotime($data->due_date)) }}</span></b>
 									<br>
 									<b><span class="text-red">{{ date('g:i A', strtotime($data->due_date)) }}</span></b>

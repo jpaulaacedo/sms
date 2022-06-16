@@ -35,42 +35,51 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             @foreach($messengerial as $data)
-                            @if($data->status=='For Pickup')
+                            @if($data->status=='For CAO Approval')
                             <tr class="text-center">
                                 <td>{{$data->subject}}</td>
                                 <td>{{$data->control_num}}</td>
                                 <td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>
-                                    @if($data->status=='For Pickup')
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+                                </td>
+                                <td>{{$data->count_rec}}</td>
+                                <td>
+                                    <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
+                                        <span class="fa fa-users"></span>
+
+                                    </a> |
+                                    </button>
+
+                                    <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+
+                            @foreach($messengerial as $data)
+                            @if($data->status=='Confirmed')
+                            <tr class="text-center">
+                                <td>{{$data->subject}}</td>
+                                <td>{{$data->control_num}}</td>
+                                <td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
+                                <td>
+                                    @if($data->status=='Confirmed')
+                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
                                 </td>
                                 <td>{{$data->count_rec}}</td>
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                    
                                     </a> |
-                                    </button>
-                                    @if($data->status =='For Pickup')
                                     <button onclick="_outfordel_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-truck"></span>
                                     </button>
-                                    @endif
-
-                                    @if($data->status=='Out For Delivery')
-                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
-                                        <span class="fa fa-check"></span>
-                                    </button>
-                                    @endif
-
-                                    @if($data->status =='Accomplished')
-                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
-                                        <span class="fa fa-file"></span>
-                                    </button>
-                                    @endif
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -93,26 +102,11 @@
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                    
                                     </a> |
-                                    </button>
-                                    @if($data->status =='For Pickup')
-                                    <button onclick="_outfordel_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
-                                    </button>
-                                    @endif
-
-                                    @if($data->status=='Out For Delivery')
-                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
+                                    <button onclick="mark_accomplish_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-check"></span>
                                     </button>
-                                    @endif
-
-                                    @if($data->status =='Accomplished')
-                                    <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
-                                        <span class="fa fa-file"></span>
-                                    </button>
-                                    @endif
+                                 
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -135,26 +129,10 @@
                                 <td>
                                     <a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
                                         <span class="fa fa-users"></span>
-                                    
                                     </a> |
-                                    </button>
-                                    @if($data->status =='For Pickup')
-                                    <button onclick="_outfordel_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
-                                    </button>
-                                    @endif
-
-                                    @if($data->status=='Out For Delivery')
-                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
-                                        <span class="fa fa-check"></span>
-                                    </button>
-                                    @endif
-
-                                    @if($data->status =='Accomplished')
                                     <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
                                         <span class="fa fa-file"></span>
                                     </button>
-                                    @endif
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -284,6 +262,50 @@
                 <button onclick="_outfordel()" class="btn btn-success">
                     <span class="fa fa-truck"></span>
                     out for delivery
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Mark Accomplish modal -->
+<div class="modal fade" id="mark_accomplish_modal" tabindex="-1" aria-labelledby="mark_accomplish_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="mark_accomplish_modalLabel">
+                    <span class="fa fa-envelope"></span>
+                    &nbsp;Accomplishment Details
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <input type="hidden" id="markacc_msg_id" name="markacc_msg_id">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="pickup_date">Pickup Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="pickup_date" id="pickup_date" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="accomplished_date">Accomplished Date</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="accomplished_date" id="accomplished_date" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#mark_accomplish_modal">
+                    Close
+                </button>
+                <button class="btn btn-success" onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
+                    <span class="fa fa-check"></span>
+                    Accomplished
                 </button>
             </div>
         </div>

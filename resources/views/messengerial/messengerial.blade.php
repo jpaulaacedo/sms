@@ -20,7 +20,7 @@
 					</div>
 
 					<div class="col-sm">
-						<button onclick="_addRequest()" class="btn btn-purple float-right">
+						<button onclick="_add()" class="btn btn-purple float-right">
 							<span class="fas fa-plus"></span>&nbsp;Create Request
 						</button>
 					</div>
@@ -30,24 +30,28 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
-								<th width="25%">Subject</th>
-								<th width="15%">Control Number</th>
+								<th width="20%">Recipient</th>
+								<th width="10%">Agency</th>
+								<th width="10%">Control Number</th>
 								<th width="15%">Request Date</th>
-								<th width="15%">Status</th>
-								<th width="10%">No. of Recipients</th>
+								<th width="15%">Destination</th>
+								<th width="15%">Date Needed</th>
+								<th width="10%">Status</th>
 								<th width="20%">Action</th>
-							</tr>
+							</tr>  
 						</thead>
 						<tbody>
 
 							@foreach($messengerial as $data)
-							@if((Auth::user()->user_type == 1) || ((Auth::user()->user_type == 2 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 3 || $data->status!='Approved' || $data->status!='Out For Delivery') || ((Auth::user()->user_type == 4 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 5) || (Auth::user()->user_type == 6 && $data->status!='For CAO Approval' && $data->status!='For DC Approval'))
+							@if((Auth::user()->user_type == 1) || ((Auth::user()->user_type == 2 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 3 || $data->status!='Confirmed' || $data->status!='Out For Delivery') || ((Auth::user()->user_type == 4 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 5) || (Auth::user()->user_type == 6 && $data->status!='For CAO Approval' && $data->status!='For DC Approval'))
 
 							@if(Auth::user()->user_type == 1 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -58,7 +62,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -68,7 +72,6 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -76,7 +79,7 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
@@ -105,9 +108,11 @@
 
 							@if(Auth::user()->user_type == 2 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -118,7 +123,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -128,7 +133,7 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
+
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -136,13 +141,9 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
-									@endif
-
-									@if($data->status!='Filing')
-
 									@endif
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
@@ -169,9 +170,11 @@
 
 							@if(Auth::user()->user_type == 3 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -182,7 +185,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -192,7 +195,6 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -200,13 +202,9 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
-									@endif
-
-									@if($data->status!='Filing')
-
 									@endif
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
@@ -233,7 +231,7 @@
 
 							@if(Auth::user()->user_type == 4 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>
@@ -246,7 +244,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -256,7 +254,8 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -264,7 +263,7 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
@@ -293,9 +292,11 @@
 
 							@if(Auth::user()->user_type == 5 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -306,7 +307,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -316,7 +317,6 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -324,7 +324,7 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
@@ -353,9 +353,11 @@
 
 							@if(Auth::user()->user_type == 6 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -366,7 +368,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -376,7 +378,6 @@
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a> |
 
@@ -384,7 +385,7 @@
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
-									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->subject}}')">
+									<button class="btn btn-danger btn-sm" onclick="_deleteMessengerial('{{$data->id}}','{{$data->recipient}}')">
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
@@ -421,7 +422,101 @@
 		</div>
 	</div>
 </div>
-<!-- Request modal -->
+<!-- Recipient Modal-->
+<div class="modal fade" id="recipient_modal" tabindex="-1" aria-labelledby="recipient_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<h5 class="modal-title" id="recipient_modalLabel">
+					<span class="fa fa-user"></span>
+					&nbsp;Create Messengerial Request
+				</h5>
+			</div>
+			<div class="modal-body">
+				<form action="{{URL::to('/messengerial/store')}}" method="POST">
+					@csrf
+					<div class="row">
+						<input type="hidden" id="messengerial_id" name="messengerial_id">
+						<div class="col-sm">
+							
+							<div class="row">
+								<div class="col-sm">
+									<label>Agency/Office
+										<span class="text-red">*</span>
+									</label>
+									<input placeholder="....." placeholder="....." type="text" id="agency" name="agency" class="form-control" rows="5" required>
+								</div>
+							</div>
+							&nbsp;
+
+							<div class="row">
+								<div class="col-sm-4">
+									<label>Recipient Name
+										<span class="text-red">*</span>
+									</label>
+									<input placeholder="....." type="text" id="recipient" name="recipient" class="form-control" rows="5" required>
+								</div>
+								<div class="col-sm-4">
+									<label>Contact #
+										<span class="text-red">*</span>
+									</label>
+									<input placeholder="....." type="text" name="contact" id="contact" class="form-control" required />
+								</div>
+								<div class="col-sm-4">
+									<label>Due Date
+										<span class="text-red">*</span>
+									</label>
+									<input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
+								</div>
+							</div>
+
+							&nbsp;
+
+							<div class="row">
+								<div class="col-sm">
+									<label>Destination(Address)
+										<span class="text-red">*</span>
+									</label>
+									<textarea placeholder="complete address..." class="form-control" rows="3" id="destination" required name="destination"></textarea>
+								</div>
+							</div>
+							&nbsp;
+
+							<div class="row">
+								<div class="col-sm">
+									<label>What to Deliver
+										<span class="text-red">*</span>
+										<small>
+											If multiple items, separate using comma(,).
+										</small>
+									</label>
+									<textarea placeholder="eg. documents, checks, etc..." class="form-control" required rows="3" id="delivery_item" name="delivery_item"></textarea>
+								</div>
+								<div class="col-sm">
+									<label>Instruction</label>
+									<textarea placeholder="if any..." id="instruction" name="instruction" class="form-control" rows="3"></textarea>
+								</div>
+							</div>
+
+							&nbsp;
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#recipient_modal">
+									Close
+								</button>
+								<button id="btn_add" type="submit" class="btn btn-info">
+									<span id="icon_submit" class="fa fa-plus"></span>
+									<span id="btn_submit">Create</span>
+								</button>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Request modal
 <div class="modal fade" id="request_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="request_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -438,8 +533,8 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-sm">
-							<label>Subject</label>
-							<input type="text" id="subject" class="form-control" name="subject" placeholder="Enter subject here..." required>
+							<label>Recipient</label>
+							<input type="text" id="recipient" class="form-control" name="recipient" placeholder="Enter recipient here..." required>
 						</div>
 					</div>
 					<br>
@@ -447,7 +542,7 @@
 						<div class="col-sm">
 							<small>
 								<span class="fa fa-exclamation-circle text-red"></span>
-								<b>Note:</b> The "subject" will serve as the requestor's unique indicator.
+								<b>Note:</b> The "recipient" will serve as the requestor's unique indicator.
 							</small>
 						</div>
 					</div>
@@ -462,9 +557,9 @@
 			</form>
 		</div>
 	</div>
-</div>
+</div> -->
 
-<!-- cancel modal -->
+<!-- cancel modal
 <div class="modal fade" id="cancel_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="cancel_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -509,7 +604,7 @@
 			</form>
 		</div>
 	</div>
-</div>
+</div> -->
 
 <!-- Accomplish modal -->
 <div class="modal fade" id="accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="accomplish_modalLabel" aria-hidden="true">

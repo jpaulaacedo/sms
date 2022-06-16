@@ -37,7 +37,7 @@ Route::get('/messengerial/calendar_recipient/{messengerial_id}', 'MessengerialCo
 
 Route::get('/messengerial_form/{messengerial_id}', 'MessengerialController@print_messengerial');
 
-Route::post('/messengerial/recipient/store', 'MessengerialController@store_recipient');
+// Route::post('/messengerial/recipient/store', 'MessengerialController@store_recipient');
 
 Route::post('/messengerial/submit', 'MessengerialController@submit_messengerial');
 

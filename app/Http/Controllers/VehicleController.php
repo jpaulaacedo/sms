@@ -155,7 +155,7 @@ class VehicleController extends Controller
             if ($user_type == 2 || $user_type == 4) {
                 $update->status = "For CAO Approval";
             } elseif ($user_type == 6) {
-                $update->status = "For Pickup";
+                $update->status = "Confirmed";
                 $today = date("Y-m-d H:i:s");
                 $update->approvedcao_date = $today;
             } elseif ($user_type != 2 && $division == "Finance and Administrative Division") {
@@ -263,7 +263,7 @@ class VehicleController extends Controller
     {
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
-            $update->status = "For Pickup";
+            $update->status = "Confirmed";
             $today = date("Y-m-d H:i:s");
             $update->approvedcao_date = $today;
             $update->save();
@@ -287,6 +287,15 @@ class VehicleController extends Controller
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlForPickup($data));
             // Mail::to([$employee->email])->send(new msgApproved($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlApproved($data));
+
+            $chosen_driver = $update->driver;
+
+            if ($chosen_driver == "Elmo") {
+                $num = "09171259293";
+            } else {
+                $num = "09171259293";
+            }
+            $this->itexmo($num, "A new vehicle ticket is confirmed. Kindly contact Percs for more details.", "TR-PAULA259293_25NMQ", "7&6k!wqg}e");
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -330,15 +339,7 @@ class VehicleController extends Controller
             //     'from' => '639224847673',
             //     'text' => "A new ticket is ready for service vehicle. Kindly contact Admin Aide IV for more details."
             // ]);
-            $chosen_driver = $update->driver;
-
-            if ($chosen_driver == "Elmo") {
-                $num = "09171259293";
-            } else {
-                $num = "09171259293";
-            }
-            $this->itexmo($num, "A new vehicle ticket is ready for service. Kindly contact Percs for more details.", "TR-PAULA259293_25NMQ", "7&6k!wqg}e");
-
+           
             return json_encode('success');
         } catch (\Exception $e) {
             return json_encode($e->getMessage());

@@ -55,7 +55,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
@@ -86,7 +86,7 @@
 							</tr>
 							@endif
 
-							@if(Auth::user()->user_type == 6 && $data->status=='For Pickup')
+							@if(Auth::user()->user_type == 6 && $data->status=='Confirmed')
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>

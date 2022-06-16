@@ -30,7 +30,7 @@
 	<a class="btn btn-primary" href="{{URL::to('/messengerial')}}">
 		<span class="fa fa-reply"></span> Back
 	</a>
-	@elseif(Auth::user()->id != $messengerial->user_id || $messengerial->status=='For Pickup' && $messengerial->status=='Out For Delivery' && $messengerial->status=='Accomplished')
+	@elseif(Auth::user()->id != $messengerial->user_id || $messengerial->status=='Confirmed' && $messengerial->status=='Out For Delivery' && $messengerial->status=='Accomplished')
 	<a class="btn btn-primary" href="{{URL::to('/messengerial/accomplish')}}">
 		<span class="fa fa-reply"></span> Back
 	</a>
@@ -48,11 +48,11 @@
 	@endif
 
 	@if(Auth::user()->user_type == 6)
-	@if(Auth::user()->id != $messengerial->user_id && $messengerial->status=='For CAO Approval' || $messengerial->status=='For Pickup')
+	@if(Auth::user()->id != $messengerial->user_id && $messengerial->status=='For CAO Approval' || $messengerial->status=='Confirmed')
 	<a class="btn btn-primary" href="{{URL::to('/messengerial/cao/approval')}}">
 		<span class="fa fa-reply"></span> Back
 	</a>
-	@elseif(Auth::user()->id == $messengerial->user_id && $messengerial->status!='For CAO Approval' || $messengerial->status!='For Pickup')
+	@elseif(Auth::user()->id == $messengerial->user_id && $messengerial->status!='For CAO Approval' || $messengerial->status!='Confirmed')
 	<a class="btn btn-primary" href="{{URL::to('/messengerial')}}">
 		<span class="fa fa-reply"></span> Back
 	</a>
@@ -150,7 +150,7 @@
 								<td>{{$data->delivery_item}}</td>
 								<td>{{$data->instruction}}</td>
 								<td>
-									@if($messengerial->status=='For Pickup' || $messengerial->status=='Out For Delivery')
+									@if($messengerial->status=='Confirmed' || $messengerial->status=='Out For Delivery')
 									<b><span class="text-red">{{ date('F j, Y', strtotime($data->due_date)) }}</span></b>
 									<br>
 									<b><span class="text-red">{{ date('g:i A', strtotime($data->due_date)) }}</span></b>

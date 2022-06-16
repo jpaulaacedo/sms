@@ -26,7 +26,7 @@
     @endif
 
     @if(Auth::user()->user_type == 3)
-    @if(Auth::user()->id != $vehicle->user_id || $vehicle->status=='For Pickup' && $vehicle->status=='Out For Delivery' && $vehicle->status=='Accomplished')
+    @if(Auth::user()->id != $vehicle->user_id || $vehicle->status=='Confirmed' && $vehicle->status=='Out For Delivery' && $vehicle->status=='Accomplished')
     <a class="btn btn-primary" href="{{URL::to('/vehicle/accomplish')}}">
         <span class="fa fa-reply"></span> Back
     </a>

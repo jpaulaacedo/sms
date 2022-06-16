@@ -63,7 +63,7 @@
 							</tr>
 							@endif
 
-							@if(Auth::user()->user_type == 6 && $data->status=='For Pickup' || (App\User::get_division($data->user_id) == "Finance and Administrative Division") && $data->status=='For Pickup')
+							@if(Auth::user()->user_type == 6 && $data->status=='Confirmed' || (App\User::get_division($data->user_id) == "Finance and Administrative Division") && $data->status=='Confirmed')
 							<tr class="text-center">
 								<td>{{$data->subject}}</td>
 								<td>{{$data->control_num}}</td>

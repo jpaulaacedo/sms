@@ -4,7 +4,7 @@
 <div>
 	@foreach($vehicle as $data)
 	<a class="btn btn-primary" href="{{URL::to('/vehicle')}}">
-		<span class="fa fa-reply"></span> Back
+		<span class="fa fa-reply"></span> Back to Vehicle
 	</a>
 	@endforeach
 
@@ -96,7 +96,7 @@
 								</td>
 								@endforeach
 
-								<td>
+								<td class="float-left">
 									@foreach($passenger as $data)
 									• {{$data->passenger}}
 									<br>

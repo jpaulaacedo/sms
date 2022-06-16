@@ -41,7 +41,7 @@
 						<tbody>
 
 							@foreach($vehicle as $data)
-							@if((Auth::user()->user_type == 1) || ((Auth::user()->user_type == 2 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 3 || $data->status!='Approved' || $data->status!='On The Way') || ((Auth::user()->user_type == 4 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 5) || (Auth::user()->user_type == 6 && $data->status!='For CAO Approval' && $data->status!='For DC Approval'))
+							@if((Auth::user()->user_type == 1) || ((Auth::user()->user_type == 2 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 3 || $data->status!='Confirmed' || $data->status!='On The Way') || ((Auth::user()->user_type == 4 && $data->status!='For DC Approval')) || (Auth::user()->user_type == 5) || (Auth::user()->user_type == 6 && $data->status!='For CAO Approval' && $data->status!='For DC Approval'))
 
 							@if(Auth::user()->user_type == 1 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
@@ -59,7 +59,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
@@ -126,7 +126,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
@@ -194,7 +194,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
@@ -266,7 +266,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
@@ -333,7 +333,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
@@ -399,7 +399,7 @@
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status=='Approved')
+									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")

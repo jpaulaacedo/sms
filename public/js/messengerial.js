@@ -15,7 +15,19 @@ $(function () {
         $('#submit_button').removeAttr('disabled');
     }
 });
-
+$(function () {
+    var dateControl = document.querySelector('input[type="datetime-local"]');
+    // dateControl.value = '2017-06-01T08:30'; format of date should be the same on the datepicker
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var hr = d.getHours();
+    var min = d.getMinutes();
+    var year = d.getFullYear();
+    var output = year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day + 'T' + (hr < 10 ? '0' : '') + hr + ':' + (min < 10 ? '0' : '') + min;
+    dateControl.value = output;
+    dateControl.min = output;
+});
 
 //   Messengerial Recipient Button DELETE
 function _delete(messengerial_item_id, messengerial_id, recipient) {
@@ -120,6 +132,7 @@ function _edit(data) {
 //ADD RECIPIENT
 function _add() {
     $('#recipient_modal').modal('show');
+    $('#messengerial_id').val("");
     $('#recipient').val('');
     $('#agency').val('');
     $('#contact').val('');
@@ -127,44 +140,24 @@ function _add() {
     $('#delivery_item').val('');
     $('#instruction').val('');
     $('#due_date').val('');
-    var dateControl = document.querySelector('input[type="datetime-local"]');
-    // dateControl.value = '2017-06-01T08:30'; format of date should be the same on the datepicker
-    var d = new Date();
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
-    var hr = d.getHours();
-    var min = d.getMinutes();
-    var year = d.getFullYear();
-    var output = year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day + 'T' + (hr < 10 ? '0' : '') + hr + ':' + (min < 10 ? '0' : '') + min;
-    dateControl.value = output;
-    dateControl.min = output;
-    // alert(output);
-    // alert(dateControl.value)
-    $('#messengerial_item_id').val('');
-
-    $('#btn_add').removeClass('btn-success');
-    $('#btn_add').addClass('btn-info');
 
     $('#icon_submit').removeClass('fa-check');
     $('#icon_submit').addClass('fa-plus');
-    $('#btn_submit').html("Add to List");
 }
 
-
-//SAVE MESSENGERIAL : CREATE NEW MESSSENGERIAL REQ
-function _addRequest() {
-    $('#request_modal').modal('show');
-    $('#subject').val("");
-    $('#messengerial_id').val("");
-    $('#icon_submit').removeClass('fa-check');
-    $('#icon_submit').addClass('fa-plus');
-    $('#btn_submit').html("Create");
-}
+// //SAVE MESSENGERIAL : CREATE NEW MESSSENGERIAL REQ
+// function _addRequest() {
+//     $('#request_modal').modal('show');
+//     $('#messengerial_id').val("");
+//     $('#icon_submit').removeClass('fa-check');
+//     $('#icon_submit').addClass('fa-plus');
+//     $('#btn_submit').html("Create");
+// }
 
 //edit messengerial: EDIT SUBJECT MESSENGERIAL
 function _editMessengerial(data) {
     var formData = new FormData();
-    formData.append('data_id', data);
+    formData.append('data_id', data); 
     $.ajax({
         url: "/messengerial/edit",
         method: 'post',
@@ -284,50 +277,6 @@ function _deleteMessengerial(messengerial_id, subject) {
     })
 }
 
-// Accomplish modal  
-function _markAccomplish(id, control_num) {
-    Swal.fire({
-        title: 'Mark ' + control_num + ' as Accomplished?',
-        text: "You won't be able to revert this.",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, proceed.'
-    }).then((result) => {
-        if (result.value) {
-            var formData = new FormData();
-            formData.append('data_id', id);
-            $.ajax({
-                url: global_path + "/messengerial/mark_accomplish",
-                method: 'post',
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    if (response == "success") {
-                        Swal.fire(
-                            'Accomplished.',
-                            response,
-                            'success'
-                        ).then((result2) => {
-                            window.location.href = global_path + "/messengerial/accomplish";
-                        })
-
-                    } else {
-                        Swal.fire(
-                            'DB Error.',
-                            response,
-                            'error'
-                        )
-                    }
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            });
-        }
-    })
-}
 
 function _attachmentAgent(data) {
     var formData = new FormData();
@@ -481,6 +430,14 @@ function _outfordel_modal(data) {
     $('#outfordel_modal').modal('show');
     $('#submit_msg_id').val(data);
 }
+
+function mark_accomplish_modal(data) {
+    $('#mark_accomplish_modal').modal('show');
+    $('#markacc_msg_id').val(data);
+    $('#pickup_date').val('');
+    $('#accomplished_date').val('');
+}
+
 function _outfordel() {
     var driver = $('#driver').val();
     if (driver != null) {
@@ -537,6 +494,76 @@ function _outfordel() {
     }
 }
 
+// Accomplish modal  
+function _markAccomplish(id, control_num) {
+
+    var pickup_date = $('#pickup_date').val();
+    var accomplished_date = $('#accomplished_date').val();
+
+    console.log(pickup_date);
+    console.log(accomplished_date);
+
+    var empty_field = "";
+    if (pickup_date == "" && accomplished_date == "") {
+        empty_field = "Pickup Date and Accomplished Date";
+    } else if (pickup_date == "") {
+        empty_field = "Pickup Date";
+    } else if (accomplished_date == "") {
+        empty_field = "Accomplished Date";
+    }
+    if (pickup_date != "" && accomplished_date != "") {
+        Swal.fire({
+            title: 'Mark ' + control_num + ' as Accomplished?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', $('#markacc_msg_id').val());
+                formData.append('pickup_date', $('#pickup_date').val());
+                formData.append('accomplished_date', $('#accomplished_date').val());
+                $.ajax({
+                    url: global_path + "/messengerial/mark_accomplish",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Accomplished.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial/accomplish";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+        })
+    } else {
+
+        Swal.fire(
+            'Required field missing.',
+            'Please add ' + empty_field + '.',
+            'warning'
+        )
+    }
+}
 function _loadRecipient(data) {
     var formData = new FormData();
     formData.append('messengerial_id', data);

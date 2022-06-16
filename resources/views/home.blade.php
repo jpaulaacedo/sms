@@ -102,9 +102,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <small><b>Legend:</b></small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Vehicle</small>
+                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Ruben</small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Messengerial</small>
+                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Elmo</small>
                             </h3>
                         </div>
                         <div class="card-body">
