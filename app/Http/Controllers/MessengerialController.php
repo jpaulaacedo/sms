@@ -44,7 +44,7 @@ class MessengerialController extends Controller
                 $save->user_id = Auth::user()->id;
                 $save->remarks = "";
                 $save->attachment = "";
-                $current_rec = Messengerial::max('id');
+                $current_rec = Messengerial::count('id');
                 $new_num = $current_rec + 1;
                 $new_rec = '';
                 if ($new_num <= 9) {
@@ -95,18 +95,18 @@ class MessengerialController extends Controller
     //     }
     // }
 
-    public function get_recipient($messengerial_id)
-    {
-        $messengerial = Messengerial::where('id', $messengerial_id)->first(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+    // public function get_recipient($messengerial_id)
+    // {
+    //     $messengerial = Messengerial::where('id', $messengerial_id)->first(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
 
-        $recipient = MessengerialItem::where('messengerial_id', $messengerial_id)
-            ->orderBy('id', 'desc')
-            ->get();
-        $count_recipient = count($recipient);
-        $messengerial->count_rec = $count_recipient;
-        $messengerial->save();
-        return view('messengerial.recipient', compact('recipient', 'messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
-    }
+    //     $recipient = MessengerialItem::where('messengerial_id', $messengerial_id)
+    //         ->orderBy('id', 'desc')
+    //         ->get();
+    //     $count_recipient = count($recipient);
+    //     $messengerial->count_rec = $count_recipient;
+    //     $messengerial->save();
+    //     return view('messengerial.recipient', compact('recipient', 'messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
+    // }
 
     public function calendar_recipient($messengerial_id)
     {
@@ -139,21 +139,22 @@ class MessengerialController extends Controller
     public function submit_messengerial(Request $request)
     {
         try {
-            $update = Messengerial::where('id', $request->submit_msg_id)->first(); //model
+            $update = Messengerial::where('id', $request->data_id)->first(); //model
             $division = Auth::user()->division;
             $user_type = Auth::user()->user_type;
             if ($user_type == 2 || $user_type == 4) {
-                $update->status = "For CAO Approval";
+                $update->status = "For Assignment";
             } elseif ($user_type == 6) {
                 $update->status = "Confirmed";
                 $today = date("Y-m-d H:i:s");
                 $update->approvedcao_date = $today;
-            } elseif ($user_type != 2 && $division == "Finance and Administrative Division") {
-                $update->status = "For CAO Approval";
+            } elseif ($user_type != 2 && $division == "Finance and Administrative Division" || $division == "Office of the Executive Director") {
+                $update->status = "For Assignment";
             } else {
                 $update->status = "For DC Approval"; //$update->dbcolumn = $request->input name fr blade 
             }
             $update->save();
+
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
@@ -187,13 +188,14 @@ class MessengerialController extends Controller
             //     Mail::to($cao->email)->cc([$employee->email])->send(new msgCreateTicket($data));
             // }
 
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
 
-            return redirect('messengerial')->with('message', 'success');
+            return json_encode('success');
         } catch (\Exception $e) {
             return redirect()->back()->with('message', $e->getMessage());
         }
     }
+
 
     // DC  APPROVAL
     public function dc_approval_messengerial()
@@ -244,15 +246,26 @@ class MessengerialController extends Controller
         return json_encode(count($messengerial));
     }
 
-    public function edit_recipient(Request $request)
+    public function edit_messengerial(Request $request)
     {
-        $edit = MessengerialItem::where('id', $request->data_id)->first();
-        $due_date = date("Y-m-d", strtotime($edit->due_date));
-        $due_time = date("H:i", strtotime($edit->due_date));
+        $edit = Messengerial::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($edit->date_needed));
+        $due_time = date("H:i", strtotime($edit->date_needed));
 
-        $edit->due_date = $due_date . "T" . $due_time;
+        $edit->date_needed = $due_date . "T" . $due_time;
 
         return json_encode($edit);
+    }
+
+    public function view_messengerial(Request $request)
+    {
+        $view = Messengerial::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($view->date_needed));
+        $due_time = date("H:i", strtotime($view->date_needed));
+
+        $view->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($view);
     }
 
     public function delete_recipient(Request $request)
@@ -265,11 +278,11 @@ class MessengerialController extends Controller
         }
     }
 
-    public function edit_messengerial(Request $request)
-    {
-        $edit = Messengerial::where('id', $request->data_id)->first();
-        return json_encode($edit);
-    }
+    // public function edit_messengerial(Request $request)
+    // {
+    //     $edit = Messengerial::where('id', $request->data_id)->first();
+    //     return json_encode($edit);
+    // }
 
     public function cancel_messengerial(Request $request)
     {
@@ -305,7 +318,7 @@ class MessengerialController extends Controller
     {
         try {
             $update = Messengerial::where('id', $request->data_id)->first();
-            $update->status = "For CAO Approval";
+            $update->status = "For Assignment";
             $update->save();
 
             $user_id = $update->user_id;
@@ -316,7 +329,7 @@ class MessengerialController extends Controller
             $data = array(
                 'dc_name' => $cao->name,
                 'emp_name' => $employee->name,
-                'subject' => $update->subject,
+                'subject' => $update->recipient,
                 'status' => $update->status,
                 'link'  =>  URL::to('/messengerial/cao/approval'),
                 'dc' => $dc->name,
@@ -325,9 +338,9 @@ class MessengerialController extends Controller
             );
 
             // Mail::to($cao->email)->cc([$employee->email])->send(new msgCreateTicket($data));
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
             // Mail::to([$employee->email])->send(new msgApproved($data));
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgApproved($data));
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgApproved($data));
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -384,7 +397,7 @@ class MessengerialController extends Controller
     {
         try {
             $update = Messengerial::where('id', $request->data_id)->first();
-            $update->status = "Out For Delivery";
+            $update->status = "For CAO Approval";
             $today = date("Y-m-d H:i:s");
             $update->out_date = $today;
             $update->driver = $request->driver;
@@ -401,6 +414,40 @@ class MessengerialController extends Controller
 
             // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new msgOutForDel($data));
+
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function assign_messengerial(Request $request)
+    {
+        try {
+            $update = Messengerial::where('id', $request->data_id)->first();
+            $user_type = User::select('user_type')->where('id', $request->data_id)->first();
+            if ($user_type == 4 || $user_type == 6) {
+                $update->status = "Confirmed";
+            } else {
+                $update->status = "For CAO Approval";
+            }
+            $today = date("Y-m-d H:i:s");
+            $update->out_date = $today;
+            $update->driver = $request->driver;
+            $update->assigned_pickupdate = $request->assigned_pickupdate;
+            $update->save();
+
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'subject' => $update->recipient,
+                'link'  =>  URL::to('/messengerial'),
+            );
+
+            // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgOutForDel($data));
 
             return json_encode('success');
         } catch (\Exception $e) {

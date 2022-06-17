@@ -28,13 +28,14 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
-								<th width="20%">Subject</th>
+								<th width="15%">Recipient</th>
 								<th width="10%">Control Number</th>
-								<th width="15%">Request Date</th>
 								<th width="15%">Requested By</th>
-								<th width="10%">Status</th>
-								<th width="10%">No. of Recipients</th>
-								<th width="15%">Action</th>
+								<th width="10%">Request Date</th>
+								<th width="15%">Destination</th>
+								<th width="10%">Date Needed</th>
+								<th width="15%">Status</th>
+								<th width="20%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -42,14 +43,15 @@
 							@foreach($messengerial as $data)
 							@if(Auth::user()->user_type == 6 && $data->status=='For CAO Approval' || (App\User::get_division($data->user_id) == "Finance and Administrative Division") && $data->status=='For DC Approval')
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>
@@ -63,16 +65,17 @@
 							</tr>
 							@endif
 
-							@if(Auth::user()->user_type == 6 && $data->status=='Confirmed' || (App\User::get_division($data->user_id) == "Finance and Administrative Division") && $data->status=='Confirmed')
+							@if(Auth::user()->user_type == 6 && $data->status=='Confirmed' || (App\User::get_division($data->user_id) == "Finance and Administrative Division") && $data->status=='Confirmed' || (App\User::get_division($data->user_id) == "Office of the Executive Director") && $data->status=='Confirmed')
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-warning">APPROVED</span>
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
 									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm">
 										<span class="fa fa-users"></span>

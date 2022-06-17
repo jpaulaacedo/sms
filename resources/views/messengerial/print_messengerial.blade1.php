@@ -566,7 +566,7 @@
                 @endif
             </div>
             <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
                 Chief Administrative Officer
             </small>
 
@@ -585,13 +585,7 @@
                         <th style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">WHAT TO DELIVER</th>
                         <th style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">DATE/TIME</th>
                     </tr>
-                    <tr>
-                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$messengerial->agency}}</td>
-                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$messengerial->recipient}}</td>
-                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">{{$messengerial->contact}}</td>
-                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">{{$messengerial->delivery_item}}</td>
-                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">{{ date('F j, Y', strtotime($messengerial->date_needed)) }} <br>{{ date('g:i A', strtotime($messengerial->date_needed)) }}</td>
-                    </tr>
+                    @if(count($recipient) == 0)
                     <tr>
                         <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
                         <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
@@ -606,17 +600,93 @@
                         <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
                         <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
                     </tr>
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                    </tr>
+                    @elseif(count($recipient) == 1)
+                    @foreach($recipient as $data)
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->agency}}</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->recipient}}</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">{{$data->contact}}</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">{{$data->delivery_item}}</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">{{ date('F j, Y', strtotime($data->due_date)) }} <br>{{ date('g:i A', strtotime($data->due_date)) }}</td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                    </tr>
+
+                    @elseif(count($recipient) == 2)
+                    @foreach($recipient as $data)
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->agency}}</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->recipient}}</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">{{$data->contact}}</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">{{$data->delivery_item}}</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">{{ date('F j, Y', strtotime($data->due_date)) }} <br>{{ date('g:i A', strtotime($data->due_date)) }}</td>
+
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">&nbsp;<br>&nbsp;</td>
+                    </tr>
+                    @elseif(count($recipient) == 3)
+                    @foreach($recipient as $data)
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->agency}}</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->recipient}}</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">{{$data->contact}}</td>
+                        <td style="min-width: 170px; max-width: 170px; min-height: 10px; max-height: 10px;">{{$data->delivery_item}}</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">{{ date('F j, Y', strtotime($data->due_date)) }} <br>{{ date('g:i A', strtotime($data->due_date)) }}</td>
+                    </tr>
+                    @endforeach
+                    </tr>
+                    <!--ADD TO next page -->
+                    @elseif(count($recipient) > 3)
+                    @foreach($recipient as $data)
+                    <tr>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->agency}}</td>
+                        <td style="min-width: 140px; max-width: 140px; min-height: 10px; max-height: 10px;">{{$data->recipient}}</td>
+                        <td style="min-width: 110px; max-width: 110px; min-height: 10px; max-height: 10px;">{{$data->contact}}</td>
+                        <td style="min-width: 150px; max-width: 150px; min-height: 10px; max-height: 10px;">{{$data->delivery_item}}</td>
+                        <td style="min-width: 100px; max-width: 100px; min-height: 10px; max-height: 10px;">{{ date('F j, Y', strtotime($data->due_date)) }} <br>{{ date('g:i A', strtotime($data->due_date)) }}</td>
+                    </tr>
+                    @endforeach
+                    </tr>
+                    @endif
                 </table>
 
                 <br>
                 <div class="row" id="instruction">
                     <tr><b>INSTRUCTION(S):</b>
+                        @foreach($recipient as $data)
 
-                        @if($messengerial->instruction == null)
-                        <u>For recipient: {{$messengerial->recipient}} - N/A</u>
+                        @if($data->instruction == null)
+                        <u>For recipient: {{$data->recipient}} - N/A</u>
                         @else
-                        <u>{{$messengerial->instruction}}</u>
+                        <u>Recipient: {{$data->recipient}} - {{$data->instruction}}</u>
                         @endif
+                        @endforeach
                     </tr>
                 </div>
                 <br>
@@ -626,14 +696,85 @@
                     ----------------------------------------------------------------------------------------------------------------------------------------------------------------
                 </div>
             </center>
-            <h3>MESSENGER PORTION</h3>
+            @if($messengerial->count_rec <= 3) <center>
+                <h3>MESSENGER PORTION</h3>
+                </center>
+                <div class="row">
+                    <small>
+                        <i>(to be filled up by Finance and Administrative Division)</i>
+                    </small>
+                </div>
+
+                <div class="row">
+                    <table>
+                        <input type="hidden" id="out" name="out">
+
+                        <tr>
+                            <div class="col">
+                                <td id="row1"><b>DATE OF DELIVERY</b></td>
+                                @if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
+                                <td id="row1">{{ date('F j, Y', strtotime($messengerial->out_date)) }}</td>
+                                <td id="row1"><b>TIME: </b> {{ date('g:i A', strtotime($messengerial->out_date)) }}</td>
+                                @else
+                                <td id="row1">&nbsp;</td>
+                                <td id="row1">&nbsp;</td>
+                                @endif
+
+                            </div>
+                        </tr>
+
+                        <tr>
+                            <div class="col">
+                                <td id="row1"><b>WHO DELIVERED</b></td>
+                                <td id="row1">{{$messengerial->driver}}</td>
+                                <td id="return"><b>RETURNED ACCOMPLISHED FORM TO REQUESTING STAFF DATE/TIME: </b> </td>
+                            </div>
+                        </tr>
+
+                        <tr>
+                            <div class="col">
+                                <td id="row1"><b>SIGNATURE OF THE MESSENGER</b></td>
+                                <td id="row1">{{$messengerial->driver}}</td>
+                                @if($messengerial->status == "Accomplished")
+                                @if($messengerial->count_file != 0)
+                                <td id="return">{{ date('F j, Y g:i A', strtotime($messengerial->returned_date)) }} </td>
+                                @else
+                                <td id="return">&nbsp; </td>
+                                @endif
+                                @else
+                                <td id="return">&nbsp; </td>
+                                @endif
+                            </div>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+        <br>
+        <div class="row" style="float: right">
+            <div class="row">
+                <div></div>
+                Noted By:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <u>&nbsp;&nbsp;&nbsp;&nbsp;Percus Imperio&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                </div>
+            </div>
+            <div" class="row">
+                <div class="col"> &nbsp;&nbsp;&nbsp;Authorized Staff
+                </div>
+        </div>
+        @else
+        <div style="page-break-before: always">
+            <center>
+                <h3>MESSENGER PORTION</h3>
             </center>
             <div class="row">
                 <small>
                     <i>(to be filled up by Finance and Administrative Division)</i>
                 </small>
             </div>
-
             <div class="row">
                 <table>
                     <input type="hidden" id="out" name="out">
@@ -655,7 +796,7 @@
                     <tr>
                         <div class="col">
                             <td id="row1"><b>WHO DELIVERED</b></td>
-                            <td id="row1">{{$messengerial->driver}}</td>
+                            <td id="row1">Sr. Elmo</td>
                             <td id="return"><b>RETURNED ACCOMPLISHED FORM TO REQUESTING STAFF DATE/TIME: </b> </td>
                         </div>
                     </tr>
@@ -663,12 +804,17 @@
                     <tr>
                         <div class="col">
                             <td id="row1"><b>SIGNATURE OF THE MESSENGER</b></td>
-                            <td id="row1">{{$messengerial->driver}}</td>
+                            <td id="row1">insert signature by Sr. Elmo</td>
                             @if($messengerial->status == "Accomplished")
-                            <td id="return">{{ date('F j, Y g:i A', strtotime($messengerial->accomplished_date)) }} </td>
+                            @if($messengerial->count_file != 0)
+                            <td id="return">{{ date('F j, Y g:i A', strtotime($messengerial->returned_date)) }} </td>
                             @else
                             <td id="return">&nbsp; </td>
                             @endif
+                            @else
+                            <td id="return">&nbsp; </td>
+                            @endif
+
                         </div>
                     </tr>
                 </table>
@@ -690,6 +836,8 @@
                 <div class="col"> &nbsp;&nbsp;&nbsp;Authorized Staff
                 </div>
         </div>
+        </div>
+        @endif
         <div class="row" id="footer">
             <div class="col">
                 <p>

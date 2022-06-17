@@ -52,11 +52,13 @@ Route::get('/messengerial/accomplish', 'MessengerialController@to_accomplish_mes
 
 Route::get('/messengerial/report', 'MessengerialController@report_messengerial');
 
-Route::post('/messengerial/recipient/edit', 'MessengerialController@edit_recipient');
+// Route::post('/messengerial/recipient/edit', 'MessengerialController@edit_recipient');
 
-Route::post('/messengerial/recipient/delete', 'MessengerialController@delete_recipient');
+// Route::post('/messengerial/recipient/delete', 'MessengerialController@delete_recipient');
 
 Route::post('/messengerial/edit', 'MessengerialController@edit_messengerial');
+
+Route::post('/messengerial/view', 'MessengerialController@view_messengerial');
 
 Route::post('/messengerial/cancel', 'MessengerialController@cancel_messengerial');
 
@@ -72,6 +74,8 @@ Route::post('/messengerial/dc/approve', 'MessengerialController@approveDC_messen
 Route::post('/messengerial/cao/approve', 'MessengerialController@approveCAO_messengerial');
 
 Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfordel_messengerial');
+
+Route::post('/messengerial/accomplish/assign', 'MessengerialController@assign_messengerial');
 
 //all messengerial
 Route::get('/messengerial/all', 'MessengerialController@all_messengerial');
