@@ -30,14 +30,17 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
-								<th width="20%">Recipient</th>
+								<th width="15%">Recipient</th>
 								<th width="10%">Agency</th>
 								<th width="10%">Control Number</th>
-								<th width="15%">Request Date</th>
-								<th width="15%">Destination</th>
-								<th width="15%">Date Needed</th>
+								<th width="10%">Request Date</th>
+								<th width="10%">Destination</th>
+								<th width="10%">Contact No.</th>
+								<th width="10%">What to Deliver</th>
+								<th width="10%">Instruction</th>
+								<th width="10%">Date Needed</th>
 								<th width="10%">Status</th>
-								<th width="20%">Action</th>
+								<th width="15%">Action</th>
 							</tr>  
 						</thead>
 						<tbody>
@@ -48,9 +51,11 @@
 							@if(Auth::user()->user_type == 1 && (Auth::user()->id == $data->user_id))
 							<tr class="text-center">
 								<td>{{$data->recipient}}</td>
+								<td>{{$data->agency}}</td>
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								<td>{{$data->contact}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
