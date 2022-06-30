@@ -27,12 +27,12 @@
                             <tr class="text-center">
                                 <th width="15%">Recipient</th>
                                 <th width="10%">Control Number</th>
-                                <th width="15%">Requested By</th>
+                                <th width="10%">Requested By</th>
                                 <th width="10%">Request Date</th>
                                 <th width="15%">Destination</th>
                                 <th width="10%">Date Needed</th>
-                                <th width="15%">Status</th>
-                                <th width="20%">Action</th>
+                                <th width="20%">Status</th>
+                                <th width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,7 +53,7 @@
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
 
@@ -98,9 +98,9 @@
                                 <td>{{$data->destination}}</td>
                                 <td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
                                 <td>
-                                    @if($data->status=='Confirmed')
                                     <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->assigned_pickupdate)) }}</small>
                                 </td>
                                 <td>
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -125,9 +125,9 @@
                                 <td>{{$data->destination}}</td>
                                 <td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
                                 <td>
-                                    @if($data->status == "Out For Delivery")
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}</small>
                                 </td>
                                 <td>
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -153,9 +153,10 @@
                                 <td>{{$data->destination}}</td>
                                 <td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
                                 <td>
-                                    @if($data->status == "Accomplished")
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}
+                                        <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
                                 </td>
                                 <td>
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -184,18 +185,14 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="accomplish_modalLabel">
                     <span id="modal_header" class="fa fa-file"></span>&nbsp;
-                    <span>Attachment/s for Request - </span>
-                    <span id="ctrl_num"></span>
+                    <span>Attachment/s for Recipient - </span>
+                    <span id="recipient"></span>
                 </h5>
             </div>
             <input type="hidden" id="messengerial_id" name="messengerial_id">
             <div class="modal-body modal-lg">
                 <div class="row">
-                    <div class="col-sm">
-                        <label>Recipient</label>
-                        <select name="recipient" class="form-control" id="recipient"></select>
-                    </div>
-                    <br>
+                    
                     <div class="col-sm">
                         <label>Upload Documents </label>
                         <div class="custom-file">
@@ -207,7 +204,7 @@
                 <br>
                 <div class="row">
                     <div class="col-sm">
-                        <label>Remarks (optional)</label>
+                        <label>Remarks <small>(optional)</small></label>
                         <!-- <input type="text" id="remarks" class="form-control"> -->
                         <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
                     </div>
@@ -238,14 +235,12 @@
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                                 <tr class="text-center">
-                                    <th width="25%">Recipient</th>
                                     <th width="30%">File</th>
-                                    <th width="40%">Remarks</th>
+                                    <th width="50%">Remarks</th>
                                     <th width="5%"></th>
                                 </tr>
                             </thead>
                             <tbody id="file_body">
-                                <td></td>
                             </tbody>
                         </table>
                     </div>
@@ -257,7 +252,7 @@
         </div>
     </div>
 </div>
-<!-- Out For Del modal -->
+<!-- Assign modal -->
 <div class="modal fade" id="assign_modal" tabindex="-1" aria-labelledby="assign_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -310,6 +305,44 @@
     </div>
 </div>
 
+<!-- Out For Del modal -->
+<div class="modal fade" id="outfordel_modal" tabindex="-1" aria-labelledby="outfordel_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="outfordel_modalLabel">
+                    <span class="fa fa-truck"></span>
+                    &nbsp;Pickup Date
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <input type="hidden" id="sub_msg_id" name="sub_msg_id">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="pickup_date">Pick-up Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="outfordel_pickupdate" id="outfordel_pickupdate" required>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#assig_modal">
+                    Close
+                </button>
+                <button onclick="_outfordel()" class="btn btn-success">
+                    <span class="fa fa-truck"></span>
+                    Out For Delivery
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Mark Accomplish modal -->
 <div class="modal fade" id="mark_accomplish_modal" tabindex="-1" aria-labelledby="mark_accomplish_modalLabel" aria-hidden="true">
@@ -318,19 +351,22 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="mark_accomplish_modalLabel">
                     <span class="fa fa-envelope"></span>
-                    &nbsp;Accomplishment Details
+                    &nbsp;Mark Accomplished
                 </h5>
             </div>
             <!-- BLADE TO AJAX -->
             <!-- use this id below in ajax -->
             <input type="hidden" id="markacc_msg_id" name="markacc_msg_id">
+            <input type="hidden" id="mark_msg_id" name="mark_msg_id">
+            <input type="hidden" id="cntrl_num" name="cntrl_num">
             <div class="modal-body">
                 <div class="row">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="pickup_date">Pickup Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="input-group-text" for="outfordel_pickup_date">Pickup Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         </div>
-                        <input type="datetime-local" class="form-control" name="pickup_date" id="pickup_date" required>
+                        <input type="datetime-local" class="form-control" readonly name="outfordel_pickup_date" id="outfordel_pickup_date" required>
+
                     </div>
 
                     <div class="input-group mb-3">
@@ -345,7 +381,7 @@
                 <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#mark_accomplish_modal">
                     Close
                 </button>
-                <button class="btn btn-success" onclick="_markAccomplish('{{$data->id}}', '{{$data->control_num}}')" class="btn btn-success btn-sm">
+                <button class="btn btn-success" onclick="_markAccomplish()" class="btn btn-success btn-sm">
                     <span class="fa fa-check"></span>
                     Accomplished
                 </button>
@@ -395,7 +431,7 @@
                                 <input readonly type="text" name="view_contact" id="view_contact" class="form-control" required />
                             </div>
                             <div class="col-sm-4">
-                                <label>Due Date
+                                <label>Date Needed
                                     <span class="text-red">*</span>
                                 </label>
                                 <input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date" required>

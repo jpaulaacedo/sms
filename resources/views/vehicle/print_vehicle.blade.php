@@ -396,7 +396,7 @@
                             <br>
 
                             <center>
-                                @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                @if(App\User::get_user_type($vehicle->user_id) == 2 || App\User::get_user_type($vehicle->user_id) == 4 || App\User::get_user_type($vehicle->user_id) == 6)
                                 @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                 <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                 @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -410,12 +410,31 @@
                                 @else
                                 <span style="text-align: center;"><img id="dc_kmd_signature"></span>
                                 @endif
+
+                                @elseif(App\User::get_user_type($vehicle->user_id) == 3 || ($vehicle->status == "For Assignment" && $vehicle->status == "For CAO Approval") && (App\User::get_division($vehicle->user_id) == "Finance and Administrative Division" || App\User::get_division($vehicle->user_id) == "Office of the Executive Director"))
+                                <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+                                @elseif(App\User::get_user_type($vehicle->user_id) == 1 && ($vehicle->status == "Filing" || $vehicle->status == "For Assignment" || $vehicle->status == "For CAO Approval") && App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+
+                                @elseif(App\User::get_user_type($vehicle->user_id) == 1 || App\User::get_user_type($vehicle->user_id) == 5 && $vehicle->status != "Filing" && $vehicle->status != "For DC Approval" && $vehicle->status != "Cancelled")
+                                @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
+                                <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                @endif
+
                                 @endif
                                 <br><small><b>Division Chief</b></small>
                             </center>
                         </td>
                         <td id="td2">
-                        <label style="float: left"> By:</label>
+                            <label style="float: left"> By:</label>
                             <br>
                             <center>
                                 @if($vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
@@ -889,10 +908,26 @@
                 <td id="col4"></td>
                 <td id="col5"></td>
             </tr>
+            @if($vehicle->status == "Accomplished")
             <tr>
                 <td id="col4"></td>
                 <td id="col5"></td>
             </tr>
+            <tr>
+                <td id="col4">
+                    &nbsp;&nbsp;&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Percus Imperio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                </td>
+                <td>
+                    <img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature">
+                </td>
+            </tr>
+            <tr>
+                <td id="col4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signature over printed name</td>
+                <td id="col5">
+                    Chief, FAD
+                </td>
+            </tr>
+            @else
             <tr>
                 <td id="col4"></td>
                 <td id="col5"></td>
@@ -903,6 +938,7 @@
                     Chief, FAD
                 </td>
             </tr>
+            @endif
         </table>
         <div class="row" id="footer">
             <div class="col">
@@ -1004,7 +1040,7 @@
                                 <br>
 
                                 <center>
-                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if(App\User::get_user_type($vehicle->user_id) == 2 || App\User::get_user_type($vehicle->user_id) == 4 || App\User::get_user_type($vehicle->user_id) == 6)
                                     @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                     <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -1018,6 +1054,23 @@
                                     @else
                                     <span style="text-align: center;"><img id="dc_kmd_signature"></span>
                                     @endif
+
+                                    @elseif(App\User::get_user_type($vehicle->user_id) == 3 || ($vehicle->status == "For Assignment" && $vehicle->status == "For CAO Approval") && (App\User::get_division($vehicle->user_id) == "Finance and Administrative Division" || App\User::get_division($vehicle->user_id) == "Office of the Executive Director"))
+                                    <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+
+                                    @elseif(App\User::get_user_type($vehicle->user_id) == 1 || App\User::get_user_type($vehicle->user_id) == 5 && $vehicle->status != "Filing" && $vehicle->status != "For DC Approval" && $vehicle->status != "Cancelled")
+                                    @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                    <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
+                                    <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                    <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                    <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                    <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @endif
+
                                     @endif
                                     <br><small><b>Division Chief</b></small>
                                 </center>
@@ -1185,10 +1238,26 @@
                     <td id="col4"></td>
                     <td id="col5"></td>
                 </tr>
+                @if($vehicle->status == "Accomplished")
                 <tr>
                     <td id="col4"></td>
                     <td id="col5"></td>
                 </tr>
+                <tr>
+                    <td id="col4">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Percus Imperio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                    </td>
+                    <td>
+                        <img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="col4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signature over printed name</td>
+                    <td id="col5">
+                        Chief, FAD
+                    </td>
+                </tr>
+                @else
                 <tr>
                     <td id="col4"></td>
                     <td id="col5"></td>
@@ -1199,6 +1268,7 @@
                         Chief, FAD
                     </td>
                 </tr>
+                @endif
             </table>
             <div class="row" id="footer">
                 <div class="col">
@@ -1300,7 +1370,7 @@
                                 <br>
 
                                 <center>
-                                    @if($vehicle->status == "For CAO Approval" || $vehicle->status == "Confirmed" || $vehicle->status == "On The Way" || $vehicle->status == "Accomplished")
+                                    @if(App\User::get_user_type($vehicle->user_id) == 2 || App\User::get_user_type($vehicle->user_id) == 4 || App\User::get_user_type($vehicle->user_id) == 6)
                                     @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
                                     <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                                     @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
@@ -1314,6 +1384,23 @@
                                     @else
                                     <span style="text-align: center;"><img id="dc_kmd_signature"></span>
                                     @endif
+
+                                    @elseif(App\User::get_user_type($vehicle->user_id) == 3 || ($vehicle->status == "For Assignment" && $vehicle->status == "For CAO Approval") && (App\User::get_division($vehicle->user_id) == "Finance and Administrative Division" || App\User::get_division($vehicle->user_id) == "Office of the Executive Director"))
+                                    <span style="text-align: center;"><img id="dc_kmd_signature"></span>
+
+                                    @elseif(App\User::get_user_type($vehicle->user_id) == 1 || App\User::get_user_type($vehicle->user_id) == 5 && $vehicle->status != "Filing" && $vehicle->status != "For DC Approval" && $vehicle->status != "Cancelled")
+                                    @if(App\User::get_division($vehicle->user_id) == "Finance and Administrative Division")
+                                    <span style="text-align: center;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Knowledge Management Division")
+                                    <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                    <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Training Division")
+                                    <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @elseif(App\User::get_division($vehicle->user_id) == "Research Division")
+                                    <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
+                                    @endif
+
                                     @endif
                                     <br><small><b>Division Chief</b></small>
                                 </center>
@@ -1797,10 +1884,26 @@
                     <td id="col4"></td>
                     <td id="col5"></td>
                 </tr>
+                @if($vehicle->status == "Accomplished")
                 <tr>
                     <td id="col4"></td>
                     <td id="col5"></td>
                 </tr>
+                <tr>
+                    <td id="col4">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Percus Imperio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+                    </td>
+                    <td>
+                        <img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="col4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signature over printed name</td>
+                    <td id="col5">
+                        Chief, FAD
+                    </td>
+                </tr>
+                @else
                 <tr>
                     <td id="col4"></td>
                     <td id="col5"></td>
@@ -1811,6 +1914,7 @@
                         Chief, FAD
                     </td>
                 </tr>
+                @endif
             </table>
             <div class="row" id="footer">
                 <div class="col">

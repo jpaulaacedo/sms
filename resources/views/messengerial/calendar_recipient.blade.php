@@ -9,8 +9,8 @@
 
 @section('content')
 <div>
-	<a class="btn btn-primary" href="{{URL::to('/messengerial')}}">
-		<span class="fa fa-reply"></span> Back to Messengerial 
+	<a class="btn btn-primary" href="{{URL::to('/home')}}">
+		<span class="fa fa-reply"></span> Back
 	</a>
 </div>
 <br>
@@ -27,37 +27,59 @@
 			<div class="col-sm">
 				<table>
 					<tbody>
-						<tr>
-							<td style="text-align:right">REQUESTOR: &nbsp;</td>
-							<td><b>{{App\User::get_user($messengerial->user_id)}}</b></td>
-						</tr>
-						<tr>
-							<td style="text-align:right">SUBJECT: &nbsp;</td>
-							<td><b>{{$messengerial->subject}}</b></td>
-						</tr>
+
 						<tr>
 							<td style="text-align:right">CONTROL #:&nbsp;</td>
 							<td><b>{{$messengerial->control_num}}</b></td>
 						</tr>
-						<tr>
-							<td style="text-align:right">DATE OF REQUEST:&nbsp;</td>
-							<td><b>{{ date('F j, Y g:i A', strtotime($messengerial->created_at)) }}</b></td>
-						</tr>
-						@if($messengerial->status == "Accomplished")
-						<tr>
-							<td style="text-align:right">DATE ACCOMPLISHED:&nbsp;</td>
-							<td><b>{{ date('F j, Y g:i A', strtotime($messengerial->updated_at)) }}</b></td>
-						</tr>
-						@endif
-						@if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
+						@if($messengerial->status != "Filing" || $messengerial->status == "For DC Approval")
 						<tr>
 							<td style="text-align:right">DRIVER:&nbsp;</td>
 							<td><b>{{$messengerial->driver}}</b></td>
 						</tr>
 						@endif
+						@if($messengerial->status == "For CAO Approval" || $messengerial->status == "Confirmed")
+						<tr>
+							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($messengerial->assigned_pickupdate)) }}</b></td>
+						</tr>
+						@else
+						<tr>
+							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($messengerial->outfordel_pickupdate)) }}</b></td>
+						</tr>
+						@endif
+						@if($messengerial->status == "Accomplished")
+						<tr>
+							<td style="text-align:right">DATE ACCOMPLISHED:&nbsp;</td>
+							<td><b>{{ date('F j, Y g:i A', strtotime($messengerial->accomplished_date)) }}</b></td>
+						</tr>
+						@endif
+
 						<tr>
 							<td style="text-align:right">STATUS:&nbsp;</td>
-							<td style="color:blue"><b>{{$messengerial->status}}</b></td>
+							<td>
+								@if($messengerial->status=='Filing')
+								<span class="right badge badge-primary">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
+								@elseif($messengerial->status == "For CAO Approval" || $messengerial->status == "For DC Approval")
+								<span class="right badge badge-warning">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
+								@elseif($messengerial->status == "Cancelled")
+								<span class="right badge badge-danger">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
+								@elseif($messengerial->status=='Confirmed')
+								<span class="right badge badge-success">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
+								@elseif($messengerial->status == "Out For Delivery")
+								<span class="right badge badge-primary">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
+								@elseif($messengerial->status == "For Assignment")
+								<span class="right badge badge-info">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+								@elseif($messengerial->status=='Accomplished')
+								<span class="right badge badge-success">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+								@endif
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -78,38 +100,38 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
+								<th width="10%">Requestor</th>
+								<th width="10%">Date Requested</th>
 								<th width="15%">Recipient</th>
-								<th width="15%">Agency</th>
+								<th width="10%">Agency</th>
 								<th width="10%">Contact #</th>
 								<th width="15%">Destination</th>
 								<th width="10%">What to Deliver</th>
-								<th width="15%">Instruction</th>
-								<th width="10%">Due Date</th>
+								<th width="10%">Instruction</th>
+								<th width="10%">Date Needed</th>
 							</tr>
 						</thead>
 						<tbody>
 
-							@foreach($recipient as $data)
 							<tr class="text-center">
-								<td>{{$data->recipient}}</td>
-								<td>{{$data->agency}}</td>
-								<td>{{$data->contact}}</td>
-								<td>{{$data->destination}}</td>
-								<td>{{$data->delivery_item}}</td>
-								<td>{{$data->instruction}}</td>
+								<td>{{App\User::get_user($messengerial->user_id)}}</td>
 								<td>
-									@if($messengerial->status=='Confirmed' || $messengerial->status=='Out For Delivery')
-									<b><span class="text-red">{{ date('F j, Y', strtotime($data->due_date)) }}</span></b>
+									{{ date('F j, Y', strtotime($messengerial->created_at)) }}
 									<br>
-									<b><span class="text-red">{{ date('g:i A', strtotime($data->due_date)) }}</span></b>
-									@else
-									{{ date('F j, Y', strtotime($data->due_date)) }}
+									{{ date('g:i A', strtotime($messengerial->created_at)) }}
+								</td>
+								<td>{{$messengerial->recipient}}</td>
+								<td>{{$messengerial->agency}}</td>
+								<td>{{$messengerial->contact}}</td>
+								<td>{{$messengerial->destination}}</td>
+								<td>{{$messengerial->delivery_item}}</td>
+								<td>{{$messengerial->instruction}}</td>
+								<td>
+									{{ date('F j, Y', strtotime($messengerial->date_needed)) }}
 									<br>
-									{{ date('g:i A', strtotime($data->due_date)) }}
-									@endif
+									{{ date('g:i A', strtotime($messengerial->date_needed)) }}
 								</td>
 							</tr>
-							@endforeach
 						</tbody>
 					</table>
 				</div>

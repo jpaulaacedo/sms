@@ -112,7 +112,7 @@ function _editMessengerial(data) {
             $('#delivery_item').val(response.delivery_item);
             $('#instruction').val(response.instruction);
             $('#due_date').val(response.date_needed);
-            $('#messengerial_id').val(response.id);
+            $('#msg_id').val(response.id);
 
             $('#btn_add').removeClass('btn-info');
             $('#btn_add').addClass('btn-success');
@@ -122,7 +122,7 @@ function _editMessengerial(data) {
 
             $('#btn_submit').html("Save Changes");
             $('#recipient_title').html("Edit Messengerial Request");
-
+            console.log(response);
         },
         cache: false,
         contentType: false,
@@ -309,9 +309,9 @@ function _deleteMessengerial(messengerial_id, recipient) {
 }
 
 //   Messengerial Button SUBMIT
-function _submitMessengerial(data) {
+function _submitMessengerial(data, control_num) {
     Swal.fire({
-        title: 'Submit messengerial request?',
+        title: 'Submit ' + control_num + ' Messengerial Request?',
         text: "You won't be able to revert this.",
         type: 'question',
         showCancelButton: true,
@@ -364,11 +364,10 @@ function _attachmentAgent(data) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#accomplish_modal').modal('show');
             $('#recipient').empty();
-            _loadRecipient(data);
+            $('#recipient').html(response.recipient);
+            $('#accomplish_modal').modal('show');
             _loadFileAgent(data);
-            $('#ctrl_num').html(response.control_num);
             $('#attachment').val("");
             $('.custom-file-label').html("");
             $('#remarks').val(response.remarks);
@@ -390,11 +389,11 @@ function _attachment(data) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#accomplish_modal').modal('show');
             $('#recipient').empty();
-            _loadRecipient(data);
+            $('#recipient').html(response.recipient);
+            $('#accomplish_modal').modal('show');
+            // _loadRecipient(data);
             _loadFile(data);
-            $('#ctrl_num').html(response.control_num);
             $('#attachment').val("");
             $('.custom-file-label').html("");
             $('#remarks').val(response.remarks);
@@ -510,11 +509,40 @@ function _assign_modal(data) {
     $('#submit_msg_id').val(data);
 }
 
+function _outfordel_modal(data) {
+    $('#outfordel_pickupdate').val('');
+    $('#outfordel_modal').modal('show');
+    $('#sub_msg_id').val(data);
+}
+
+// function mark_accomplish_modal(data, outfordel_pickupdate) {
+//     $('#mark_accomplish_modal').modal('show');
+//     $('#markacc_msg_id').val(data); 
+//     $('#outfordel_pickupdate').val(outfordel_pickupdate);
+//     $('#accomplished_date').val('');
+// }
+
 function mark_accomplish_modal(data) {
-    $('#mark_accomplish_modal').modal('show');
-    $('#markacc_msg_id').val(data);
-    $('#pickup_date').val('');
     $('#accomplished_date').val('');
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/mark_accomplish_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            $('#mark_accomplish_modal').modal('show');
+            $('#outfordel_pickup_date').val(response.outfordel_pickupdate);
+            $('#cntrl_num').val(response.control_num);
+            $('#mark_msg_id').val(response.id);
+            $('#markacc_msg_id').val(response.id);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
 }
 
 function _assign() {
@@ -522,9 +550,9 @@ function _assign() {
     var driver = $('#driver').val();
     var assigned_pickupdate = $('#assigned_pickupdate').val();
     if (driver == null) {
-        missing = "driver";
-    } else { 
-        missing = "pickup date";
+        missing = "Driver";
+    } else {
+        missing = "Pickup Date";
     }
     if (driver != null && assigned_pickupdate != "") {
         Swal.fire({
@@ -581,26 +609,69 @@ function _assign() {
     }
 }
 
-// Accomplish modal  
-function _markAccomplish(id, control_num) {
+function _outfordel() {
+    var outfordel_pickupdate = $('#outfordel_pickupdate').val();
 
-    var pickup_date = $('#pickup_date').val();
-    var accomplished_date = $('#accomplished_date').val();
-
-    console.log(pickup_date);
-    console.log(accomplished_date);
-
-    var empty_field = "";
-    if (pickup_date == "" && accomplished_date == "") {
-        empty_field = "Pickup Date and Accomplished Date";
-    } else if (pickup_date == "") {
-        empty_field = "Pickup Date";
-    } else if (accomplished_date == "") {
-        empty_field = "Accomplished Date";
-    }
-    if (pickup_date != "" && accomplished_date != "") {
+    if (outfordel_pickupdate != "") {
         Swal.fire({
-            title: 'Mark ' + control_num + ' as Accomplished?',
+            title: 'Are you sure?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, out for delivery.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                //AJAX to Controller
+                formData.append('data_id', $('#sub_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+                formData.append('outfordel_pickupdate', $('#outfordel_pickupdate').val());
+                $.ajax({
+                    url: global_path + "/messengerial/accomplish/outfordel",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Out For Delivery.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial/accomplish";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    } else {
+        Swal.fire(
+            'Required field missing.',
+            'Please select pickup date from dropdown.',
+            'warning'
+        )
+    }
+}
+
+// mark Accomplish modal  
+function _markAccomplish() {
+    var accomplished_date = $('#accomplished_date').val();
+    if (accomplished_date != "") {
+        Swal.fire({
+            title: 'Mark ' + $('#cntrl_num').val() + ' as Accomplished?',
             text: "You won't be able to revert this.",
             type: 'question',
             showCancelButton: true,
@@ -611,7 +682,6 @@ function _markAccomplish(id, control_num) {
             if (result.value) {
                 var formData = new FormData();
                 formData.append('data_id', $('#markacc_msg_id').val());
-                formData.append('pickup_date', $('#pickup_date').val());
                 formData.append('accomplished_date', $('#accomplished_date').val());
                 $.ajax({
                     url: global_path + "/messengerial/mark_accomplish",
@@ -646,38 +716,38 @@ function _markAccomplish(id, control_num) {
 
         Swal.fire(
             'Required field missing.',
-            'Please add ' + empty_field + '.',
+            'Please add Accomplished Date.',
             'warning'
         )
     }
 }
-function _loadRecipient(data) {
-    var formData = new FormData();
-    formData.append('messengerial_id', data);
-    $.ajax({
-        url: global_path + "/load_recipient",
-        method: 'post',
-        data: formData,
-        dataType: 'json',
-        success: function (response) {
-            $('#recipient').empty();
+// function _loadRecipient(data) {
+//     var formData = new FormData();
+//     formData.append('messengerial_id', data);
+//     $.ajax({
+//         url: global_path + "/load_recipient",
+//         method: 'post',
+//         data: formData,
+//         dataType: 'json',
+//         success: function (response) {
+//             $('#recipient').empty();
 
-            $('#recipient').append(
+//             $('#recipient').append(
 
-                '<option value = "">Select option</option>'
-            );
-            $.each(response, function (key, value,) {
+//                 '<option value = "">Select option</option>'
+//             );
+//             $.each(response, function (key, value,) {
 
-                $('#recipient').append(
-                    '<option>' + value.recipient + '</option>'
-                )
-            });
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-}
+//                 $('#recipient').append(
+//                     '<option>' + value.recipient + '</option>'
+//                 )
+//             });
+//         },
+//         cache: false,
+//         contentType: false,
+//         processData: false
+//     });
+// }
 
 function _loadFileAgent(data) {
     var formData = new FormData();
@@ -699,9 +769,8 @@ function _loadFileAgent(data) {
 
                 $('#file_body').append(
                     '<tr class="text-center">' +
-                    '<td width="25%">' + value.recipient + '</td>' +
                     '<td width="30%"><a href="' + global_path + '/images/messengerial/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="40%">' + value.remarks + '</td>' +
+                    '<td width="50%">' + value.remarks + '</td>' +
                     '<td width="5%"><button onclick="_deleteFile(' + value.id + ')" class="btn btn-danger btn-circle"><span class="fa fa-trash"></span></button></td>' +
                     '</tr>'
                 )
@@ -733,9 +802,8 @@ function _loadFile(data) {
 
                 $('#file_body').append(
                     '<tr class="text-center">' +
-                    '<td width="25%">' + value.recipient + '</td>' +
                     '<td width="30%"><a href="' + global_path + '/images/messengerial/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="40%">' + value.remarks + '</td>' +
+                    '<td width="50%">' + value.remarks + '</td>' +
                     '</tr>'
                 )
             });
@@ -763,7 +831,6 @@ function _submitFile() {
             _loadFileAgent(
                 $("#messengerial_id").val()
             );
-            $('#recipient').val("");
             $('#remarks').val("");
         },
         cache: false,
@@ -797,27 +864,27 @@ function _deleteFile(data_id) {
 
 }
 
-$('.getMonthlyReport').click(function (e) {
-    e.preventDefault();
+// $('.getMonthlyReport').click(function (e) {
+//     e.preventDefault();
 
-    let month = $('#month_search option:selected');
-    let year = $('#year_search').val();
+//     let month = $('#month_search option:selected');
+//     let year = $('#year_search').val();
 
-    if (!month || !year) {
-        Swal.fire({
-            title: 'Please select month and year to generate report.',
-            type: 'warning',
-        })
-    } else {
-        if ($('#month_emp').val() > 0) {
-            window.open('/report/' + year + '/' + month.val(), '_blank');
-        } else {
-            window.open('/messengerial/report/monthly/' + month.text() + '/' + year, '_blank');
-        }
-        // var win = window.open('/dtr/report/monthly/' + month, '_blank');
-    }
+//     if (!month || !year) {
+//         Swal.fire({
+//             title: 'Please select month and year to generate report.',
+//             type: 'warning',
+//         })
+//     } else {
+//         if ($('#month_emp').val() > 0) {
+//             window.open('/report/' + year + '/' + month.val(), '_blank');
+//         } else {
+//             window.open('/messengerial/report/monthly/' + month.text() + '/' + year, '_blank');
+//         }
+//         // var win = window.open('/dtr/report/monthly/' + month, '_blank');
+//     }
 
-})
+// })
 
 function print_report(data) {
     var formData = new FormData();
@@ -848,13 +915,29 @@ function generate_report() {
     var my_month = $('#month_search').val();
     var my_year = $('#year_search').val();
 
-    if (my_month == null || my_year == null) {
+    if (my_month == null) {
         Swal.fire(
             'Required fields missing.',
-            'Please select from dropdown.',
+            'Please select month from dropdown.',
             'warning'
         )
-    } else {
+    }
+    if (my_year == null) {
+        Swal.fire(
+            'Required fields missing.',
+            'Please select year from dropdown.',
+            'warning'
+        )
+    }
+    if (my_month == null && my_year == null) {
+        Swal.fire(
+            'Required fields missing.',
+            'Please select moth and year from dropdown.',
+            'warning'
+        )
+    }
+    if (my_month != null && my_year != null) {
+
         var formData = new FormData();
         formData.append('month', my_month);
         formData.append('year', my_year);

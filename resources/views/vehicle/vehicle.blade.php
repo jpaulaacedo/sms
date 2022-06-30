@@ -60,12 +60,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -73,12 +75,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
@@ -89,7 +91,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -105,7 +107,7 @@
 
 									</button>
 									@endif
-									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
 							@endif
@@ -127,12 +129,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -140,12 +144,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
@@ -156,7 +160,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -172,7 +176,7 @@
 
 									</button>
 									@endif
-									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 
 								</td>
 							</tr>
@@ -195,12 +199,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -208,12 +214,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
@@ -228,7 +234,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -244,7 +250,7 @@
 
 									</button>
 									@endif
-									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 
 							</tr>
@@ -267,12 +273,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -280,12 +288,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
@@ -296,7 +304,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -312,7 +320,7 @@
 
 									</button>
 									@endif
-									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
 							@endif
@@ -334,12 +342,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -347,12 +357,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
@@ -362,7 +372,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -400,12 +410,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -413,12 +425,12 @@
 									@if($data->status!='Filing')
 									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button onclick="_addPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									<button name="edit" id="edit" onclick="_editVehicle('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="fa fa-edit"></span>
 									</button>
@@ -428,7 +440,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -467,7 +479,7 @@
 			<div class="modal-header bg-info">
 				<h5 class="modal-title" id="request_modalLabel">
 					<span class="fa fa-times"></span>&nbsp;
-					<span id="cancel_header"> Cancel Request </span>
+					<span id="cancel_header"> Request </span>
 				</h5>
 			</div>
 			<form action="{{URL::to('/vehicle/cancel')}}" method="post">
@@ -660,8 +672,7 @@
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;
+								&nbsp;&nbsp;
 								<small><label>Total:</label>
 									<span id="psg_count"></span>
 								</small>
@@ -691,7 +702,7 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#passenger_modal">
 					Close
 				</button>
-				<form action="{{URL::to('/vehicle/submit')}}" method="POST">
+				<!-- <form action="{{URL::to('/vehicle/submit')}}" method="POST">
 					@csrf
 
 					<input type="hidden" id="submit_psg_id" name="submit_psg_id">
@@ -700,7 +711,14 @@
 							Submit Request
 						</button>
 					</center>
-				</form>
+				</form> -->
+				@foreach($vehicle as $data)
+				@if($data->status=='Filing')
+				<button ame="submit_button" id='submit_button' class="btn btn-success btn" onclick="_submitVehicle()">
+					<span class="fa fa-check"></span> Submit
+				</button>
+				@endif
+				@endforeach
 			</div>
 		</div>
 	</div>

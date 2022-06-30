@@ -30,13 +30,13 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
-								<th width="20%">Recipient</th>
+								<th width="15%">Recipient</th>
 								<th width="10%">Control Number</th>
-								<th width="15%">Request Date</th>
+								<th width="10%">Request Date</th>
 								<th width="15%">Destination</th>
-								<th width="15%">Date Needed</th>
+								<th width="10%">Date Needed</th>
 								<th width="10%">Status</th>
-								<th width="20%">Action</th>
+								<th width="15%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,12 +62,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -75,11 +77,11 @@
 									@if($data->status!='Filing')
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button> | 
+									</button> |
 									@endif
 									@if($data->status=='Filing')
-									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span> Submit  
+									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->control_num}}')">
+										<span class="fa fa-check"></span> Submit
 									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
@@ -90,7 +92,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -129,12 +131,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -143,13 +147,13 @@
 									@if($data->status!='Filing')
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span>
-									</button>
+										<span class="fa fa-check"></span> Submit
+									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
 									</button>
@@ -160,7 +164,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -175,7 +179,7 @@
 										<span class="fa fa-file"></span>
 									</button>
 									@endif
-									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
 							@endif
@@ -198,12 +202,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -211,12 +217,12 @@
 									@if($data->status!='Filing')
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span>
-									</button>
+										<span class="fa fa-check"></span> Submit
+									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
 									</button>
@@ -227,7 +233,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -265,12 +271,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -278,12 +286,13 @@
 									@if($data->status!='Filing')
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button> | 
+									</button> |
 									@endif
+
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span>  Submit
-									</button> | 
+										<span class="fa fa-check"></span> Submit
+									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
 									</button>
@@ -294,7 +303,7 @@
 
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -332,12 +341,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -345,12 +356,13 @@
 									@if($data->status!='Filing')
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
+
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span>
-									</button>
+										<span class="fa fa-check"></span> Submit
+									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
 									</button>
@@ -360,7 +372,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -399,23 +411,27 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
 								<td>
+									@if($data->status!='Filing')
 									<button id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
+									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
-										<span class="fa fa-check"></span>
-									</button>
+										<span class="fa fa-check"></span> Submit
+									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
 										<span class="far fa-edit"></span>
 									</button>
@@ -425,7 +441,7 @@
 									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
-										<span class="fa fa-times"></span> cancel
+										<span class="fa fa-times"></span>
 									</button>
 									@endif
 
@@ -470,7 +486,7 @@
 				<form action="{{URL::to('/messengerial/store')}}" method="POST">
 					@csrf
 					<div class="row">
-						<input type="hidden" id="messengerial_id" name="messengerial_id">
+						<input type="hidden" id="msg_id" name="msg_id">
 						<div class="col-sm">
 
 							<div class="row">
@@ -497,7 +513,7 @@
 									<input placeholder="....." type="text" name="contact" id="contact" class="form-control" required />
 								</div>
 								<div class="col-sm-4">
-									<label>Due Date
+									<label>Date Needed
 										<span class="text-red">*</span>
 									</label>
 									<input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
@@ -590,7 +606,7 @@
 								<input readonly type="text" name="view_contact" id="view_contact" class="form-control" required />
 							</div>
 							<div class="col-sm-4">
-								<label>Due Date
+								<label>Date Needed
 									<span class="text-red">*</span>
 								</label>
 								<input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date" required>
@@ -684,7 +700,7 @@
 	</div>
 </div> -->
 
-<!-- cancel modal
+<!-- cancel modal -->
 <div class="modal fade" id="cancel_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="cancel_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -696,7 +712,7 @@
 			</div>
 			<form action="{{URL::to('/messengerial/cancel')}}" method="post">
 				@csrf
-				<input type="hidden" id="msg_cancel_id" name="messengerial_id">
+				<input type="hidden" id="msg_cancel_id" name="msg_cancel_id">
 
 				<div class="modal-body">
 					<div class="row">
@@ -729,7 +745,7 @@
 			</form>
 		</div>
 	</div>
-</div> -->
+</div> 
 
 <!-- Accomplish modal -->
 <div class="modal fade" id="accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="accomplish_modalLabel" aria-hidden="true">
@@ -738,8 +754,8 @@
 			<div class="modal-header bg-info">
 				<h5 class="modal-title" id="accomplish_modalLabel">
 					<span id="modal_header" class="fa fa-file"></span>&nbsp;
-					<span>Attachment/s for Request - </span>
-					<span id="ctrl_num"></span>
+					<span>Attachment/s for Recipient - </span>
+					<span id="recipient"></span>
 				</h5>
 			</div>
 			<input type="hidden" id="messengerial_id" name="messengerial_id">
@@ -750,9 +766,8 @@
 						<table class="table table-sm table-bordered table-striped">
 							<thead>
 								<tr class="text-center">
-									<th width="30%">Recipient</th>
 									<th width="30%">File</th>
-									<th width="40%">Remarks</th>
+									<th width="50%">Remarks</th>
 
 								</tr>
 							</thead>

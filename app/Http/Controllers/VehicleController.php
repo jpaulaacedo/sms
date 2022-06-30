@@ -7,9 +7,10 @@ use App\VehicleFile;
 use App\VehiclePassenger;
 use App\User;
 use App\Mail\vhlCreateTicket;
-use App\Mail\vhlForPickup;
 use App\Mail\vhlApproved;
 use App\Mail\vhlAccomplished;
+use App\Mail\vhlConfirmed;
+use App\Mail\vhlAssigned;
 use App\Mail\vhlOnTheWay;
 use Illuminate\Support\Facades\Mail;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -149,63 +150,107 @@ class VehicleController extends Controller
     public function submit_vehicle(Request $request)
     {
         try {
-            $update = Vehicle::where('id', $request->submit_psg_id)->first(); //model
+            $update = Vehicle::where('id', $request->data_id)->first(); //model
             $division = Auth::user()->division;
-            $user_type = Auth::user()->user_type;
-            if ($user_type == 2 || $user_type == 4) {
-                $update->status = "For CAO Approval";
-            } elseif ($user_type == 6) {
-                $update->status = "Confirmed";
-                $today = date("Y-m-d H:i:s");
-                $update->approvedcao_date = $today;
-            } elseif ($user_type != 2 && $division == "Finance and Administrative Division") {
-                $update->status = "For CAO Approval";
+            $user = User::where('id', $update->user_id)->first();
+            $user_type = $user->user_type;
+            if ($user_type == 2 || $user_type == 4 || $user_type == 6) {
+                $update->status = "For Assignment";
+            } elseif ($user_type != 2 && $division == "Finance and Administrative Division" || $division == "Office of the Executive Director") {
+                $update->status = "For Assignment";
             } else {
-
-                $update->status = "For DC Approval";
+                $update->status = "For DC Approval"; //$update->dbcolumn = $request->input name fr blade 
             }
             $update->save();
-
             $user_id = $update->user_id;
-
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
             $cao = User::select('name', 'email')->where('user_type', '6')->first();
-            if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
-                $data = array(
-                    'dc_name' => $cao->name,
-                    'emp_name' => $employee->name,
-                    'purpose' => $update->purpose,
-                    'link'  =>  URL::to('/vehicle/cao/approval')
-                );
-            } elseif ($employee->division != "Finance and Administrative Division") {
-                $data = array(
-                    'dc_name' => $dc->name,
-                    'emp_name' => $employee->name,
-                    'purpose' => $update->purpose,
-                    'link'  =>  URL::to('/vehicle/dc/approval')
-                );
-            } else {
-                $data = array(
-                    'dc_name' => $cao->name,
-                    'emp_name' => $employee->name,
-                    'purpose' => $update->purpose,
-                    'link'  =>  URL::to('/vehicle/cao/approval')
-                );
-            }
+            // if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
+            //     $data = array(
+            //         'dc_name' => $cao->name,
+            //         'emp_name' => $employee->name,
+            //         'purpose' => $update->purpose,
+            //         'link'  =>  URL::to('/vehicle/cao/approval')
+            //     );
+            // } elseif ($employee->division != "Finance and Administrative Division") {
+            $data = array(
+                'dc_name' => $dc->name,
+                'emp_name' => $employee->name,
+                'status' => $update->status,
+                'purpose' => $update->purpose,
+                'dc_link'  =>  URL::to('/vehicle/dc/approval'),
+                'link'  =>  URL::to('/vehicle/dc/approval')
+            );
+            // } else {
+            //     $data = array(
+            //         'dc_name' => $cao->name,
+            //         'emp_name' => $employee->name,
+            //         'purpose' => $update->purpose,
+            //         'link'  =>  URL::to('/vehicle/cao/approval')
+            //     );
+            // }
 
             // if ($dc_true == 1) {
             //     Mail::to($dc->email)->cc([$employee->email])->send(new msgCreateTicket($data));
             // } else {
             //     Mail::to($cao->email)->cc([$employee->email])->send(new msgCreateTicket($data));
             // }
+            if ($update->status == "For DC Approval") {
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
+            }
 
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
-
-
-            return redirect('vehicle')->with('message', 'success');
+            return json_encode('success');
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', $e->getMessage());
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function assign_vehicle(Request $request)
+    {
+        try {
+            $update = Vehicle::where('id', $request->data_id)->first();
+            $user = User::where('id', $update->user_id)->first();
+            $user_type = $user->user_type;
+            if ($user_type == 4 || $user_type == 6) {
+                $update->status = "Confirmed";
+                $today = date("Y-m-d H:i:s");
+                $update->approvedcao_date = $today;
+            } else {
+                $update->status = "For CAO Approval";
+            }
+            $update->driver = $request->driver;
+            $update->assigned_pickupdate = $request->assigned_pickupdate;
+            $update->save();
+
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+            $cao = User::select('name', 'email')->where('user_type', '6')->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'purpose' => $update->purpose,
+                'driver' => $update->driver,
+                'agent' => $agent->name,
+                'cao_name' => $cao->name,
+                'status' => $update->status,
+                'link'  =>  URL::to('/vehicle'),
+                'agent_link'  =>  URL::to('/vehicle/accomplish'),
+                'cao_link'  =>  URL::to('/vehicle/cao/approval'),
+            );
+
+            // Mail::to([$employee->email])->send(new msgApproved($data));
+            if ($update->status == "Confirmed") {
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlConfirmed($data));
+            } else {
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlAssigned($data));
+            }
+
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
         }
     }
 
@@ -221,7 +266,9 @@ class VehicleController extends Controller
     {
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
-            $update->status = "For CAO Approval";
+            $update->status = "For Assignment";
+            $today = date("Y-m-d H:i:s");
+            $update->approveddc_date = $today;
             $update->save();
 
             $user_id = $update->user_id;
@@ -241,7 +288,6 @@ class VehicleController extends Controller
             );
 
             // Mail::to($cao->email)->cc([$employee->email])->send(new vhlCreateTicket($data));
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
             // Mail::to([$employee->email])->send(new vhlApproved($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlApproved($data));
 
@@ -277,14 +323,16 @@ class VehicleController extends Controller
                 'agent' => $agent->name,
                 'emp_name' => $employee->name,
                 'cao' => $cao->name,
+                'driver' => $update->driver,
                 'purpose' => $update->purpose,
                 'status' => $update->status,
                 'link'  =>  URL::to('/vehicle/accomplish'),
+                'agent_link'  =>  URL::to('/vehicle/accomplish'),
                 'cao_approved_link'  =>  URL::to('/vehicle')
             );
 
             // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlForPickup($data));
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlConfirmed($data));
             // Mail::to([$employee->email])->send(new msgApproved($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlApproved($data));
 
@@ -295,7 +343,7 @@ class VehicleController extends Controller
             } else {
                 $num = "09171259293";
             }
-            $this->itexmo($num, "A new vehicle ticket is confirmed. Kindly contact Percs for more details.", "TR-PAULA259293_25NMQ", "7&6k!wqg}e");
+            // $this->itexmo($num, "A new vehicle ticket is confirmed. Kindly contact Percs for more details.", "TR-PAULA259293_25NMQ", "7&6k!wqg}e");
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -316,9 +364,8 @@ class VehicleController extends Controller
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
             $update->status = "On The Way";
-            $today = date("Y-m-d H:i:s");
-            $update->out_date = $today;
-            $update->driver = $request->driver;
+            $update->otw_pickupdate = $request->otw_pickupdate;
+
             $update->save();
 
             $user_id = $update->user_id;
@@ -327,6 +374,7 @@ class VehicleController extends Controller
             $data = array(
                 'emp_name' => $employee->name,
                 'purpose' => $update->purpose,
+                'driver' => $update->driver,
                 'link'  =>  URL::to('/vehicle'),
             );
 
@@ -339,7 +387,7 @@ class VehicleController extends Controller
             //     'from' => '639224847673',
             //     'text' => "A new ticket is ready for service vehicle. Kindly contact Admin Aide IV for more details."
             // ]);
-           
+
             return json_encode('success');
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
@@ -367,7 +415,7 @@ class VehicleController extends Controller
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
             $update->status = "Accomplished";
-            $update->returned_date = date("Y-m-d H:i:s");
+            $update->accomplished_date = $request->accomplished_date;  // $update->save();
             $update->save();
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
@@ -375,6 +423,9 @@ class VehicleController extends Controller
             $data = array(
                 'emp_name' => $employee->name,
                 'purpose' => $update->purpose,
+                'driver' => $update->driver,
+                'pickup_date' => $update->otw_pickupdate,
+                'accomplished_date' => $update->accomplished_date,
                 'link'  =>  URL::to('/vehicle'),
             );
 
@@ -385,6 +436,16 @@ class VehicleController extends Controller
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
         }
+    }
+    public function vhl_mark_accomplish_modal(Request $request)
+    {
+        $view = Vehicle::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($view->otw_pickupdate));
+        $due_time = date("H:i", strtotime($view->otw_pickupdate));
+
+        $view->otw_pickupdate = $due_date . "T" . $due_time;
+
+        return json_encode($view);
     }
 
     // vehicle ATTACHMENT
@@ -472,18 +533,18 @@ class VehicleController extends Controller
 
     public function vehicle_monthly_report($month, $year)
     {
-        $vehicle = Vehicle::whereYear('approvedcao_date', $year)
-            ->whereMonth('approvedcao_date', $month)
+        $vehicle = Vehicle::whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
             ->get();
 
-        $my_date = date("M Y", strtotime($vehicle[0]["approvedcao_date"]));
+        $my_date = date("M Y", strtotime($vehicle[0]["accomplished_date"]));
         return view('vehicle.vehicle_monthly_report', compact('vehicle', 'my_date'));
     }
 
     public function vehicle_check_monthly_report(Request $request)
     {
-        $vehicle = Vehicle::whereYear('approvedcao_date', $request->year)
-            ->whereMonth('approvedcao_date', $request->month)
+        $vehicle = Vehicle::whereYear('accomplished_date', $request->year)
+            ->whereMonth('accomplished_date', $request->month)
             ->get();
         return json_encode(count($vehicle));
     }
@@ -516,6 +577,7 @@ class VehicleController extends Controller
         $vehicle->created_at = $due_date;
         return json_encode($vehicle);
     }
+
     public function passengertolist(Request $request)
     {
         try {
@@ -528,7 +590,6 @@ class VehicleController extends Controller
             return json_encode($e->getMessage());
         }
     }
-
 
     public function del_passengertolist(Request $request)
     {

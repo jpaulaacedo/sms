@@ -102,9 +102,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <small><b>Legend:</b></small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Ruben</small>
+                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Messengerial</small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Elmo</small>
+                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Vehicle</small>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -173,8 +173,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         // initialDate: '2020-09-12',
                         navLinks: true, // can click day/week names to navigate views
                         businessHours: true, // display business hours
-                        editable: true,
-                        selectable: true,
+                        editable: false,
+                        selectable: false,
                         googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
                         events: response
 
@@ -186,6 +186,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 contentType: false,
                 processData: false
             });
+            
 
         });
     </script>

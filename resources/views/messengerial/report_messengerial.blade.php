@@ -45,10 +45,10 @@
 
                         <tr class="text-center">
                             <td width="10%">{{ date('F j, Y g:i A', strtotime($data->approvedcao_date)) }}</td>
-                            <td width="10%">{{ date('F j, Y g:i A', strtotime($data->returned_date)) }}</td>
+                            <td width="10%">{{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</td>
                             <td width="10%">
                                 @php
-                                $date1 = strtotime($data->returned_date);
+                                $date1 = strtotime($data->accomplished_date);
                                 $date2 = strtotime($data->approvedcao_date);
                                 $diff = $date1 - $date2;
                                 $datediff = round($diff / (60 * 60 * 24));
@@ -78,25 +78,18 @@
                                 @endphp
                                 {{$division}}
                             <td width="15%" class="text-left">
-                                @foreach(App\MessengerialItem::get_recipient($data->id) as $rec)
-                                • {{$rec->delivery_item}}
+                                {{App\Messengerial::get_del_item($data->id)}}
                                 <br>
-                                @endforeach
                             </td>
 
                             <td width="15%" class="text-left">
-                                @foreach(App\MessengerialItem::get_recipient($data->id) as $rec)
-                                • {{$rec->recipient}}
-                                <br>
-                                @endforeach
+                                {{App\Messengerial::get_agency($data->id)}}
+
                             </td>
 
                             <td width="15%" class="text-left">
-                                @foreach(App\MessengerialItem::get_recipient($data->id) as $rec)
+                                {{App\Messengerial::get_dest($data->id)}}
 
-                                • {{$rec->destination}}
-                                <br>
-                                @endforeach
                             </td>
                         </tr>
                         @endif
@@ -162,10 +155,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#recipient_modal">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#monthly_report_modal">
                     Close
                 </button>
-                <button class="btn btn-success" onclick="generate_report()"><span class="fa fa-print"></span> Generate</button>
+                <button class="btn btn-success" onclick="generate_report()"><span class="fa fa-print "></span> Generate</button>
             </div>
         </div>
     </div>

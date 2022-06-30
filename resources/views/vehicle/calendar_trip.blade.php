@@ -3,13 +3,13 @@
 @section('content')
 <div>
 	@foreach($vehicle as $data)
-	<a class="btn btn-primary" href="{{URL::to('/vehicle')}}">
-		<span class="fa fa-reply"></span> Back to Vehicle
+	<a class="btn btn-primary" href="{{URL::to('/home')}}">
+		<span class="fa fa-reply"></span> Back
 	</a>
 	@endforeach
 
 </div>
-<br>	
+<br>
 <div class="card">
 	<div class="card-header card-header-vhl">
 		<h4 align="center"><span class="fa fa-truck"></span>&nbsp;Vehicle Request</h4>
@@ -21,17 +21,55 @@
 				<table>
 					<tbody>
 						@foreach($vehicle as $data)
-						<tr>
-							<td style="text-align:right">REQUESTOR: &nbsp;</td>
-							<td><b>{{App\User::get_user($data->user_id)}}</b></td>
-						</tr>
 
-						@if($data->status == "Out For Delivery" || $data->status == "Accomplished")
+						@if($data->status != "Filing" || $data->status == "For DC Approval")
 						<tr>
 							<td style="text-align:right">DRIVER:&nbsp;</td>
 							<td><b>{{$data->driver}}</b></td>
 						</tr>
 						@endif
+						@if($data->status == "For CAO Approval" || $data->status == "Confirmed")
+						<tr>
+							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->assigned_pickupdate)) }}</b></td>
+						</tr>
+						@else
+						<tr>
+							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}</b></td>
+						</tr>
+						@endif
+						@if($data->status == "Accomplished")
+						<tr>
+							<td style="text-align:right">ACCOMPLISHED DATE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</b></td>
+						</tr>
+						@endif
+						<tr>
+							<td style="text-align:right">STATUS:&nbsp;</td>
+							<td>
+								@if($data->status=='Filing')
+								<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
+								@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
+								<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+
+								@elseif($data->status == "Cancelled")
+								<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
+
+								@elseif($data->status=='Confirmed')
+								<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+
+								@elseif($data->status == "On The Way")
+								<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
+								@elseif($data->status == "For Assignment")
+								<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+								@elseif($data->status=='Accomplished')
+								<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+								@endif
+							</td>
+						</tr>
 						@endforeach
 
 					</tbody>
@@ -59,10 +97,10 @@
 						<thead>
 							<tr class="text-center">
 								<th width="10%">Date Requested</th>
+								<th width="10%">Requestor</th>
 								<th width="15%">Purpose of Trip</th>
 								<th width="10%">Date and Time Needed</th>
 								<th width="15%">Destination</th>
-								<th width="10%">Status</th>
 								<th width="10%">Passenger/s</th>
 							</tr>
 						</thead>
@@ -71,29 +109,11 @@
 							@foreach($vehicle as $data)
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->purpose}}</td>
 								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
 								<td>{{$data->destination}}</td>
-								<td>
-									@if($data->status=='Filing')
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
-									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "Cancelled")
-									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status=='Approved')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "On The Way")
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@else
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-									@endif
-								</td>
 								@endforeach
 
 								<td class="float-left">

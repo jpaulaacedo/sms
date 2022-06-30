@@ -363,50 +363,19 @@
                     @endif
                     @endif
 
-                    @if(App\User::get_user_type($messengerial->user_id) == 3)
+                    @if(App\User::get_user_type($messengerial->user_id) == 3 && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division")
 
-                    @if($messengerial->status == "For CAO Approval" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @if($messengerial->status == "For Assignment" || $messengerial->status == "Filing" || $messengerial->status == "Cancelled" || $messengerial->status == "For CAO Approval")
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
                         <span style="text-align: right;"><img id="dc_fad_signature" src=""></span>
                     </td>
-                    @endif
-
-                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
+                    @elseif($messengerial->status == "Confirmed" || $messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
                         <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-
-
-                    @if(App\User::get_division($messengerial->user_id) == "Knowledge Management Division")
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Office of the Executive Director")
-                    <td id="col3">
-                        <b>NOTED BY: </b>&nbsp;
-                        <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Research Division")
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Training Division")
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
                     </td>
                     @endif
                     @endif
@@ -485,46 +454,18 @@
                     @endif
                     @endif
 
-                    @if(App\User::get_user_type($messengerial->user_id) == 6)
-                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @else
+                    @if(App\User::get_user_type($messengerial->user_id) == 6 && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division")
+                    @if($messengerial->status == "Filing")
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
                         <span style="text-align: right;"><img id="dc_fad_signature" src=""></span>
                     </td>
-                    @endif
-
-                    @if(App\User::get_division($messengerial->user_id) == "Knowledge Management Division")
+                    @else
                     <td id="col3">
                         <b>NOTED BY: </b>
                         &nbsp;
-                        <span style="text-align: center;"><img id="dc_kmd_signature" src="{{asset('images/dc_kmd_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Office of the Executive Director")
-                    <td id="col3">
-                        <b>NOTED BY: </b>&nbsp;
-                        <span style="text-align: center;"><img id="dc_oed_signature" src="{{asset('images/dc_oed_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Research Division")
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: center;"><img id="dc_rd_signature" src="{{asset('images/dc_rd_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
-                    @if(App\User::get_division($messengerial->user_id) == "Training Division")
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: center;"><img id="dc_td_signature" src="{{asset('images/dc_td_signature.png')}}" alt="PSRTI DC signature"></span>
+                        <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
                     </td>
                     @endif
                     @endif
@@ -539,7 +480,7 @@
                 </tr>
             </table>
             <div class="row" id="received_by">
-                @if($messengerial->status == "Filing" || $messengerial->status == "For DC Approval" || $messengerial->status == "For CAO Approval"|| $messengerial->status == "Cancelled")
+                @if($messengerial->status == "Filing" || $messengerial->status == "For DC Approval" || $messengerial->status == "For Assignment" || $messengerial->status == "For CAO Approval"|| $messengerial->status == "Cancelled")
                 <tr>
                     <b>Received by: </b><img id="CAO_signature" src="{{asset('images/cao_no_signature.png')}}" alt="PSRTI CAO signature">
                     &nbsp;
@@ -613,7 +554,7 @@
                     <tr><b>INSTRUCTION(S):</b>
 
                         @if($messengerial->instruction == null)
-                        <u>For recipient: {{$messengerial->recipient}} - N/A</u>
+                        <u>N/A</u>
                         @else
                         <u>{{$messengerial->instruction}}</u>
                         @endif
@@ -642,8 +583,8 @@
                         <div class="col">
                             <td id="row1"><b>DATE OF DELIVERY</b></td>
                             @if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
-                            <td id="row1">{{ date('F j, Y', strtotime($messengerial->out_date)) }}</td>
-                            <td id="row1"><b>TIME: </b> {{ date('g:i A', strtotime($messengerial->out_date)) }}</td>
+                            <td id="row1">{{ date('F j, Y', strtotime($messengerial->outfordel_pickupdate)) }}</td>
+                            <td id="row1"><b>TIME: </b> {{ date('g:i A', strtotime($messengerial->outfordel_pickupdate)) }}</td>
                             @else
                             <td id="row1">&nbsp;</td>
                             <td id="row1">&nbsp;</td>
@@ -655,16 +596,23 @@
                     <tr>
                         <div class="col">
                             <td id="row1"><b>WHO DELIVERED</b></td>
+                            @if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
                             <td id="row1">{{$messengerial->driver}}</td>
-                            <td id="return"><b>RETURNED ACCOMPLISHED FORM TO REQUESTING STAFF DATE/TIME: </b> </td>
+                            @else
+                            <td id="row1">&nbsp;</td>
+                            @endif<td id="return"><b>RETURNED ACCOMPLISHED FORM TO REQUESTING STAFF DATE/TIME: </b> </td>
                         </div>
                     </tr>
 
                     <tr>
                         <div class="col">
                             <td id="row1"><b>SIGNATURE OF THE MESSENGER</b></td>
+                            @if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
                             <td id="row1">{{$messengerial->driver}}</td>
-                            @if($messengerial->status == "Accomplished")
+                            @else
+                            <td id="row1">&nbsp;</td>
+                            @endif
+                            @if($messengerial->status == "Accomplished" || $messengerial->status == "Accomplished")
                             <td id="return">{{ date('F j, Y g:i A', strtotime($messengerial->accomplished_date)) }} </td>
                             @else
                             <td id="return">&nbsp; </td>

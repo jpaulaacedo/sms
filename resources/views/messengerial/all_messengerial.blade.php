@@ -33,24 +33,26 @@
 					<table class="table-sm table table-bordered table-striped searchTable no-footer" id="tickets_table" align="center" role="grid" aria-describedby="tickets_table_info">
 						<thead>
 							<tr class="text-center">
-								<th width="20%">Subject</th>
+								<th width="15%">Recipient</th>
 								<th width="10%">Control Number</th>
-								<th width="15%">Request Date</th>
-								<th width="15%">Requested By</th>
-								<th width="10%">Status</th>
-								<th width="10%">No. of Recipients</th>
+								<th width="10%">Requested By</th>
+								<th width="10%">Request Date</th>
+								<th width="15%">Destination</th>
+								<th width="10%">Date Needed</th>
+								<th width="20%">Status</th>
 								<th width="15%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
 
 							@foreach($messengerial as $data)
-
 							<tr class="text-center">
-								<td>{{$data->subject}}</td>
+								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
-								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -62,23 +64,22 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Out For Delivery")
-									<span class="right badge badge-secondary">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
-								<td>{{$data->count_rec}}</td>
 								<td>
-									<a href="{{URL::to('/messengerial/recipient')}}/{{$data->id}}" class="btn btn-info btn-sm"><span class="fa fa-users"></span></a>
-
-									<button class="btn btn-secondary btn-sm" onclick="">
-										<span class="fa fa-print"></span>
-									</button>
-
+									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
 							@endforeach
@@ -97,8 +98,8 @@
 			<div class="modal-header bg-info">
 				<h5 class="modal-title" id="accomplish_modalLabel">
 					<span id="modal_header" class="fa fa-file"></span>&nbsp;
-					<span>Attachment/s for Request - </span>
-					<span id="ctrl_num"></span>
+					<span>Attachment/s for Recipient - </span>
+					<span id="recipient"></span>
 				</h5>
 			</div>
 			<input type="hidden" id="messengerial_id" name="messengerial_id">
@@ -109,9 +110,8 @@
 						<table class="table table-sm table-bordered table-striped">
 							<thead>
 								<tr class="text-center">
-									<th width="30%">Recipient</th>
 									<th width="30%">File</th>
-									<th width="40%">Remarks</th>
+									<th width="50%">Remarks</th>
 								</tr>
 							</thead>
 							<tbody id="file_body">

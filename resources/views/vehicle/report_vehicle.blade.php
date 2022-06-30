@@ -27,14 +27,14 @@
                 <table class="table table-sm table-bordered table-striped report ">
                     <thead>
                         <div class="row">
-                            <th width="10%" class="text-center">Date Received</th>
-                            <th width="10%" class="text-center">Date Needed</th>
-                            <th width="10%" class="text-center">Date Accomplished</th>
-                            <th width="12%" class="text-center">Requestor</th>
-                            <th width="13%" class="text-center">Division/Unit</th>
-                            <th width="13%" class="text-center">Destination</th>
-                            <th width="13%" class="text-center">Purpose</th>
-                            <th width="13%" class="text-center">Passengers</th>
+                            <th width="15%" class="text-center">Date Received</th>
+                            <th width="15%" class="text-center">Date Needed</th>
+                            <th width="15%" class="text-center">Date Accomplished</th>
+                            <th width="10%" class="text-center">Requestor</th>
+                            <th width="10%" class="text-center">Division/Unit</th>
+                            <th width="10%" class="text-center">Destination</th>
+                            <th width="15%" class="text-center">Purpose</th>
+                            <th width="10%" class="text-center">Passengers</th>
                         </div>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                         <tr class="text-center">
                             <td width="10%">{{ date('F j, Y g:i A', strtotime($data->approvedcao_date)) }}</td>
                             <td width="10%">{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
-                            <td width="10%">{{ date('F j, Y g:i A', strtotime($data->returned_date)) }}</td>
+                            <td width="10%">{{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</td>
                             <td width="12%">{{App\User::get_user($data->user_id)}}</td>
                             <td width="13%">
                                 @php
@@ -136,7 +136,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#recipient_modal">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#monthly_report_modal">
                     Close
                 </button>
                 <button class="btn btn-success" onclick="generate_report()"><span class="fa fa-print"></span> Generate</button>

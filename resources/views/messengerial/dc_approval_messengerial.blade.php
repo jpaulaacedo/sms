@@ -42,7 +42,7 @@
 
 							@foreach($messengerial as $data)
 
-							@if((Auth::user()->user_type == 2 && $data->status=='For DC Approval') && (App\User::get_division($data->user_id) == Auth::user()->division))
+							@if((Auth::user()->user_type == 2 && $data->status=='For DC Approval') && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
 							<tr class="text-center">
 								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
@@ -51,7 +51,7 @@
 								<td>{{$data->destination}}</td>
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -65,7 +65,8 @@
 								</td>
 							</tr>
 							@endif
-
+							@endforeach
+							@foreach($messengerial as $data)
 							@if($data->status=='For Assignment' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
 							<tr class="text-center">
 								<td>{{$data->recipient}}</td>
@@ -75,7 +76,7 @@
 								<td>{{$data->destination}}</td>
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-info">APPROVED</span>
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -85,7 +86,10 @@
 
 								</td>
 							</tr>
-							@else
+							@endif
+							@endforeach
+							@foreach($messengerial as $data)
+							@if($data->status=='For CAO Approval' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
 							<tr class="text-center">
 								<td>{{$data->recipient}}</td>
 								<td>{{$data->control_num}}</td>
@@ -94,7 +98,95 @@
 								<td>{{$data->destination}}</td>
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+								</td>
+								<td>
+									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button>|
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+
+								</td>
+							</tr>
+							@endif
+							@endforeach
+							@foreach($messengerial as $data)
+							@if($data->status=='Confirmed' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{$data->recipient}}</td>
+								<td>{{$data->control_num}}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
+								<td>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+								</td>
+								<td>
+									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button>|
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+
+								</td>
+							</tr>
+							@endif
+							@endforeach
+							@foreach($messengerial as $data)
+							@if($data->status=='Cancelled' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{$data->recipient}}</td>
+								<td>{{$data->control_num}}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
+								<td>
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
+								</td>
+								<td>
+									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button>|
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+
+								</td>
+							</tr>
+							@endif
+							@endforeach
+							@foreach($messengerial as $data)
+							@if($data->status=='Out For Delivery' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{$data->recipient}}</td>
+								<td>{{$data->control_num}}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
+								<td>
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+								</td>
+								<td>
+									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button>|
+									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+
+								</td>
+							</tr>
+							@endif
+							@endforeach
+							@foreach($messengerial as $data)
+							@if($data->status=='Accomplished' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{$data->recipient}}</td>
+								<td>{{$data->control_num}}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{ date('F j, Y', strtotime($data->created_at)) }} <br> {{ date('g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->destination}}</td>
+								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
+								<td>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -155,7 +247,7 @@
 								<input readonly type="text" name="view_contact" id="view_contact" class="form-control" required />
 							</div>
 							<div class="col-sm-4">
-								<label>Due Date
+								<label>Date Needed
 									<span class="text-red">*</span>
 								</label>
 								<input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date" required>

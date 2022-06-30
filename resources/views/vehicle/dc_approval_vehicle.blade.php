@@ -39,7 +39,7 @@
 
 							@foreach($vehicle as $data)
 
-							@if(Auth::user()->user_type == 2 || Auth::user()->user_type == 4 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
+							@if(Auth::user()->user_type == 2 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
@@ -57,12 +57,14 @@
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status == "Out For Delivery")
+									@elseif($data->status == "On The Way")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@else
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 								</td>
@@ -86,7 +88,8 @@
 								</td>
 							</tr>
 							@endif
-							@if($data->status=='For CAO Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
+							@if(Auth::user()->user_type == 2 && $data->status!='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
+
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
@@ -94,7 +97,26 @@
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
 								<td>
-									<span class="right badge badge-warning">APPROVED</span>
+									@if($data->status=='Filing')
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
+									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "Cancelled")
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status=='Confirmed')
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "On The Way")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "For Assignment")
+									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@elseif($data->status=='Accomplished')
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									@endif
 								</td>
 								<td>
 									@if($data->status!='Filing')
@@ -239,8 +261,7 @@
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;
+								&nbsp;&nbsp;
 								<small><label>Total:</label>
 									<span id="psg_count"></span>
 								</small>
@@ -270,16 +291,14 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#passenger_modal">
 					Close
 				</button>
-				<form action="{{URL::to('/vehicle/submit')}}" method="POST">
-					@csrf
 
-					<input type="hidden" id="submit_psg_id" name="submit_psg_id">
-					<center><button type="submit" name="submit_button" id='submit_button' class="btn btn-success">
-							<span class="fa fa-check"></span>
-							Submit Request
-						</button>
-					</center>
-				</form>
+				@foreach($vehicle as $data)
+				@if($data->status=='Filing')
+				<button ame="submit_button" id='submit_button' class="btn btn-success btn" onclick="_submitVehicle()">
+					<span class="fa fa-check"></span> Submit
+				</button>
+				@endif
+				@endforeach
 			</div>
 		</div>
 	</div>

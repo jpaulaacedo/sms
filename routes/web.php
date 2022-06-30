@@ -77,6 +77,8 @@ Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfor
 
 Route::post('/messengerial/accomplish/assign', 'MessengerialController@assign_messengerial');
 
+Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfordel_messengerial');
+
 //all messengerial
 Route::get('/messengerial/all', 'MessengerialController@all_messengerial');
 
@@ -89,6 +91,8 @@ Route::post('/messengerial/attachment', 'MessengerialController@messengerial_att
 Route::post('/load_recipient', 'MessengerialController@load_recipient');
 
 Route::post('/messengerial/mark_accomplish', 'MessengerialController@messengerial_mark_accomplish');
+
+Route::post('/messengerial/mark_accomplish_modal', 'MessengerialController@msg_mark_accomplish_modal');
 
 Route::post('/load_file', 'MessengerialController@load_file');
 
@@ -131,6 +135,8 @@ Route::post('/vehicle/submit', 'VehicleController@submit_vehicle');
 
 Route::get('/vehicle/dc/approval', 'VehicleController@dc_approval_vehicle');
 
+Route::post('/vehicle/accomplish/assign', 'VehicleController@assign_vehicle');
+
 Route::post('/vehicle/dc/approve', 'VehicleController@approveDC_vehicle');
 
 Route::get('/vehicle/cao/approval', 'VehicleController@cao_approval_vehicle');
@@ -163,7 +169,7 @@ Route::post('/vehicle/check_monthly_report', 'VehicleController@vehicle_check_mo
 
 Route::get('/vehicle/monthly_report/{month}/{year}', 'VehicleController@vehicle_monthly_report');
 
-Route::post('/vehicle/trip/passenger', 'MessengerialController@add_passenger');
+Route::post('/vehicle/trip/passenger', 'VehicleController@add_passenger');
 
 Route::post('/vehicle/add/passenger', 'VehicleController@add_passenger');
 
@@ -174,6 +180,8 @@ Route::post('/vehicle/delete/passengertolist', 'VehicleController@del_passengert
 Route::post('/vehicle/view/passenger', 'VehicleController@view_passenger');
 
 Route::post('/vehicle/view/vehicle', 'VehicleController@view_vehicle');
+
+Route::post('/vehicle/mark_accomplish_modal', 'VehicleController@vhl_mark_accomplish_modal');
 
 Route::get('/vehicle_form/{vehicle_id}', 'VehicleController@print_vehicle');
 

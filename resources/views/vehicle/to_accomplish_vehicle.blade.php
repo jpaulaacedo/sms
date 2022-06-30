@@ -27,14 +27,37 @@
                             <tr class="text-center">
                                 <th width="10%">Date Requested</th>
                                 <th width="15%">Purpose of Trip</th>
-                                <th width="10%">Date and Time Needed</th>
+                                <th width="10%">Date Needed</th>
                                 <th width="15%">Requested By</th>
-                                <th width="15%">Destination</th>
-                                <th width="10%">Status</th>
+                                <th width="10%">Destination</th>
+                                <th width="15%">Status</th>
                                 <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($vehicle as $data)
+                            @if($data->status=='For Assignment')
+                            <tr class="text-center">
+                                <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+                                <td>{{$data->purpose}}</td>
+                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>{{App\User::get_user($data->user_id)}}</td>
+                                <td>{{$data->destination}}</td>
+                                <td>
+                                    <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+                                </td>
+                                <td>
+                                    <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
+                                        <span class="fa fa-users"></span>
+                                    </button> |
+                                    <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
+                                        <span class="fa fa-id-card"></span>
+                                    </button>
+                                    <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
                             @foreach($vehicle as $data)
                             @if($data->status=='For CAO Approval')
                             <tr class="text-center">
@@ -45,14 +68,14 @@
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->assigned_pickupdate)) }}</small>
                                 </td>
                                 <td>
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    <button onclick="_otw_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
-                                    </button>
+
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -67,7 +90,9 @@
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
-                                    <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->assigned_pickupdate)) }}</small>
                                 </td>
                                 <td>
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
@@ -92,12 +117,14 @@
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->otw_pickupdate)) }}</small>
                                 </td>
                                 <td>
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    <button onclick="_markAccomplish('{{$data->id}}', '{{$data->subject}}')" class="btn btn-success btn-sm">
+                                    <button onclick="mark_accomplish_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-check"></span>
                                     </button>
 
@@ -118,11 +145,15 @@
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <br>
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}
+                                        <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
                                 </td>
                                 <td>
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
+
                                     <button class="btn btn-warning btn-sm" onclick="_attachmentAgent('{{$data->id}}')">
                                         <span class="fa fa-file"></span>
                                     </button>
@@ -138,8 +169,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="passenger_modal" tabindex="-1" aria-labelledby="trip_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal modal-dialog-centered">
+<div class="modal fade" id="passenger_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="passenger_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="trip_modalLabel">
@@ -180,9 +211,22 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12">
-                                <label id="lbl_passenger">Add Passenger: &nbsp;</label>
+                                <label id="lbl_passenger">Add Passenger:</label>
                                 <span id="asterisk" class="text-red">*</span>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;
+                                <small><label>Total:</label>
+                                    <span id="psg_count"></span>
+                                </small>
                                 <div class="input-group">
                                     <input type="text" placeholder="Type passenger name here..." class="form-control" name="passenger" id="passenger">
                                     <div class="input-group-append">
@@ -194,8 +238,7 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12">
-                                <label>Passenger(s): </label>
-                                <div class='scrolledTable' style='height:300px;'>
+                                <div class='scrolledTable' style="height:300px; width:460px; overflow:auto;">
                                     <table class="table table-striped table-bordered table-sm">
                                         <tbody id="my_tbody">
                                         </tbody>
@@ -210,16 +253,76 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#passenger_modal">
                     Close
                 </button>
-                <form action="{{URL::to('/vehicle/submit')}}" method="POST">
-                    @csrf
+                <!-- <form action="{{URL::to('/vehicle/submit')}}" method="POST">
+					@csrf
 
-                    <input type="hidden" id="submit_psg_id" name="submit_psg_id">
-                    <center><button type="submit" name="submit_button" id='submit_button' class="btn btn-success">
-                            <span class="fa fa-check"></span>
-                            Submit Request
-                        </button>
-                    </center>
-                </form>
+					<input type="hidden" id="submit_psg_id" name="submit_psg_id">
+					<center><button type="submit" name="submit_button" id='submit_button' class="btn btn-success">
+							<span class="fa fa-check"></span>
+							Submit Request
+						</button>
+					</center>
+				</form> -->
+                @foreach($vehicle as $data)
+                @if($data->status=='Filing')
+                <button class="btn btn-success btn" ame="submit_button" id='submit_button' onclick="_submitVehicle()">
+                    <span class="fa fa-check"></span> Submit
+                </button>
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign modal -->
+<div class="modal fade" id="assign_modal" tabindex="-1" aria-labelledby="assign_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="assign_modalLabel">
+                    <span class="fa fa-truck"></span>
+                    &nbsp;Assign Driver and Pickup Date
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <input type="hidden" id="submit_vhl_id" name="submit_vhl_id">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="driver">Driver:</label>
+                            </div>
+                            <select class="custom-select" id="driver">
+                                <option selected value="" disabled>-- select --</option>
+                                <option value="Elmo">Elmo</option>
+                                <option value="Ruben">Ruben</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="pickup_date">Pick-up Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="assigned_pickupdate" id="assigned_pickupdate" required>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#assig_modal">
+                    Close
+                </button>
+                <button onclick="_assign()" class="btn btn-success">
+                    <span class="fa fa-truck"></span>
+                    Assign
+                </button>
             </div>
         </div>
     </div>
@@ -232,7 +335,7 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="accomplish_modalLabel">
                     <span id="modal_header" class="fa fa-file"></span>&nbsp;
-                    <span>Attachment/s for Trip to&nbsp;</span>
+                    <span>Attachment/s for Trip - </span>
                     <span id="header_destination"></span>
                 </h5>
             </div>
@@ -307,24 +410,21 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="otw_modalLabel">
                     <span class="fa fa-truck"></span>
-                    &nbsp;Select Driver
+                    &nbsp;Pickup Date
                 </h5>
             </div>
             <!-- BLADE TO AJAX -->
             <!-- use this id below in ajax -->
-            <input type="hidden" id="submit_msg_id" name="submit_msg_id">
+            <input type="hidden" id="sub_vhl_id" name="sub_vhl_id">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="driver">Driver:</label>
+                                <label class="input-group-text" for="pickup_date">Pick-up Date:</label>
                             </div>
-                            <select class="custom-select" id="driver">
-                                <option selected value="" disabled>-- select --</option>
-                                <option value="Elmo">Sr. Elmo</option>
-                                <option value="Ruben">Sr. Ruben</option>
-                            </select>
+                            <input type="datetime-local" class="form-control" name="otw_pickupdate" id="otw_pickupdate" required>
+
                         </div>
                     </div>
                 </div>
@@ -335,9 +435,55 @@
                 </button>
                 <button onclick="_otw()" class="btn btn-success">
                     <span class="fa fa-truck"></span>
-                    on the way
+                    On The Way
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<!-- Mark Accomplish modal -->
+<div class="modal fade" id="mark_accomplish_modal" tabindex="-1" aria-labelledby="mark_accomplish_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="mark_accomplish_modalLabel">
+                    <span class="fa fa-envelope"></span>
+                    &nbsp;Mark Accomplished
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <input type="hidden" id="markacc_vhl_id" name="markacc_vhl_id">
+            <input type="hidden" id="mark_vhl_id" name="mark_vhl_id">
+            <input type="hidden" id="destination" name="destination">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="otw_pickup_date">Pickup Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" readonly name="otw_pickup_date" id="otw_pickup_date" required>
+
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="accomplished_date">Accomplished Date</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="accomplished_date" id="accomplished_date" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#mark_accomplish_modal">
+                    Close
+                </button>
+                <button class="btn btn-success" onclick="_markAccomplish()" class="btn btn-success btn-sm">
+                    <span class="fa fa-check"></span>
+                    Accomplished
+                </button>
             </div>
         </div>
     </div>

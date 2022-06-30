@@ -31,18 +31,19 @@ class HomeController extends Controller
 
     public function feed_calendar()
     {
-        $msg_calendar = Messengerial::leftjoin('messengerial_items', 'messengerial.id', 'messengerial_items.messengerial_id')->where('status', "Confirmed")->orwhere('status', "Out For Delivery")->orwhere('status', "Accomplished")->get();
+        $msg_calendar = Messengerial::where('status', "Confirmed")->orwhere('status', "Out For Delivery")->orwhere('status', "Accomplished")->get();
         $msg_my_array = [];
 
         foreach ($msg_calendar as $data) {
             $driver = $data->driver;
             if ($driver == "Ruben") {
-                // green
+                // messengerial=green
                 array_push(
                     $msg_my_array,
                     [
+                        "icon" => "msg_icon",
                         "title" => $driver,
-                        "start" => $data->due_date,
+                        "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#218551",
                         "textColor" => "#ffffff",
@@ -56,9 +57,9 @@ class HomeController extends Controller
                     $msg_my_array,
                     [
                         "title" => $driver,
-                        "start" => $data->due_date,
+                        "start" => $data->date_needed,
                         "allDay" => false,
-                        "backgroundColor" => "#eb4034",
+                        "backgroundColor" => "#218551",
                         "textColor" => "#ffffff",
                         "eventColor" => "#ffffff",
                         "url" => URL::to('/messengerial/calendar_recipient/' . $data->id)
@@ -70,7 +71,7 @@ class HomeController extends Controller
 
         $vhl_calendar = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
             ->leftjoin('users', 'vehicle.user_id', 'users.id')->where('status', "Confirmed")->orwhere('status', "On The Way")->orwhere('status', "Accomplished")->get();
-        // green
+        // vehicle=red
         foreach ($vhl_calendar as $data) {
             $driver = $data->driver;
             if ($driver == "Ruben") {
@@ -80,7 +81,7 @@ class HomeController extends Controller
                         "title" => $driver,
                         "start" => $data->date_needed,
                         "allDay" => false,
-                        "backgroundColor" => "#218551",
+                        "backgroundColor" => "#eb4034",
                         "textColor" => "#ffffff",
                         "eventColor" => "#ffffff",
                         "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)

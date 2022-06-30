@@ -148,6 +148,7 @@
                         <th>No. of <br>Request</th>
                     </thead>
                     <tbody>
+
                         @foreach($vehicle as $data)
                         @if($data->status=='Accomplished')
 
@@ -193,6 +194,9 @@
                         </tr>
                         @endif
                         @endforeach
+                        @php
+
+                        @endphp
                     </tbody>
 
                 </table>

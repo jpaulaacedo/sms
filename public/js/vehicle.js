@@ -244,6 +244,78 @@ function del_psg_list(vehicle_id) {
 
 }
 
+function _assign_modal(data) {
+    $('#driver').val('');
+    $('#assigned_pickupdate').val('');
+    $('#assign_modal').modal('show');
+    $('#submit_vhl_id').val(data);
+}
+
+function _assign() {
+    var missing = "";
+    var driver = $('#driver').val();
+    var assigned_pickupdate = $('#assigned_pickupdate').val();
+    if (driver == null) {
+        missing = "Driver";
+    } else {
+        missing = "Pickup Date";
+    }
+    if (driver != null && assigned_pickupdate != "") {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, assign.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                //AJAX to Controller
+                formData.append('data_id', $('#submit_vhl_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+                formData.append('driver', $('#driver').val());
+                formData.append('assigned_pickupdate', $('#assigned_pickupdate').val());
+                $.ajax({
+                    url: global_path + "/vehicle/accomplish/assign",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Driver and Pickup Date Assigned.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/vehicle/accomplish";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    } else {
+        Swal.fire(
+            'Required field missing.',
+            'Please select ' + missing + ' from dropdown.',
+            'warning'
+        )
+    }
+}
+
+
 function add_psg_list(passenger) {
     if (passenger != "") {
         var formData = new FormData();
@@ -271,6 +343,7 @@ function add_psg_list(passenger) {
         })
     }
 }
+
 //   Vehicle trip Button DELETE
 function _delete(vehicle_item_id, vehicle_id, destination) {
     Swal.fire({
@@ -417,6 +490,63 @@ function _editVehicle(data) {
     })
 }
 
+function _submitVehicle() {
+    if ($("#psg_count").html() != 0) {
+
+        Swal.fire({
+            title: 'Submit Vehicle Request?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', $("#psg_vehicle_id").val());
+                $.ajax({
+                    url: global_path + "/vehicle/submit",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/vehicle";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    }
+    else {
+        Swal.fire(
+            'Passenger is required.',
+            'Please add passenger to proceed.',
+            'warning'
+        )
+        
+    }
+}
+
+
 // CANCEL VEHICLE
 function _cancelVehicle(data) {
     $('#cancel_modal').modal('show');
@@ -517,52 +647,84 @@ function _deleteVehicle(vehicle_id, purpose) {
 }
 
 // Accomplish modal  
-function _markAccomplish(id, subject) {
-    Swal.fire({
-        title: 'Mark ' + subject + ' as Accomplished?',
-        text: "You won't be able to revert this.",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, proceed.'
-    }).then((result) => {
-        if (result.value) {
-            var formData = new FormData();
-            formData.append('data_id', id);
-            $.ajax({
-                url: global_path + "/vehicle/mark_accomplish",
-                method: 'post',
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    if (response == "success") {
-                        Swal.fire(
-                            'Accomplished.',
-                            response,
-                            'success'
-                        ).then((result2) => {
-                            window.location.href = global_path + "/vehicle/accomplish";
-                        })
+function _markAccomplish() {
+    var accomplished_date = $('#accomplished_date').val();
+    if (accomplished_date != "") {
+        Swal.fire({
+            title: 'Mark ' + $('#destination').val() + ' as Accomplished?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', $('#markacc_vhl_id').val());
+                formData.append('accomplished_date', $('#accomplished_date').val());
+                $.ajax({
+                    url: global_path + "/vehicle/mark_accomplish",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Accomplished.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/vehicle/accomplish";
+                            })
 
-                    } else {
-                        Swal.fire(
-                            'DB Error.',
-                            response,
-                            'error'
-                        )
-                    }
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            });
-        }
-    })
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+        })
+    } else {
+
+        Swal.fire(
+            'Required field missing.',
+            'Please add Accomplished Date.',
+            'warning'
+        )
+    }
 }
 
 
+function mark_accomplish_modal(data) {
+    $('#accomplished_date').val('');
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/mark_accomplish_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
 
+        success: function (response) {
+            $('#mark_accomplish_modal').modal('show');
+            $('#otw_pickup_date').val(response.otw_pickupdate);
+            $('#destination').val(response.destination);
+            $('#mark_vhl_id').val(response.id);
+            $('#markacc_vhl_id').val(response.id);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
 
 
 
@@ -664,12 +826,14 @@ function _approveCAO(data) {
     })
 }
 function _otw_modal(data) {
+    $('#otw_pickupdate').val('');
     $('#otw_modal').modal('show');
-    $('#submit_msg_id').val(data);
+    $('#sub_vhl_id').val(data);
 }
 function _otw() {
-    var driver = $('#driver').val();
-    if (driver != null) {
+    var otw_pickupdate = $('#otw_pickupdate').val();
+
+    if (otw_pickupdate != "") {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this.",
@@ -682,8 +846,8 @@ function _otw() {
             if (result.value) {
                 var formData = new FormData();
                 //AJAX to Controller
-                formData.append('data_id', $('#submit_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
-                formData.append('driver', $('#driver').val());
+                formData.append('data_id', $('#sub_vhl_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+                formData.append('otw_pickupdate', $('#otw_pickupdate').val());
                 $.ajax({
                     url: global_path + "/vehicle/accomplish/otw",
                     method: 'post',
@@ -692,7 +856,7 @@ function _otw() {
                     success: function (response) {
                         if (response == "success") {
                             Swal.fire(
-                                'On the way.',
+                                'On The Way.',
                                 response,
                                 'success'
                             ).then((result2) => {
@@ -717,7 +881,7 @@ function _otw() {
     } else {
         Swal.fire(
             'Required field missing.',
-            'Please select driver from dropdown.',
+            'Please select pickup date from dropdown.',
             'warning'
         )
     }
@@ -881,27 +1045,41 @@ function _deleteFile(data_id) {
 
 }
 
-$('.getMonthlyReport').click(function (e) {
-    e.preventDefault();
+// $('.getMonthlyReport').click(function (e) {
+//     e.preventDefault();
 
-    let month = $('#month_search option:selected');
-    let year = $('#year_search').val();
+//     let month = $('#month_search option:selected');
+//     let year = $('#year_search').val();
 
-    if (!month || !year) {
-        Swal.fire({
-            title: 'Please select month and year to generate report.',
-            type: 'warning',
-        })
-    } else {
-        if ($('#month_emp').val() > 0) {
-            window.open('/report/' + year + '/' + month.val(), '_blank');
-        } else {
-            window.open('/vehicle/report/monthly/' + month.text() + '/' + year, '_blank');
-        }
-        // var win = window.open('/dtr/report/monthly/' + month, '_blank');
-    }
+//     if (!month) {
+//         Swal.fire({
+//             title: 'Please select month to generate report.',
+//             type: 'warning',
+//         })
+//     } 
+//     if(!year){
+//         Swal.fire({
+//             title: 'Please select year to generate report.',
+//             type: 'warning',
+//         })
+//     }
+//     if(!month && !year){
+//         Swal.fire({
+//             title: 'Please select month and year to generate report.',
+//             type: 'warning',
+//         })
+//     }
+//     if(month && year)
+//     {
+//         if ($('#month_emp').val() > 0) {
+//             window.open('/report/' + year + '/' + month.val(), '_blank');
+//         } else {
+//             window.open('/vehicle/report/monthly/' + month.text() + '/' + year, '_blank');
+//         }
+//         // var win = window.open('/dtr/report/monthly/' + month, '_blank');
+//     }
 
-})
+// })
 
 function print_report(data) {
     var formData = new FormData();
@@ -932,13 +1110,29 @@ function generate_report() {
     var my_month = $('#month_search').val();
     var my_year = $('#year_search').val();
 
-    if (my_month == null || my_year == null) {
+    if (my_month == null) {
         Swal.fire(
             'Required fields missing.',
-            'Please select from dropdown.',
+            'Please select month from dropdown.',
             'warning'
         )
-    } else {
+    }
+    if (my_year == null) {
+        Swal.fire(
+            'Required fields missing.',
+            'Please select year from dropdown.',
+            'warning'
+        )
+    }
+    if (my_month == null && my_year == null) {
+        Swal.fire(
+            'Required fields missing.',
+            'Please select moth and year from dropdown.',
+            'warning'
+        )
+    }
+    if (my_month != null && my_year != null) {
+
         var formData = new FormData();
         formData.append('month', my_month);
         formData.append('year', my_year);
