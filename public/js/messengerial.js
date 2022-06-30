@@ -502,9 +502,10 @@ function _approveCAO(data) {
         }
     })
 }
-function _assign_modal(data) {
+function _assign_modal(data, date_needed) {
     $('#driver').val('');
     $('#assigned_pickupdate').val('');
+    $('#date_needed').val(date_needed);
     $('#assign_modal').modal('show');
     $('#submit_msg_id').val(data);
 }

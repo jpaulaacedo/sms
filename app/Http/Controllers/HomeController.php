@@ -85,7 +85,6 @@ class HomeController extends Controller
                         "textColor" => "#ffffff",
                         "eventColor" => "#ffffff",
                         "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)
-
                     ]
                 );
             }else{

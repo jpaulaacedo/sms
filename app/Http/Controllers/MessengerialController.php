@@ -190,7 +190,53 @@ class MessengerialController extends Controller
             ->get();
 
         $my_date = date("M Y", strtotime($messengerial[0]["accomplished_date"]));
-        return view('messengerial.monthly_report', compact('messengerial', 'my_date'));
+
+        $kmd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+            ->leftjoin('users', 'messengerial.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Knowledge Management Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $kmd_count = count($kmd_cnt);
+
+        $oed_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+            ->leftjoin('users', 'messengerial.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Office of the Executive Director')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $oed_count = count($oed_cnt);
+
+        $td_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+            ->leftjoin('users', 'messengerial.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Training Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $td_count = count($td_cnt);
+
+        $rd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+            ->leftjoin('users', 'messengerial.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Research Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $rd_count = count($rd_cnt);
+        
+        $fad_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+            ->leftjoin('users', 'messengerial.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Finance and Administrative Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $fad_count = count($fad_cnt);
+
+        return view('messengerial.monthly_report', compact('messengerial', 'my_date', 'kmd_count', 'oed_count' , 'td_count' , 'rd_count' , 'fad_count'));
     }
 
     public function messengerial_check_monthly_report(Request $request)
@@ -396,6 +442,7 @@ class MessengerialController extends Controller
             $update = Messengerial::where('id', $request->data_id)->first();
             $user = User::where('id', $update->user_id)->first();
             $user_type = $user->user_type;
+
             if ($user_type == 4 || $user_type == 6) {
                 $update->status = "Confirmed";
                 $today = date("Y-m-d H:i:s");

@@ -538,7 +538,53 @@ class VehicleController extends Controller
             ->get();
 
         $my_date = date("M Y", strtotime($vehicle[0]["accomplished_date"]));
-        return view('vehicle.vehicle_monthly_report', compact('vehicle', 'my_date'));
+
+        $kmd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+            ->leftjoin('users', 'vehicle.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Knowledge Management Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $kmd_count = count($kmd_cnt);
+
+        $oed_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+            ->leftjoin('users', 'vehicle.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Office of the Executive Director')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $oed_count = count($oed_cnt);
+
+        $td_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+            ->leftjoin('users', 'vehicle.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Training Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $td_count = count($td_cnt);
+
+        $rd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+            ->leftjoin('users', 'vehicle.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Research Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $rd_count = count($rd_cnt);
+        
+        $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+            ->leftjoin('users', 'vehicle.user_id', 'users.id')
+            ->where('status', 'Accomplished')
+            ->where('division', 'Finance and Administrative Division')
+            ->whereYear('accomplished_date', $year)
+            ->whereMonth('accomplished_date', $month)
+            ->get();
+        $fad_count = count($fad_cnt);
+
+        return view('vehicle.vehicle_monthly_report', compact('vehicle', 'my_date', 'kmd_count', 'oed_count' , 'td_count' , 'rd_count' , 'fad_count'));
     }
 
     public function vehicle_check_monthly_report(Request $request)
