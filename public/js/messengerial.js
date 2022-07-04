@@ -502,13 +502,86 @@ function _approveCAO(data) {
         }
     })
 }
-function _assign_modal(data, date_needed) {
+function _assign_modal(data) {
     $('#driver').val('');
     $('#assigned_pickupdate').val('');
-    $('#date_needed').val(date_needed);
     $('#assign_modal').modal('show');
     $('#submit_msg_id').val(data);
 }
+
+function _resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/accomplish/resched",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            $('#resched_modal').modal('show');
+            $('#due_date').val(response.date_needed);
+            $('#resched_msg_id').val(response.id);
+            $('#resched_reason').val("");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+// function _resched() {
+//     var due_date = $('#due_date').val();
+//     var resched_reason = $('#resched_reason').val();
+
+//     if (due_date != null && resched_reason != "") {
+//         Swal.fire({
+//             title: 'Are you sure?',
+//             text: "You won't be able to revert this.",
+//             type: 'question',
+//             showCancelButton: true,
+//             confirmButtonColor: '#3085d6',
+//             cancelButtonColor: '#d33',
+//             confirmButtonText: 'Yes, reschedule.'
+//         }).then((result) => {
+//             if (result.value) {
+//                 var formData = new FormData();
+//                 //AJAX to Controller
+//                 formData.append('data_id', $('#resched_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+//                 formData.append('resched_reason', $('#resched_reason').val());
+//                 formData.append('date_needed', $('#due_date').val());
+//                 $.ajax({
+//                     url: global_path + "/messengerial/accomplish/resched",
+//                     method: 'post',
+//                     data: formData,
+//                     dataType: 'json',
+//                     success: function (response) {
+//                         if (response == "success") {
+//                             Swal.fire(
+//                                 'Reschedule Date Needed Sent',
+//                                 response,
+//                                 'success'
+//                             ).then((result2) => {
+//                                 window.location.href = global_path + "/messengerial/accomplish";
+//                             })
+
+//                         } else {
+//                             Swal.fire(
+//                                 'DB Error.',
+//                                 response,
+//                                 'error'
+//                             )
+//                         }
+//                     },
+//                     cache: false,
+//                     contentType: false,
+//                     processData: false
+//                 });
+
+//             }
+//         })
+//     }
+// }
 
 function _outfordel_modal(data) {
     $('#outfordel_pickupdate').val('');

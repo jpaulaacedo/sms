@@ -36,13 +36,14 @@ class HomeController extends Controller
 
         foreach ($msg_calendar as $data) {
             $driver = $data->driver;
+            $destination = $data->destination;
             if ($driver == "Ruben") {
                 // messengerial=green
                 array_push(
                     $msg_my_array,
                     [
                         "icon" => "msg_icon",
-                        "title" => $driver,
+                        "title" => $driver . ' | ' . $destination,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#218551",
@@ -56,7 +57,7 @@ class HomeController extends Controller
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver,
+                        "title" => $driver . ' | ' . $destination,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#218551",
@@ -74,11 +75,12 @@ class HomeController extends Controller
         // vehicle=red
         foreach ($vhl_calendar as $data) {
             $driver = $data->driver;
+            $destination = $data->destination;
             if ($driver == "Ruben") {
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver,
+                        "title" => $driver . ' | ' . $destination,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#eb4034",
@@ -87,11 +89,11 @@ class HomeController extends Controller
                         "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)
                     ]
                 );
-            }else{
+            } else {
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver,
+                        "title" => $driver . ' | ' . $destination,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#eb4034",

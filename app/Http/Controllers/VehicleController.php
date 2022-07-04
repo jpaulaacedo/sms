@@ -11,6 +11,7 @@ use App\Mail\vhlApproved;
 use App\Mail\vhlAccomplished;
 use App\Mail\vhlConfirmed;
 use App\Mail\vhlAssigned;
+use App\Mail\vhlResched;
 use App\Mail\vhlOnTheWay;
 use Illuminate\Support\Facades\Mail;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -595,6 +596,47 @@ class VehicleController extends Controller
         return json_encode(count($vehicle));
     }
 
+    public function resched_vehicle(Request $request)
+    {
+        $resched = Vehicle::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($resched->date_needed));
+        $due_time = date("H:i", strtotime($resched->date_needed));
+
+        $resched->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($resched);
+    }
+
+    public function reschedule_vehicle(Request $request)
+    {
+        try {
+            $update = Vehicle::where('id', $request->resched_vhl_id)->first();
+
+            $update->date_needed = $request->due_date;
+            $update->resched_reason = $request->resched_reason;
+            $update->save();
+
+            $user_id = $update->user_id;
+
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'purpose' => $update->purpose,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'link'  =>  URL::to('/vehicle'),
+            );
+            // Mail::to([$employee->email])->send(new msgApproved($data));
+
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
+
+            return redirect()->back()->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('message', $e->getMessage());
+        }
+    }
 
     public function add_passenger(Request $request)
     {

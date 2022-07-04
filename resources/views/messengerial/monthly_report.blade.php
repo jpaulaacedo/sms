@@ -164,53 +164,26 @@
                                 <th>No. of <br>Request</th>
                             </thead>
                             <tbody>
-
-                                @php
-                                $division = App\User::get_division($data->user_id);
-                                if ($division == "Knowledge Management Division")
-                                
-                                @endphp
                                 <tr>
                                     <td>KMD</td>
                                     <td>{{$kmd_count}}</td>
                                 </tr>
-                                @php
-                                $division = App\User::get_division($data->user_id);
-                                if ($division == "Office of the Executive Director")
-                                
-                                @endphp
                                 <tr>
                                     <td>OED</td>
                                     <td>{{$oed_count}}</td>
                                 </tr>
-                                @php
-                                $division = App\User::get_division($data->user_id);
-                                if ($division == "Finance and Administrative Division")
-                                
-                                @endphp
                                 <tr>
                                     <td>FAD</td>
                                     <td>{{$fad_count}}</td>
                                 </tr>
-                                @php
-                                $division = App\User::get_division($data->user_id);
-                                if ($division == "Research Division")
-                                
-                                @endphp
                                 <tr>
                                     <td>RD</td>
                                     <td>{{$rd_count}}</td>
                                 </tr>
-                                @php
-                                $division = App\User::get_division($data->user_id);
-                                if ($division == "Training Division")
-                                
-                                @endphp
                                 <tr>
                                     <td>TD</td>
                                     <td>{{$td_count}}</td>
                                 </tr>
-                                
                             </tbody>
 
                         </table>

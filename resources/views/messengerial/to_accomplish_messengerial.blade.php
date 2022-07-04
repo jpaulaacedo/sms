@@ -29,10 +29,10 @@
                                 <th width="10%">Control Number</th>
                                 <th width="10%">Requested By</th>
                                 <th width="10%">Request Date</th>
-                                <th width="15%">Destination</th>
+                                <th width="10%">Destination</th>
                                 <th width="10%">Date Needed</th>
                                 <th width="20%">Status</th>
-                                <th width="15%">Action</th>
+                                <th width="20%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +53,9 @@
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
+                                    <button onclick="_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -192,7 +195,7 @@
             <input type="hidden" id="messengerial_id" name="messengerial_id">
             <div class="modal-body modal-lg">
                 <div class="row">
-                    
+
                     <div class="col-sm">
                         <label>Upload Documents </label>
                         <div class="custom-file">
@@ -293,6 +296,8 @@
                 </div>
             </div>
             <div class="modal-footer">
+
+
                 <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#assig_modal">
                     Close
                 </button>
@@ -301,6 +306,57 @@
                     Assign
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- resched modal -->
+<div class="modal fade" id="resched_modal" tabindex="-1" aria-labelledby="resched_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="resched_modalLabel">
+                    <span class="fa fa-truck"></span>
+                    &nbsp;Reschedule Date Needed
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <form action="{{URL::to('/messengerial/accomplish/reschedule')}}" method="POST">
+                @csrf
+                <input type="hidden" id="resched_msg_id" name="resched_msg_id">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="due_date">Change Date Needed:</label>
+                                </div>
+                                <input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <label>Reason for Reschedule
+                                <span class="text-red">*</span>
+                            </label>
+                            <textarea class="form-control" rows="3" id="resched_reason" name="resched_reason" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#resched_modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-calendar"></span>
+                        Reschedule
+                    </button>
+
+                </div>
+            </form>
         </div>
     </div>
 </div>

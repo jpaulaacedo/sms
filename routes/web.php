@@ -58,6 +58,8 @@ Route::get('/messengerial/report', 'MessengerialController@report_messengerial')
 
 Route::post('/messengerial/edit', 'MessengerialController@edit_messengerial');
 
+Route::post('/messengerial/accomplish/resched', 'MessengerialController@resched_messengerial');
+
 Route::post('/messengerial/view', 'MessengerialController@view_messengerial');
 
 Route::post('/messengerial/cancel', 'MessengerialController@cancel_messengerial');
@@ -76,6 +78,8 @@ Route::post('/messengerial/cao/approve', 'MessengerialController@approveCAO_mess
 Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfordel_messengerial');
 
 Route::post('/messengerial/accomplish/assign', 'MessengerialController@assign_messengerial');
+
+Route::post('/messengerial/accomplish/reschedule', 'MessengerialController@reschedule_messengerial');
 
 Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfordel_messengerial');
 
@@ -118,6 +122,10 @@ Route::post('/vehicle/store', 'VehicleController@vehicle_store');
 Route::get('/vehicle/all', 'VehicleController@all_vehicle');
 
 Route::get('/vehicle/calendar_trip/{vehicle_id}', 'VehicleController@calendar_trip');
+
+Route::post('/vehicle/accomplish/reschedule', 'VehicleController@reschedule_vehicle');
+
+Route::post('/vehicle/accomplish/resched', 'VehicleController@resched_vehicle');
 
 Route::get('/vehicle/trip/{vehicle_id}', 'VehicleController@get_trip');
 

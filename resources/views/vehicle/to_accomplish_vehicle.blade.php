@@ -50,6 +50,9 @@
                                     <button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
+                                    <button onclick="_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -275,6 +278,56 @@
     </div>
 </div>
 
+<!-- resched modal -->
+<div class="modal fade" id="resched_modal" tabindex="-1" aria-labelledby="resched_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="resched_modalLabel">
+                    <span class="fa fa-truck"></span>
+                    &nbsp;Reschedule Date Needed
+                </h5>
+            </div>
+            <!-- BLADE TO AJAX -->
+            <!-- use this id below in ajax -->
+            <form action="{{URL::to('/vehicle/accomplish/reschedule')}}" method="POST">
+                @csrf
+                <input type="hidden" id="resched_vhl_id" name="resched_vhl_id">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="due_date">Change Date Needed:</label>
+                                </div>
+                                <input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <label>Reason for Reschedule
+                                <span class="text-red">*</span>
+                            </label>
+                            <textarea class="form-control" rows="3" id="resched_reason" name="resched_reason" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#resched_modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-calendar"></span>
+                        Reschedule
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Assign modal -->
 <div class="modal fade" id="assign_modal" tabindex="-1" aria-labelledby="assign_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">

@@ -11,6 +11,7 @@ use App\Mail\msgCreateTicket;
 use App\Mail\msgConfirmed;
 use App\Mail\msgApproved;
 use App\Mail\msgAssigned;
+use App\Mail\msgResched;
 use App\Mail\msgAccomplished;
 use App\Mail\msgOutForDel;
 use Illuminate\Support\Facades\Mail;
@@ -226,7 +227,7 @@ class MessengerialController extends Controller
             ->whereMonth('accomplished_date', $month)
             ->get();
         $rd_count = count($rd_cnt);
-        
+
         $fad_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
             ->leftjoin('users', 'messengerial.user_id', 'users.id')
             ->where('status', 'Accomplished')
@@ -236,7 +237,7 @@ class MessengerialController extends Controller
             ->get();
         $fad_count = count($fad_cnt);
 
-        return view('messengerial.monthly_report', compact('messengerial', 'my_date', 'kmd_count', 'oed_count' , 'td_count' , 'rd_count' , 'fad_count'));
+        return view('messengerial.monthly_report', compact('messengerial', 'my_date', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
     }
 
     public function messengerial_check_monthly_report(Request $request)
@@ -256,6 +257,17 @@ class MessengerialController extends Controller
         $edit->date_needed = $due_date . "T" . $due_time;
 
         return json_encode($edit);
+    }
+
+    public function resched_messengerial(Request $request)
+    {
+        $resched = Messengerial::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($resched->date_needed));
+        $due_time = date("H:i", strtotime($resched->date_needed));
+
+        $resched->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($resched);
     }
 
     public function view_messengerial(Request $request)
@@ -484,6 +496,36 @@ class MessengerialController extends Controller
         }
     }
 
+    public function reschedule_messengerial(Request $request)
+    {
+        try {
+            $update = Messengerial::where('id', $request->resched_msg_id)->first();
+
+            $update->date_needed = $request->due_date;
+            $update->resched_reason = $request->resched_reason;
+            $update->save();
+
+            $user_id = $update->user_id;
+
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'link'  =>  URL::to('/messengerial'),
+            );
+            // Mail::to([$employee->email])->send(new msgApproved($data));
+
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgResched($data));
+
+            return redirect()->back()->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('message', $e->getMessage());
+        }
+    }
 
     public function messengerial_mark_accomplish(Request $request)
     {

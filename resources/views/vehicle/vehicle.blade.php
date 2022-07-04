@@ -32,7 +32,7 @@
 							<tr class="text-center">
 								<th width="10%">Date Requested</th>
 								<th width="15%">Purpose of Trip</th>
-								<th width="10%">Date and Time Needed</th>
+								<th width="10%">Date Needed</th>
 								<th width="15%">Destination</th>
 								<th width="10%">Status</th>
 								<th width="10%">Action</th>
@@ -47,7 +47,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -116,7 +120,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
-								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@if($data->resched_reason == null)
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </BR> </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -186,7 +194,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
-								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@if($data->resched_reason == null)
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -260,7 +272,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
-								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@if($data->resched_reason == null)
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -329,7 +345,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
-								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@if($data->resched_reason == null)
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')
@@ -397,7 +417,11 @@
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
-								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@if($data->resched_reason == null)
+								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>{{$data->destination}}</td>
 								<td>
 									@if($data->status=='Filing')

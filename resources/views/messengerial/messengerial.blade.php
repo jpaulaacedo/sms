@@ -50,7 +50,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -119,7 +123,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -190,7 +198,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -259,7 +271,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -329,7 +345,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -399,7 +419,11 @@
 								<td>{{$data->control_num}}</td>
 								<td>{{ date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->destination}}</td>
+								@if($data->resched_reason == null)
 								<td>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@else
+								<td><small><b>DATE RESCHEDULED to </b></small>{{ date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								@endif
 								<td>
 									@if($data->status=='Filing')
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -465,7 +489,6 @@
 							@endif
 							@endforeach
 						</tbody>
-					</table>
 					</table>
 				</div>
 			</div>
@@ -561,6 +584,7 @@
 							</div>
 						</div>
 					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -577,7 +601,6 @@
 				</h5>
 			</div>
 			<div class="modal-body">
-				@csrf
 				<div class="row">
 					<input type="hidden" id="view_messengerial_id" name="view_messengerial_id">
 					<div class="col-sm">
@@ -587,7 +610,7 @@
 								<label>Recipient
 									<span class="text-red">*</span>
 								</label>
-								<input readonly type="text" id="view_recipient" name="view_recipient" class="form-control" rows="5" required>
+								<input readonly type="text" id="view_recipient" name="view_recipient" class="form-control" rows="5">
 							</div>
 						</div>
 						&nbsp;
@@ -597,19 +620,19 @@
 								<label>Agency/Office
 									<span class="text-red">*</span>
 								</label>
-								<input readonly type="text" id="view_agency" name="view_agency" class="form-control" rows="5" required>
+								<input readonly type="text" id="view_agency" name="view_agency" class="form-control" rows="5">
 							</div>
 							<div class="col-sm-4">
 								<label>Contact #
 									<span class="text-red">*</span>
 								</label>
-								<input readonly type="text" name="view_contact" id="view_contact" class="form-control" required />
+								<input readonly type="text" name="view_contact" id="view_contact" class="form-control" />
 							</div>
 							<div class="col-sm-4">
 								<label>Date Needed
 									<span class="text-red">*</span>
 								</label>
-								<input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date" required>
+								<input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date">
 							</div>
 						</div>
 
@@ -620,7 +643,7 @@
 								<label>Destination(Address)
 									<span class="text-red">*</span>
 								</label>
-								<textarea readonly class="form-control" rows="3" id="view_destination" required name="view_destination"></textarea>
+								<textarea readonly class="form-control" rows="3" id="view_destination" name="view_destination"></textarea>
 							</div>
 						</div>
 						&nbsp;
@@ -633,7 +656,7 @@
 										If multiple items, separate using comma(,).
 									</small>
 								</label>
-								<textarea readonly class="form-control" required rows="3" id="view_delivery_item" name="view_delivery_item"></textarea>
+								<textarea readonly class="form-control" rows="3" id="view_delivery_item" name="view_delivery_item"></textarea>
 							</div>
 							<div class="col-sm">
 								<label>Instruction</label>
@@ -656,50 +679,6 @@
 	</div>
 </div>
 
-
-<!-- Request modal
-<div class="modal fade" id="request_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="request_modalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header bg-info">
-				<h5 class="modal-title" id="request_modalLabel">
-					<span class="fa fa-pen"></span>&nbsp;
-					<span id="request_header"> Create Request</span>
-				</h5>
-			</div>
-			<form action="{{URL::to('/messengerial/store')}}" method="post">
-				@csrf
-				<input type="hidden" id="messengerial_id" name="messengerial_id">
-
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-sm">
-							<label>Recipient</label>
-							<input type="text" id="recipient" class="form-control" name="recipient" placeholder="Enter recipient here..." required>
-						</div>
-					</div>
-					<br>
-					<div class="row">
-						<div class="col-sm">
-							<small>
-								<span class="fa fa-exclamation-circle text-red"></span>
-								<b>Note:</b> The "recipient" will serve as the requestor's unique indicator.
-							</small>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button id="btn_editMessengerialRequest" type="submit" class="btn btn-success">
-						<span id="icon_submit" class="fa fa-plus"></span>
-						<span id="btn_submit">Create</span>
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div> -->
-
 <!-- cancel modal -->
 <div class="modal fade" id="cancel_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="cancel_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
@@ -710,7 +689,7 @@
 					<span id="cancel_header"> Cancel Request </span>
 				</h5>
 			</div>
-			<form action="{{URL::to('/messengerial/cancel')}}" method="post">
+			<form action="{{URL::to('/messengerial/cancel')}}" method="POST">
 				@csrf
 				<input type="hidden" id="msg_cancel_id" name="msg_cancel_id">
 
@@ -721,7 +700,7 @@
 							@if($data->status=='Cancelled')
 							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" readonly></textarea>
 							@else
-							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" placeholder="Type here..." required></textarea>
+							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" placeholder="Type here..."></textarea>
 							@endif
 						</div>
 					</div>
@@ -737,15 +716,17 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					@if($data->status!='Cancelled' || $data->status!='Filing')
 					<button id="btn_cancelRequest" type="submit" class="btn btn-warning">
 						<span id="icon_submit" class="fa fa-times"></span>
-						<span id="btn_submit">Cancel</span>
+						<span id="btn_cancel">Cancel</span>
 					</button>
+					@endif
 				</div>
 			</form>
 		</div>
 	</div>
-</div> 
+</div>
 
 <!-- Accomplish modal -->
 <div class="modal fade" id="accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="accomplish_modalLabel" aria-hidden="true">

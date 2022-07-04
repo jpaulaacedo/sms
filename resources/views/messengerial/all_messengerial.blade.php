@@ -79,6 +79,11 @@
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@if($data->status=='Accomplished')
+									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+										<span class="fa fa-file"></span>
+									</button>
+									@endif
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
@@ -112,6 +117,7 @@
 								<tr class="text-center">
 									<th width="30%">File</th>
 									<th width="50%">Remarks</th>
+
 								</tr>
 							</thead>
 							<tbody id="file_body">
@@ -123,6 +129,96 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- View Messengerial Modal-->
+<div class="modal fade" id="view_msg_modal" tabindex="-1" aria-labelledby="view_msg_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<h5 class="modal-title" id="view_msg_modalLabel">
+					<span class="fa fa-user"></span>
+					&nbsp;Recipient Details
+				</h5>
+			</div>
+			<div class="modal-body">
+				@csrf
+				<div class="row">
+					<input type="hidden" id="view_messengerial_id" name="view_messengerial_id">
+					<div class="col-sm">
+
+						<div class="row">
+							<div class="col-sm">
+								<label>Recipient
+									<span class="text-red">*</span>
+								</label>
+								<input readonly type="text" id="view_recipient" name="view_recipient" class="form-control" rows="5" required>
+							</div>
+						</div>
+						&nbsp;
+
+						<div class="row">
+							<div class="col-sm-4">
+								<label>Agency/Office
+									<span class="text-red">*</span>
+								</label>
+								<input readonly type="text" id="view_agency" name="view_agency" class="form-control" rows="5" required>
+							</div>
+							<div class="col-sm-4">
+								<label>Contact #
+									<span class="text-red">*</span>
+								</label>
+								<input readonly type="text" name="view_contact" id="view_contact" class="form-control" required />
+							</div>
+							<div class="col-sm-4">
+								<label>Date Needed
+									<span class="text-red">*</span>
+								</label>
+								<input type="datetime-local" class="form-control" readonly name="view_due_date" id="view_due_date" required>
+							</div>
+						</div>
+
+						&nbsp;
+
+						<div class="row">
+							<div class="col-sm">
+								<label>Destination(Address)
+									<span class="text-red">*</span>
+								</label>
+								<textarea readonly class="form-control" rows="3" id="view_destination" required name="view_destination"></textarea>
+							</div>
+						</div>
+						&nbsp;
+
+						<div class="row">
+							<div class="col-sm">
+								<label>What to Deliver
+									<span class="text-red">*</span>
+									<small>
+										If multiple items, separate using comma(,).
+									</small>
+								</label>
+								<textarea readonly class="form-control" required rows="3" id="view_delivery_item" name="view_delivery_item"></textarea>
+							</div>
+							<div class="col-sm">
+								<label>Instruction</label>
+								<textarea readonly id="view_instruction" name="view_instruction" class="form-control" rows="3"></textarea>
+							</div>
+						</div>
+
+						&nbsp;
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_msg_modal">
+								Close
+							</button>
+
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

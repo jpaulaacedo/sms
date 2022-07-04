@@ -1158,3 +1158,24 @@ function generate_report() {
         });
     }
 }
+
+function _resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/accomplish/resched",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            $('#resched_modal').modal('show');
+            $('#due_date').val(response.date_needed);
+            $('#resched_vhl_id').val(response.id);
+            $('#resched_reason').val("");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
