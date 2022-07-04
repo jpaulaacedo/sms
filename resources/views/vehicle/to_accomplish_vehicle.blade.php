@@ -149,7 +149,7 @@
                                 <td>
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
                                     <br>
-                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}
+                                    <small>Driver: {{$data->driver}} <br> Pickup date: {{ date('F j, Y g:i A', strtotime($data->otw_pickupdate)) }}
                                         <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
                                 </td>
                                 <td>

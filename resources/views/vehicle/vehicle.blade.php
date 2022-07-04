@@ -514,10 +514,12 @@
 					<div class="row">
 						<div class="col-sm">
 							<label id="lbl_reason">Reason for Cancellation </label>
+							@if(isset($data))
 							@if($data->status=='Cancelled')
 							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" readonly></textarea>
 							@else
 							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" placeholder="Type here..." required></textarea>
+							@endif
 							@endif
 						</div>
 					</div>

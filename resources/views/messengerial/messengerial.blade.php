@@ -697,10 +697,12 @@
 					<div class="row">
 						<div class="col-sm">
 							<label id="lbl_reason">Reason for Cancellation </label>
+							@if(isset($data))
 							@if($data->status=='Cancelled')
 							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" readonly></textarea>
 							@else
 							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" placeholder="Type here..."></textarea>
+							@endif
 							@endif
 						</div>
 					</div>
@@ -716,11 +718,13 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					@if(isset($data))
 					@if($data->status!='Cancelled' || $data->status!='Filing')
 					<button id="btn_cancelRequest" type="submit" class="btn btn-warning">
 						<span id="icon_submit" class="fa fa-times"></span>
 						<span id="btn_cancel">Cancel</span>
 					</button>
+					@endif
 					@endif
 				</div>
 			</form>

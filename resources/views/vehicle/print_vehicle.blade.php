@@ -413,7 +413,7 @@
 
                                 @elseif(App\User::get_user_type($vehicle->user_id) == 3 || ($vehicle->status == "For Assignment" && $vehicle->status == "For CAO Approval") && (App\User::get_division($vehicle->user_id) == "Finance and Administrative Division" || App\User::get_division($vehicle->user_id) == "Office of the Executive Director"))
                                 <span style="text-align: center;"><img id="dc_kmd_signature"></span>
-                                @elseif(App\User::get_user_type($vehicle->user_id) == 1 && ($vehicle->status == "Filing" || $vehicle->status == "For Assignment" || $vehicle->status == "For CAO Approval") && App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
+                                @elseif(App\User::get_user_type($vehicle->user_id) == 1 && ($vehicle->status == "Filing" || $vehicle->status == "For Assignment" || $vehicle->status == "For CAO Approval") || App\User::get_division($vehicle->user_id) == "Office of the Executive Director")
                                 <span style="text-align: center;"><img id="dc_kmd_signature"></span>
 
                                 @elseif(App\User::get_user_type($vehicle->user_id) == 1 || App\User::get_user_type($vehicle->user_id) == 5 && $vehicle->status != "Filing" && $vehicle->status != "For DC Approval" && $vehicle->status != "Cancelled")

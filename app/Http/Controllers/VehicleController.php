@@ -612,8 +612,8 @@ class VehicleController extends Controller
         try {
             $update = Vehicle::where('id', $request->resched_vhl_id)->first();
 
+            $update->resched_reason = "Rescheduled from: " . $update->date_needed . " to " . $request->due_date  . " due to " . $request->resched_reason;
             $update->date_needed = $request->due_date;
-            $update->resched_reason = $request->resched_reason;
             $update->save();
 
             $user_id = $update->user_id;
