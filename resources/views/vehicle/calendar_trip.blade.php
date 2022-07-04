@@ -36,7 +36,7 @@
 						@else
 						<tr>
 							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
-							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}</b></td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->otw_pickupdate)) }}</b></td>
 						</tr>
 						@endif
 						@if($data->status == "Accomplished")
