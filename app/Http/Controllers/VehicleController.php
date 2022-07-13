@@ -10,7 +10,7 @@ use App\Mail\vhlCreateTicket;
 use App\Mail\vhlApproved;
 use App\Mail\vhlAccomplished;
 use App\Mail\vhlConfirmed;
-use App\Mail\vhlAssigned;
+use App\Mail\vhlForAssignment;
 use App\Mail\vhlResched;
 use App\Mail\vhlOnTheWay;
 use Illuminate\Support\Facades\Mail;
@@ -44,6 +44,7 @@ class VehicleController extends Controller
         try {
             if ($request->vehicle_id != null) {
                 $save = Vehicle::where('id', $request->vehicle_id)->first();
+                VehiclePassenger::where('vehicle_id', $save->id)->delete();
             } else {
                 $save = new Vehicle; //model
                 $save->status = 'Filing';
@@ -52,7 +53,19 @@ class VehicleController extends Controller
             $save->date_needed = $request->date_needed; //$save->dbcolumn = $request->input name fr blade
             $save->purpose = $request->purpose;
             $save->destination = $request->destination;
+            $save->urgency = $request->urgency;
             $save->save();
+
+            $ctr = 0;
+            foreach ($request->all() as $key => $value) {
+                if ($ctr >= 7) {
+                    $passenger = new VehiclePassenger;
+                    $passenger->vehicle_id = $save->id;
+                    $passenger->passenger = $value;
+                    $passenger->save();
+                }
+                $ctr++;
+            }
 
             return redirect()->back()->with('message', 'success');
         } catch (\Exception $e) {
@@ -90,6 +103,16 @@ class VehicleController extends Controller
 
         $edit->date_needed = $due_date . "T" . $due_time;
         return json_encode($edit);
+    }
+
+    public function view_vehicle(Request $request)
+    {
+        $view = Vehicle::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($view->date_needed));
+        $due_time = date("H:i", strtotime($view->date_needed));
+
+        $view->date_needed = $due_date . "T" . $due_time;
+        return json_encode($view);
     }
 
     // DELETE VEHICLE REC
@@ -166,39 +189,24 @@ class VehicleController extends Controller
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-            $cao = User::select('name', 'email')->where('user_type', '6')->first();
-            // if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
-            //     $data = array(
-            //         'dc_name' => $cao->name,
-            //         'emp_name' => $employee->name,
-            //         'purpose' => $update->purpose,
-            //         'link'  =>  URL::to('/vehicle/cao/approval')
-            //     );
-            // } elseif ($employee->division != "Finance and Administrative Division") {
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
             $data = array(
                 'dc_name' => $dc->name,
+                'agent' => $agent->name,
                 'emp_name' => $employee->name,
                 'status' => $update->status,
+                'destination' => $update->destination,
                 'purpose' => $update->purpose,
+                'agent_link'  =>  URL::to('/vehicle/accomplish'),
                 'dc_link'  =>  URL::to('/vehicle/dc/approval'),
                 'link'  =>  URL::to('/vehicle/dc/approval')
             );
-            // } else {
-            //     $data = array(
-            //         'dc_name' => $cao->name,
-            //         'emp_name' => $employee->name,
-            //         'purpose' => $update->purpose,
-            //         'link'  =>  URL::to('/vehicle/cao/approval')
-            //     );
-            // }
-
-            // if ($dc_true == 1) {
-            //     Mail::to($dc->email)->cc([$employee->email])->send(new msgCreateTicket($data));
-            // } else {
-            //     Mail::to($cao->email)->cc([$employee->email])->send(new msgCreateTicket($data));
-            // }
+            
             if ($update->status == "For DC Approval") {
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
+            } else {
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlForAssignment($data));
             }
 
             return json_encode('success');
@@ -221,7 +229,6 @@ class VehicleController extends Controller
                 $update->status = "For CAO Approval";
             }
             $update->driver = $request->driver;
-            $update->assigned_pickupdate = $request->assigned_pickupdate;
             $update->save();
 
             $user_id = $update->user_id;
@@ -232,6 +239,7 @@ class VehicleController extends Controller
             $data = array(
                 'emp_name' => $employee->name,
                 'purpose' => $update->purpose,
+                'destination' => $update->destination,
                 'driver' => $update->driver,
                 'agent' => $agent->name,
                 'cao_name' => $cao->name,
@@ -246,7 +254,6 @@ class VehicleController extends Controller
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlConfirmed($data));
             } else {
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
-                Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlAssigned($data));
             }
 
             return json_encode('success');
@@ -276,14 +283,18 @@ class VehicleController extends Controller
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $cao = User::select('name', 'email')->where('user_type', '6')->first();
             $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
 
             $data = array(
                 'dc_name' => $cao->name,
+                'agent' => $agent->name,
                 'emp_name' => $employee->name,
+                'destination' => $update->destination,
                 'purpose' => $update->purpose,
                 'status' => $update->status,
                 'link'  =>  URL::to('/vehicle/cao/approval'),
                 'dc' => $dc->name,
+                'agent_link'  =>  URL::to('/vehicle/accomplish'),
                 'dc_approved_link'  =>  URL::to('/vehicle'),
 
             );
@@ -291,6 +302,7 @@ class VehicleController extends Controller
             // Mail::to($cao->email)->cc([$employee->email])->send(new vhlCreateTicket($data));
             // Mail::to([$employee->email])->send(new vhlApproved($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlApproved($data));
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlForAssignment($data));
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -325,6 +337,7 @@ class VehicleController extends Controller
                 'emp_name' => $employee->name,
                 'cao' => $cao->name,
                 'driver' => $update->driver,
+                'destination' => $update->destination,
                 'purpose' => $update->purpose,
                 'status' => $update->status,
                 'link'  =>  URL::to('/vehicle/accomplish'),
@@ -365,7 +378,8 @@ class VehicleController extends Controller
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
             $update->status = "On The Way";
-            $update->otw_pickupdate = $request->otw_pickupdate;
+            $today = date("Y-m-d H:i:s");
+            $update->otw_date = $today;
 
             $update->save();
 
@@ -375,6 +389,7 @@ class VehicleController extends Controller
             $data = array(
                 'emp_name' => $employee->name,
                 'purpose' => $update->purpose,
+                'destination' => $update->destination,
                 'driver' => $update->driver,
                 'link'  =>  URL::to('/vehicle'),
             );
@@ -411,26 +426,37 @@ class VehicleController extends Controller
         }
     }
 
-    public function vehicle_mark_accomplish(Request $request)
+    public function vhl_acc_accomplish_modal(Request $request)
+    {
+        $view = Vehicle::where('id', $request->data_id)->first();
+        return json_encode($view);
+    }
+
+    public function mark_accomplish_vehicle(Request $request)
     {
         try {
             $update = Vehicle::where('id', $request->data_id)->first();
             $update->status = "Accomplished";
             $update->accomplished_date = $request->accomplished_date;  // $update->save();
+            $update->remarks = $request->remarks;
             $update->save();
+
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
 
             $data = array(
                 'emp_name' => $employee->name,
-                'purpose' => $update->purpose,
                 'driver' => $update->driver,
-                'pickup_date' => $update->otw_pickupdate,
+                'pickup_date' => $update->otw_date,
                 'accomplished_date' => $update->accomplished_date,
+                'destination' => $update->destination,
+                'purpose' => $update->purpose,
+                'agency' => $update->agency,
+                'delivery_item' => $update->delivery_item,
                 'link'  =>  URL::to('/vehicle'),
             );
 
-            // Mail::to([$employee->email])->send(new vhlAccomplished($data));
+            // Mail::to([$employee->email])->send(new msgAccomplished($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlAccomplished($data));
 
             return json_encode('success');
@@ -438,14 +464,38 @@ class VehicleController extends Controller
             return json_encode($e->getMessage());
         }
     }
+
+    // public function vehicle_mark_accomplish(Request $request)
+    // {
+    //     try {
+    //         $update = Vehicle::where('id', $request->data_id)->first();
+    //         $update->status = "Accomplished";
+    //         $update->accomplished_date = $request->accomplished_date;  // $update->save();
+    //         $update->save();
+    //         $user_id = $update->user_id;
+    //         $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+
+    //         $data = array(
+    //             'emp_name' => $employee->name,
+    //             'destination' => $update->destination,
+    //             'purpose' => $update->purpose,
+    //             'driver' => $update->driver,
+    //             'pickup_date' => $update->otw_date,
+    //             'accomplished_date' => $update->accomplished_date,
+    //             'link'  =>  URL::to('/vehicle'),
+    //         );
+
+    //         // Mail::to([$employee->email])->send(new vhlAccomplished($data));
+    //         Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlAccomplished($data));
+
+    //         return json_encode('success');
+    //     } catch (\Exception $e) {
+    //         return json_encode($e->getMessage());
+    //     }
+    // }
     public function vhl_mark_accomplish_modal(Request $request)
     {
         $view = Vehicle::where('id', $request->data_id)->first();
-        $due_date = date("Y-m-d", strtotime($view->otw_pickupdate));
-        $due_time = date("H:i", strtotime($view->otw_pickupdate));
-
-        $view->otw_pickupdate = $due_date . "T" . $due_time;
-
         return json_encode($view);
     }
 
@@ -477,7 +527,6 @@ class VehicleController extends Controller
         try {
             $insert = new VehicleFile;
             $insert->vehicle_id = $request->vehicle_id;
-            $insert->remarks = $request->remarks;
             $file = $request->file('attachment');
 
             if ($file == '') {
@@ -575,7 +624,7 @@ class VehicleController extends Controller
             ->whereMonth('accomplished_date', $month)
             ->get();
         $rd_count = count($rd_cnt);
-        
+
         $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
             ->leftjoin('users', 'vehicle.user_id', 'users.id')
             ->where('status', 'Accomplished')
@@ -585,7 +634,7 @@ class VehicleController extends Controller
             ->get();
         $fad_count = count($fad_cnt);
 
-        return view('vehicle.vehicle_monthly_report', compact('vehicle', 'my_date', 'kmd_count', 'oed_count' , 'td_count' , 'rd_count' , 'fad_count'));
+        return view('vehicle.vehicle_monthly_report', compact('vehicle', 'my_date', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
     }
 
     public function vehicle_check_monthly_report(Request $request)
@@ -614,6 +663,7 @@ class VehicleController extends Controller
 
             $update->resched_reason = "Rescheduled from: " . $update->date_needed . " to " . $request->due_date  . " due to " . $request->resched_reason;
             $update->date_needed = $request->due_date;
+            $update->status = "For Rescheduling";
             $update->save();
 
             $user_id = $update->user_id;
@@ -623,6 +673,7 @@ class VehicleController extends Controller
 
             $data = array(
                 'emp_name' => $employee->name,
+                'destination' => $update->destination,
                 'purpose' => $update->purpose,
                 'date_needed' => $update->date_needed,
                 'resched_reason' => $update->resched_reason,
@@ -656,14 +707,6 @@ class VehicleController extends Controller
         } else {
             return json_encode("null");
         }
-    }
-
-    public function view_vehicle(Request $request)
-    {
-        $vehicle = Vehicle::where('id', $request->vehicle_id)->first();
-        $due_date = date("F j, Y g:i A", strtotime($vehicle->created_at));
-        $vehicle->created_at = $due_date;
-        return json_encode($vehicle);
     }
 
     public function passengertolist(Request $request)

@@ -73,6 +73,10 @@
 
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
@@ -100,6 +104,12 @@
 									</button>
 									@endif
 
+									@if($data->status=='For Rescheduling')
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
 									@if($data->status=='Cancelled')
 									<button class="btn btn-warning btn-sm" onclick="_cancelReasonMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span> reason
@@ -107,7 +117,7 @@
 									@endif
 
 									@if($data->status =='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
 									</button>
 									@endif
@@ -144,6 +154,9 @@
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
@@ -159,7 +172,7 @@
 									@endif
 
 									@if($data->status=='Filing')
-									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}','{{$data->recipient}}')">
+									<button class="btn btn-success btn-sm" onclick="_submitMessengerial('{{$data->id}}')">
 										<span class="fa fa-check"></span> Submit
 									</button> |
 									<button name="edit" id="edit" onclick="_editMessengerial('{{$data->id}}')" class="btn btn-sm btn-primary edit">
@@ -169,7 +182,11 @@
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
-
+									@if($data->status=='For Rescheduling')
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -183,7 +200,7 @@
 									@endif
 
 									@if($data->status=='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
 									</button>
 									@endif
@@ -216,6 +233,9 @@
 									@elseif($data->status=='Confirmed')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
@@ -243,6 +263,22 @@
 									</button>
 									@endif
 
+									@if($data->status=='For Assignment' && $data->pref_sched != "")
+									<button onclick="view_rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
+									@if($data->status=='For Rescheduling' && $data->pref_sched != "")
+									<button onclick="view_rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@else
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -256,7 +292,7 @@
 									@endif
 
 									@if($data->status=='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
 									</button>
 									@endif
@@ -292,6 +328,9 @@
 									@elseif($data->status == "Out For Delivery")
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
@@ -317,6 +356,12 @@
 									</button>
 									@endif
 
+									@if($data->status=='For Rescheduling')
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -330,7 +375,7 @@
 									@endif
 
 									@if($data->status=='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
 									</button>
 									@endif
@@ -356,6 +401,9 @@
 
 									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -390,6 +438,13 @@
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
+
+									@if($data->status=='For Rescheduling')
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -403,9 +458,8 @@
 									@endif
 
 									@if($data->status=='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
-
 									</button>
 									@endif
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
@@ -430,6 +484,9 @@
 
 									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@elseif($data->status == "For Rescheduling")
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status == "Cancelled")
 									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -463,6 +520,13 @@
 										<span class="fa fa-trash"></span>
 									</button>
 									@endif
+
+									@if($data->status=='For Rescheduling')
+									<button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+										<span class="fa fa-calendar"></span>
+									</button>
+									@endif
+
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelMessengerial('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -476,9 +540,8 @@
 									@endif
 
 									@if($data->status=='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
+									<button class="btn btn-warning btn-sm" onclick="acc_accomplish_modal('{{$data->id}}','{{$data->outfordel_date}}')">
 										<span class="fa fa-file"></span>
-
 									</button>
 									@endif
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
@@ -518,6 +581,22 @@
 										<span class="text-red">*</span>
 									</label>
 									<input placeholder="....." placeholder="....." type="text" id="recipient" name="recipient" class="form-control" rows="5" required>
+								</div>
+								<div class="col-sm">
+									<div class="form-group">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="urgency" id="urgency" value="not_urgent" required>
+											<label class="form-check-label" for="urgency">
+												Not Urgent
+											</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="urgency" id="urgency" value="urgent" required>
+											<label class="form-check-label" for="urgency">
+												Urgent
+											</label>
+										</div>
+									</div>
 								</div>
 							</div>
 							&nbsp;
@@ -611,6 +690,22 @@
 									<span class="text-red">*</span>
 								</label>
 								<input readonly type="text" id="view_recipient" name="view_recipient" class="form-control" rows="5">
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent">
+										<label class="form-check-label" for="view_urgency">
+											Not Urgent
+										</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent">
+										<label class="form-check-label" for="view_urgency">
+											Urgent
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
 						&nbsp;
@@ -732,40 +827,204 @@
 	</div>
 </div>
 
-<!-- Accomplish modal -->
-<div class="modal fade" id="accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="accomplish_modalLabel" aria-hidden="true">
+<!-- View Accomplish modal -->
+<div class="modal fade" id="acc_accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="acc_accomplish_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header bg-info">
-				<h5 class="modal-title" id="accomplish_modalLabel">
+				<h5 class="modal-title" id="acc_accomplish_modalLabel">
 					<span id="modal_header" class="fa fa-file"></span>&nbsp;
-					<span>Attachment/s for Recipient - </span>
-					<span id="recipient"></span>
+					<span>Attachment for Recipient - </span>
+					<span id="acc_recipient"></span>
 				</h5>
 			</div>
-			<input type="hidden" id="messengerial_id" name="messengerial_id">
+			<input type="hidden" id="acc_msg_id" name="acc_msg_id">
 			<div class="modal-body modal-lg">
+				<div class="row">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="acc_outfordel_date">Departure Time</label>
+						</div>
+						<input type="datetime-local" class="form-control" readonly name="acc_outfordel_date" id="acc_outfordel_date">
 
+						&nbsp;&nbsp;
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="acc_accomplished_date">Accomplished Date</label>
+						</div>
+						<input type="datetime-local" class="form-control" name="acc_accomplished_date" readonly id="acc_accomplished_date">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<label>Remarks</label>
+						<textarea class="form-control" rows="4" id="acc_remarks" name="acc_remarks" readonly></textarea>
+					</div>
+				</div>
+				<br>
+				<br>
 				<div class="row">
 					<div class="col-sm">
 						<table class="table table-sm table-bordered table-striped">
 							<thead>
 								<tr class="text-center">
 									<th width="30%">File</th>
-									<th width="50%">Remarks</th>
-
 								</tr>
 							</thead>
-							<tbody id="file_body">
-								<td></td>
+							<tbody id="view_file_body">
 							</tbody>
-
 						</table>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- rschd modal -->
+<div class="modal fade" id="rschd_modal" tabindex="-1" aria-labelledby="rschd_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<h5 class="modal-title" id="rschd_modalLabel">
+					<span class="fa fa-truck"></span>
+					&nbsp;For Rescheduling
+				</h5>
+			</div>
+			<!-- BLADE TO AJAX -->
+			<!-- use this id below in ajax -->
+			<input type="hidden" id="rschd_msg_id" name="rschd_msg_id">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="rschd_old_due_date">Date Needed:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="rschd_old_due_date" id="rschd_old_due_date" readonly>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="rschd_due_date">Suggested Date:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="rschd_due_date" id="rschd_due_date" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<select id="pref_sched" class="custom-select" aria-label="pref_sched" required>
+								<option selected value="none">Select from dropdown.</option>
+								<option value="by_agent">Proceed with the schedule set by Agent.</option>
+								<option value="by_requestor">Set preferred schedule.</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="rschd_pref_date">Preferred Date:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="rschd_pref_date" id="rschd_pref_date">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<label>Reason for Rescheduling:
+						</label>
+						<textarea class="form-control" rows="3" id="rschd_reason" name="rschd_reason" readonly></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#rschd_modal">
+					Close
+				</button>
+				<button class="btn btn-success" onclick="submitResched('{{$data->id}}','{{$data->rschd_pref_date}}')">
+					<span class="fa fa-check"></span> Submit
+				</button>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- view rschd modal -->
+<div class="modal fade" id="view_rschd_modal" tabindex="-1" aria-labelledby="view_rschd_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<h5 class="modal-title" id="view_rschd_modalLabel">
+					<span class="fa fa-truck"></span>
+					&nbsp;For Rescheduling
+				</h5>
+			</div>
+			<!-- BLADE TO AJAX -->
+			<!-- use this id below in ajax -->
+			<input type="hidden" id="view_rschd_msg_id" name="view_rschd_msg_id">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="view_rschd_old_due_date">Date Needed:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="view_rschd_old_due_date" id="view_rschd_old_due_date" readonly>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="view_rschd_due_date">Suggested Date:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="view_rschd_due_date" id="view_rschd_due_date" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<select id="view_pref_sched" disabled class="custom-select" aria-label="view_pref_sched">
+								<option value="by_agent">Proceed with the schedule set by Agent.</option>
+								<option value="by_requestor">Set preferred schedule.</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="view_rschd_pref_date">Preferred Date:</label>
+							</div>
+							<input type="datetime-local" class="form-control" name="view_rschd_pref_date" id="view_rschd_pref_date" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<label>Reason for Rescheduling:
+						</label>
+						<textarea class="form-control" rows="3" id="view_rschd_reason" name="view_rschd_reason" readonly></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_rschd_modal">
+					Close
+				</button>
 			</div>
 		</div>
 	</div>

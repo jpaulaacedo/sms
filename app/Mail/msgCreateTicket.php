@@ -28,7 +28,7 @@ class msgCreateTicket extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET FOR APPROVAL')->view('mail.msg_create_ticket')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - FOR APPROVAL')->view('mail.msg_create_ticket')->with('data', $this->data);
 
     }
 }

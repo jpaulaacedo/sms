@@ -32,26 +32,20 @@
 							<td style="text-align:right">CONTROL #:&nbsp;</td>
 							<td><b>{{$messengerial->control_num}}</b></td>
 						</tr>
-						@if($messengerial->status != "Filing" || $messengerial->status == "For DC Approval")
+						@if($messengerial->status != "Filing" || $messengerial->status != "For DC Approval")
 						<tr>
 							<td style="text-align:right">DRIVER:&nbsp;</td>
 							<td><b>{{$messengerial->driver}}</b></td>
 						</tr>
 						@endif
-						@if($messengerial->status == "For CAO Approval" || $messengerial->status == "Confirmed")
+
 						<tr>
-							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
-							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($messengerial->assigned_pickupdate)) }}</b></td>
+							<td style="text-align:right">TIME DEPARTURE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($messengerial->outfordel_date)) }}</b></td>
 						</tr>
-						@else
-						<tr>
-							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
-							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($messengerial->outfordel_pickupdate)) }}</b></td>
-						</tr>
-						@endif
 						@if($messengerial->status == "Accomplished")
 						<tr>
-							<td style="text-align:right">DATE ACCOMPLISHED:&nbsp;</td>
+							<td style="text-align:right">ACCOMPLISHED DATE:&nbsp;</td>
 							<td><b>{{ date('F j, Y g:i A', strtotime($messengerial->accomplished_date)) }}</b></td>
 						</tr>
 						@endif
@@ -59,6 +53,10 @@
 						<tr>
 							<td style="text-align:right">STATUS:&nbsp;</td>
 							<td>
+								@if($data->urgency == "urgent")
+								<span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
+								@endif
+								
 								@if($messengerial->status=='Filing')
 								<span class="right badge badge-primary">{{ ucwords(strtoupper($messengerial->status)) }}</span>
 
@@ -76,6 +74,7 @@
 
 								@elseif($messengerial->status == "For Assignment")
 								<span class="right badge badge-info">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+
 								@elseif($messengerial->status=='Accomplished')
 								<span class="right badge badge-success">{{ ucwords(strtoupper($messengerial->status)) }}</span>
 								@endif

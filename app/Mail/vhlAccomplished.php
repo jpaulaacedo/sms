@@ -30,7 +30,7 @@ class vhlAccomplished extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET ACCOMPLISHED')->view('mail.vhl_accomplished')->with('data', $this->data);
+        return $this->subject('VEHICLE TICKET - ACCOMPLISHED')->view('mail.vhl_accomplished')->with('data', $this->data);
 
     }
 }

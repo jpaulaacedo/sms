@@ -5,6 +5,8 @@
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Messengerial</b><br>
     Recipient:<b> {{ $data['recipient'] }} </b><br>
+    Agency:<b> {{ $data['agency'] }} </b><br>
+    What to deliver:<b> {{ $data['delivery_item'] }} </b><br>
     Driver: <b>{{ $data['driver'] }}</b><br>
     <br>
 

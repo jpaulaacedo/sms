@@ -29,7 +29,7 @@ class msgOutForDel extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET OUT FOR DELIVERY')->view('mail.msg_outfordel')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - OUT FOR DELIVERY')->view('mail.msg_outfordel')->with('data', $this->data);
 
     }
 }

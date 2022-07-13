@@ -7,14 +7,17 @@ $(document).ready(function () {
 });
 
 //SAVE VEHICLE : CREATE NEW VEHICLE REQ
-function _addRequest() {
-    $('#trip_modal').modal('show');
-    $('#subject').val("");
-    $('#vehicle_id').val("");
-    $('#icon_submit').removeClass('fa-check');
-    $('#icon_submit').addClass('fa-plus');
-    $('#btn_submit').html("Create");
-}
+// function _addRequest() {
+//     $('#trip_modal').modal('show');
+//     $('#purpose').val("");
+//     $('#destination').val("");
+//     $('#vehicle_id').val("");
+//     $('#my_tbody').empty();
+//     $(':radio:not(:checked)').attr('disabled', true);
+//     $('#icon_submit').removeClass('fa-check');
+//     $('#icon_submit').addClass('fa-plus');
+//     $('#btn_submit').html("Create");
+// }
 
 // ENABLE SUBMIT REQUEST ONLY IF RECIPIENT IS NOT EMPTY
 $(function () {
@@ -95,25 +98,22 @@ function _loadPassenger(vehicle_id) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#passenger_modal').modal('show');
-            $("#psg_count").html(response.length);
+            // $('#passenger_modal').modal('show');
             $("#my_tbody").empty();
             $("#passenger").val("");
 
             if (response != "null") {
-
                 $.each(response, function (key, value) {
                     $("#my_tbody").append(
                         '<tr>' +
-                        '<td width="75%">' + value.passenger + '</td>' +
-                        '<td width="15%"class="text-center"><button class="btn btn-circle btn-sm btn-danger" onclick="del_psg_list(' + value.id + ')"><span class="fa fa-trash"></span></button></td>' +
+                        '<td width="75%"><input type="hidden" name="passenger_' + $('#my_passenger_table tr').length + '" value="' + value.passenger + '">' + value.passenger + '</td>' +
+                        '<td width="15%"class="text-center"><button class="btn btn-circle btn-sm btn-danger btnDelete"><span class="fa fa-trash"></span></button></td>' +
                         '</tr>'
                     );
                 });
             }
-            else {
-                $("#psg_count").html("0");
-            }
+            $("#psg_count").html($('#my_passenger_table tr').length);
+
         },
         cache: false,
         contentType: false,
@@ -130,20 +130,21 @@ function _viewloadPassenger(vehicle_id) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#passenger_modal').modal('show');
-            $("#my_tbody").empty();
-            $("#psg_count").html(response.length);
-
+            // $('#passenger_modal').modal('show');
+            $("#view_my_tbody").empty();
+            $("#view_passenger").val("");
 
             if (response != "null") {
                 $.each(response, function (key, value) {
-                    $("#my_tbody").append(
+                    $("#view_my_tbody").append(
                         '<tr>' +
-                        '<td width="75%">' + value.passenger + '</td>' +
+                        '<td width="75%"><input type="hidden" name="view_passenger_' + $('#view_my_passenger_table tr').length + '" value="' + value.passenger + '">' + value.passenger + '</td>' +
                         '</tr>'
                     );
                 });
             }
+            $("#view_psg_count").html($('#view_my_passenger_table tr').length);
+
         },
         cache: false,
         contentType: false,
@@ -246,21 +247,14 @@ function del_psg_list(vehicle_id) {
 
 function _assign_modal(data) {
     $('#driver').val('');
-    $('#assigned_pickupdate').val('');
     $('#assign_modal').modal('show');
     $('#submit_vhl_id').val(data);
 }
 
 function _assign() {
-    var missing = "";
     var driver = $('#driver').val();
-    var assigned_pickupdate = $('#assigned_pickupdate').val();
-    if (driver == null) {
-        missing = "Driver";
-    } else {
-        missing = "Pickup Date";
-    }
-    if (driver != null && assigned_pickupdate != "") {
+
+    if (driver != null) {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this.",
@@ -275,7 +269,6 @@ function _assign() {
                 //AJAX to Controller
                 formData.append('data_id', $('#submit_vhl_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
                 formData.append('driver', $('#driver').val());
-                formData.append('assigned_pickupdate', $('#assigned_pickupdate').val());
                 $.ajax({
                     url: global_path + "/vehicle/accomplish/assign",
                     method: 'post',
@@ -284,7 +277,7 @@ function _assign() {
                     success: function (response) {
                         if (response == "success") {
                             Swal.fire(
-                                'Driver and Pickup Date Assigned.',
+                                'Driver Assigned.',
                                 response,
                                 'success'
                             ).then((result2) => {
@@ -309,7 +302,7 @@ function _assign() {
     } else {
         Swal.fire(
             'Required field missing.',
-            'Please select ' + missing + ' from dropdown.',
+            'Please select driver from dropdown.',
             'warning'
         )
     }
@@ -318,31 +311,68 @@ function _assign() {
 
 function add_psg_list(passenger) {
     if (passenger != "") {
-        var formData = new FormData();
-        formData.append('vehicle_id', $('#psg_vehicle_id').val());
-        formData.append('passenger', passenger);
-        $.ajax({
-            url: global_path + "/vehicle/add/passengertolist",
-            method: 'post',
-            data: formData,
-            dataType: 'json',
-            success: function (response) {
-                if (response == "success") {
-                    _loadPassenger($('#psg_vehicle_id').val());
-                } else {
-                    Swal.fire(
-                        'DB Error.',
-                        response,
-                        'error'
-                    )
-                }
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        })
+        $("#psg_count").html($('#my_passenger_table tr').length + 1);
+
+        $("#my_tbody").append(
+            '<tr>' +
+            '<td width="75%"><input type="hidden" name="passenger_' + $('#my_passenger_table tr').length + '" value="' + $("#passenger").val() + '">' + $("#passenger").val() + '</td>' +
+            '<td width="15%"class="text-center"><button class="btn btn-circle btn-sm btn-danger btnDelete"><span class="fa fa-trash"></span></button></td>' +
+            '</tr>'
+        );
+        $("#passenger").val("");
+
     }
 }
+
+function _submitVehicle(data) {
+    Swal.fire({
+        title: 'Submit Vehicle Request?',
+        text: "You won't be able to revert this.",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit.'
+    }).then((result) => {
+        if (result.value) {
+            var formData = new FormData();
+            formData.append('data_id', data);
+            $.ajax({
+                url: global_path + "/vehicle/submit",
+                method: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == "success") {
+                        Swal.fire(
+                            'Submitted.',
+                            response,
+                            'success'
+                        ).then((result2) => {
+                            window.location.href = global_path + "/vehicle";
+                        })
+
+                    } else {
+                        Swal.fire(
+                            'DB Error.',
+                            response,
+                            'error'
+                        )
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        }
+    })
+}
+
+$("#my_passenger_table").on('click', '.btnDelete', function () {
+    $(this).closest('tr').remove();
+    $("#psg_count").html($('#my_passenger_table tr').length);
+});
 
 //   Vehicle trip Button DELETE
 function _delete(vehicle_item_id, vehicle_id, destination) {
@@ -408,44 +438,47 @@ function _delete(vehicle_item_id, vehicle_id, destination) {
     })
 }
 
-//   edit TRIP TICKET Button
-function _edit(data) {
-    var formData = new FormData();
-    formData.append('data_id', data);
-    $.ajax({
-        url: "/vehicle/trip/edit",
-        method: 'post',
-        data: formData,
-        dataType: 'json',
+// //   edit TRIP TICKET Button
+// function _edit(data) {
+//     var formData = new FormData();
+//     formData.append('data_id', data);
+//     $.ajax({
+//         url: "/vehicle/trip/edit",
+//         method: 'post',
+//         data: formData,
+//         dataType: 'json',
 
-        success: function (response) {
-            $('#trip_modal').modal('show');
-            $('#date_needed').val(response.date_needed);
-            $('#purpose').val(response.purpose);
-            $('#destination').val(response.destination);
-            $('#vehicle_item_id').val(response.id);
+//         success: function (response) {
+//             $('#trip_modal').modal('show');
+//             $('#date_needed').val(response.date_needed);
+//             $('#purpose').val(response.purpose);
+//             $('#destination').val(response.destination);
+//             $('#vehicle_item_id').val(response.id);
+//             var urgency = response.urgency;
+//             $("input[name=urgency][value=" + urgency + "]").attr('checked', 'checked');
+//             $(':radio:not(:checked)').attr('disabled', true);
+//             $('#btn_add').removeClass('btn-info');
+//             $('#btn_add').addClass('btn-success');
 
-            $('#btn_add').removeClass('btn-info');
-            $('#btn_add').addClass('btn-success');
+//             $('#icon_submit').removeClass('fa-plus');
+//             $('#icon_submit').addClass('fa-check');
 
-            $('#icon_submit').removeClass('fa-plus');
-            $('#icon_submit').addClass('fa-check');
-
-            $('#btn_submit').html("Save Changes");
-
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    })
-}
+//             $('#btn_submit').html("Save Changes");
+//         },
+//         cache: false,
+//         contentType: false,
+//         processData: false
+//     })
+// }
 
 //ADD VEHICLE REQ/TRIP TICKET
 function _addRequest() {
     $('#trip_modal').modal('show');
     $('#date_needed').val('');
     $('#purpose').val('');
+    $('#trip_header').html("Vehicle Request/ Trip Ticket");
     $('#destination').val('');
+    $(':radio:not(:checked)').attr('disabled', false);
     $('#vehicle_id').val('');
     var dateControl = document.querySelector('input[type="datetime-local"]');
     // dateControl.value = '2017-06-01T08:30'; format of date should be the same on the datepicker
@@ -466,7 +499,7 @@ function _addRequest() {
 
 
 
-//edit VEHICLE: EDIT SUBJECT MESSENGERIAL
+//edit VEHICLE
 function _editVehicle(data) {
     var formData = new FormData();
     formData.append('data_id', data);
@@ -481,8 +514,13 @@ function _editVehicle(data) {
             $('#destination').val(response.destination);
             $('#date_needed').val(response.date_needed);
             $('#vehicle_id').val(response.id);
+            var urgency = response.urgency;
+            $("input[name=urgency][value=" + urgency + "]").attr('checked', 'checked');
+            $(':radio:not(:checked)').attr('disabled', false);
             $('#trip_header').html("Edit Trip Ticket");
             $('#btn_submit').html("Save Changes");
+            _loadPassenger(response.id);
+            $("#psg_count").html($('#my_passenger_table tr').length + 1);
         },
         cache: false,
         contentType: false,
@@ -490,63 +528,33 @@ function _editVehicle(data) {
     })
 }
 
-function _submitVehicle() {
-    if ($("#psg_count").html() != 0) {
+function _viewVehicle(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/view",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $('#view_trip_modal').modal('show');
+            var urgency = response.urgency;
+            $("input[name=view_urgency][value=" + urgency + "]").attr('checked', 'checked');
+            $(':radio:not(:checked)').attr('disabled', true);
+            $('#view_purpose').val(response.purpose);
+            $('#view_destination').val(response.destination);
+            $('#view_date_needed').val(response.date_needed);
+            $('#view_vehicle_id').val(response.id);
+            $('#view_btn_add').hide();
+            _viewloadPassenger(response.id);
 
-        Swal.fire({
-            title: 'Submit Vehicle Request?',
-            text: "You won't be able to revert this.",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, submit.'
-        }).then((result) => {
-            if (result.value) {
-                var formData = new FormData();
-                formData.append('data_id', $("#psg_vehicle_id").val());
-                $.ajax({
-                    url: global_path + "/vehicle/submit",
-                    method: 'post',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response == "success") {
-                            Swal.fire(
-                                'Submitted.',
-                                response,
-                                'success'
-                            ).then((result2) => {
-                                window.location.href = global_path + "/vehicle";
-                            })
-
-                        } else {
-                            Swal.fire(
-                                'DB Error.',
-                                response,
-                                'error'
-                            )
-                        }
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-
-            }
-        })
-    }
-    else {
-        Swal.fire(
-            'Passenger is required.',
-            'Please add passenger to proceed.',
-            'warning'
-        )
-        
-    }
+            $("#view_psg_count").html($('#view_my_passenger_table tr').length + 1);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
 }
-
-
 // CANCEL VEHICLE
 function _cancelVehicle(data) {
     $('#cancel_modal').modal('show');
@@ -647,11 +655,11 @@ function _deleteVehicle(vehicle_id, purpose) {
 }
 
 // Accomplish modal  
-function _markAccomplish() {
+function _markAccomplish(data, destination) {
     var accomplished_date = $('#accomplished_date').val();
     if (accomplished_date != "") {
         Swal.fire({
-            title: 'Mark ' + $('#destination').val() + ' as Accomplished?',
+            title: 'Mark ' + destination + ' as Accomplished?',
             text: "You won't be able to revert this.",
             type: 'question',
             showCancelButton: true,
@@ -661,8 +669,9 @@ function _markAccomplish() {
         }).then((result) => {
             if (result.value) {
                 var formData = new FormData();
-                formData.append('data_id', $('#markacc_vhl_id').val());
+                formData.append('data_id', data);
                 formData.append('accomplished_date', $('#accomplished_date').val());
+                formData.append('remarks', $('#remarks').val());
                 $.ajax({
                     url: global_path + "/vehicle/mark_accomplish",
                     method: 'post',
@@ -702,29 +711,81 @@ function _markAccomplish() {
     }
 }
 
-
-function mark_accomplish_modal(data) {
-    $('#accomplished_date').val('');
+function accomplish_modal(data, otw_date) {
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
-        url: "/vehicle/mark_accomplish_modal",
+        url: global_path + "/vehicle/mark_accomplish_modal",
         method: 'post',
         data: formData,
         dataType: 'json',
-
         success: function (response) {
-            $('#mark_accomplish_modal').modal('show');
-            $('#otw_pickup_date').val(response.otw_pickupdate);
-            $('#destination').val(response.destination);
-            $('#mark_vhl_id').val(response.id);
-            $('#markacc_vhl_id').val(response.id);
+            $('#destination').empty();
+            $('#accomplished_date').val('');
+            $('#destination').html(response.destination);
+            $('#otw_date').val(otw_date);
+            $('#accomplish_modal').modal('show');
+            _loadFileAgent(data);
+            $('#attachment').val("");
+            $('.custom-file-label').html("");
+            $('#remarks').val(response.remarks);
+            $('#accomplished_date').val(response.accomplished_date);
+            $('#vehicle_id').val(data);
         },
         cache: false,
         contentType: false,
         processData: false
-    })
+    });
 }
+
+function acc_accomplish_modal(data, otw_date) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: global_path + "/vehicle/acc_accomplish_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $('#acc_destination').empty();
+            $('#acc_accomplished_date').val('');
+            $('#acc_destination').html(response.destination);
+            $('#acc_otw_date').val(otw_date);
+            $('#acc_remarks').val(response.remarks);
+            $('#acc_accomplished_date').val(response.accomplished_date);
+            $('#acc_accomplish_modal').modal('show');
+            _loadFile(data);
+            $('#acc_attachment').val("");
+            $('.custom-file-label').html("");
+            $('#acc_vhl_id').val(data);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+}
+// function mark_accomplish_modal(data) {
+//     $('#accomplished_date').val('');
+//     var formData = new FormData();
+//     formData.append('data_id', data);
+//     $.ajax({
+//         url: "/vehicle/mark_accomplish_modal",
+//         method: 'post',
+//         data: formData,
+//         dataType: 'json',
+
+//         success: function (response) {
+//             $('#mark_accomplish_modal').modal('show');
+//             $('#otw_date').val(response.otw_date);
+//             $('#destination').val(response.destination);
+//             $('#mark_vhl_id').val(response.id);
+//             $('#markacc_vhl_id').val(response.id);
+//         },
+//         cache: false,
+//         contentType: false,
+//         processData: false
+//     })
+// }
 
 
 
@@ -830,61 +891,50 @@ function _otw_modal(data) {
     $('#otw_modal').modal('show');
     $('#sub_vhl_id').val(data);
 }
-function _otw() {
-    var otw_pickupdate = $('#otw_pickupdate').val();
+function _otw(data) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this.",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, on the way.'
+    }).then((result) => {
+        if (result.value) {
+            var formData = new FormData();
+            //AJAX to Controller
+            formData.append('data_id', data); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+            $.ajax({
+                url: global_path + "/vehicle/accomplish/otw",
+                method: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == "success") {
+                        Swal.fire(
+                            'On The Way.',
+                            response,
+                            'success'
+                        ).then((result2) => {
+                            window.location.href = global_path + "/vehicle/accomplish";
+                        })
 
-    if (otw_pickupdate != "") {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this.",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, on the way.'
-        }).then((result) => {
-            if (result.value) {
-                var formData = new FormData();
-                //AJAX to Controller
-                formData.append('data_id', $('#sub_vhl_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
-                formData.append('otw_pickupdate', $('#otw_pickupdate').val());
-                $.ajax({
-                    url: global_path + "/vehicle/accomplish/otw",
-                    method: 'post',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response == "success") {
-                            Swal.fire(
-                                'On The Way.',
-                                response,
-                                'success'
-                            ).then((result2) => {
-                                window.location.href = global_path + "/vehicle/accomplish";
-                            })
+                    } else {
+                        Swal.fire(
+                            'DB Error.',
+                            response,
+                            'error'
+                        )
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
 
-                        } else {
-                            Swal.fire(
-                                'DB Error.',
-                                response,
-                                'error'
-                            )
-                        }
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-
-            }
-        })
-    } else {
-        Swal.fire(
-            'Required field missing.',
-            'Please select pickup date from dropdown.',
-            'warning'
-        )
-    }
+        }
+    })
 }
 
 function _attachment(data) {
@@ -945,19 +995,15 @@ function _loadFileAgent(data) {
             $('#file_body').empty();
 
             $.each(response, function (key, value,) {
-                if (value.remarks == null) {
-                    value.remarks = "--";
-                } else {
-                    value.remarks;
-                }
+                if (value.attachment != "") {
 
-                $('#file_body').append(
-                    '<tr class="text-center">' +
-                    '<td width="30%"><a href="' + global_path + '/images/vehicle/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="40%">' + value.remarks + '</td>' +
-                    '<td width="5%"><button onclick="_deleteFile(' + value.id + ')" class="btn btn-danger btn-circle"><span class="fa fa-trash"></span></button></td>' +
-                    '</tr>'
-                )
+                    $('#file_body').append(
+                        '<tr class="text-center">' +
+                        '<td width="30%"><a href="' + global_path + '/images/vehicle/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
+                        '<td width="5%"><button onclick="_deleteFile(' + value.id + ')" class="btn btn-danger btn-circle"><span class="fa fa-trash"></span></button></td>' +
+                        '</tr>'
+                    )
+                }
             });
         },
         cache: false,
@@ -975,19 +1021,13 @@ function _loadFile(data) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#file_body').empty();
+            $('#acc_file_body').empty();
 
             $.each(response, function (key, value,) {
-                if (value.remarks == null) {
-                    value.remarks = "--";
-                } else {
-                    value.remarks;
-                }
 
-                $('#file_body').append(
+                $('#acc_file_body').append(
                     '<tr class="text-center">' +
                     '<td width="30%"><a href="' + global_path + '/images/vehicle/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="40%">' + value.remarks + '</td>' +
                     '</tr>'
                 )
             });
@@ -1000,7 +1040,7 @@ function _loadFile(data) {
 
 function _submitFile() {
     var formData = new FormData();
-    formData.append('remarks', $('#remarks').val());
+    formData.append('destination', $('#destination').val());
     formData.append('vehicle_id', $('#vehicle_id').val());
     formData.append('attachment', $('#attachment')[0].files[0]);
     $.ajax({
@@ -1009,16 +1049,27 @@ function _submitFile() {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#attachment').val("");
-            $('.custom-file-label').html("");
-            _loadFileAgent($("#vehicle_id").val());
-            $('#remarks').val("");
+            if ($('#attachment')[0].files[0] == null) {
+                Swal.fire(
+                    'No file chosen.',
+                    'Please browse file to upload.',
+                    'warning'
+                )
+            }
+            else {
+                $('#attachment').val("");
+                $('.custom-file-label').html("");
+                _loadFileAgent(
+                    $("#vehicle_id").val()
+                );
+            }
         },
         cache: false,
         contentType: false,
         processData: false
     })
 }
+
 
 //   delete file
 function _deleteFile(data_id) {

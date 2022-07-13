@@ -36,6 +36,7 @@ class HomeController extends Controller
 
         foreach ($msg_calendar as $data) {
             $driver = $data->driver;
+            $status = $data->status;
             $destination = $data->destination;
             if ($driver == "Ruben") {
                 // messengerial=green
@@ -43,12 +44,11 @@ class HomeController extends Controller
                     $msg_my_array,
                     [
                         "icon" => "msg_icon",
-                        "title" => $driver . ' | ' . $destination,
+                        "title" => $driver . ' | ' . $destination . ' | ' . $status,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#218551",
                         "textColor" => "#ffffff",
-                        "eventColor" => "#ffffff",
                         "url" => URL::to('/messengerial/calendar_recipient/' . $data->id)
 
                     ]
@@ -57,12 +57,11 @@ class HomeController extends Controller
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver . ' | ' . $destination,
+                        "title" => $driver . ' | ' . $destination . ' | ' . $status,
                         "start" => $data->date_needed,
                         "allDay" => false,
                         "backgroundColor" => "#218551",
                         "textColor" => "#ffffff",
-                        "eventColor" => "#ffffff",
                         "url" => URL::to('/messengerial/calendar_recipient/' . $data->id)
 
                     ]
@@ -72,18 +71,19 @@ class HomeController extends Controller
 
         $vhl_calendar = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
             ->leftjoin('users', 'vehicle.user_id', 'users.id')->where('status', "Confirmed")->orwhere('status', "On The Way")->orwhere('status', "Accomplished")->get();
-        // vehicle=red
+        // vehicle=blue
         foreach ($vhl_calendar as $data) {
             $driver = $data->driver;
             $destination = $data->destination;
+            $status = $data->status;
             if ($driver == "Ruben") {
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver . ' | ' . $destination,
+                        "title" => $driver . ' | ' . $destination . ' | ' . $status,
                         "start" => $data->date_needed,
                         "allDay" => false,
-                        "backgroundColor" => "#eb4034",
+                        "backgroundColor" => "#006ee6",
                         "textColor" => "#ffffff",
                         "eventColor" => "#ffffff",
                         "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)
@@ -93,10 +93,10 @@ class HomeController extends Controller
                 array_push(
                     $msg_my_array,
                     [
-                        "title" => $driver . ' | ' . $destination,
+                        "title" => $driver . ' | ' . $destination . ' | ' . $status,
                         "start" => $data->date_needed,
                         "allDay" => false,
-                        "backgroundColor" => "#eb4034",
+                        "backgroundColor" => "#006ee6",
                         "textColor" => "#ffffff",
                         "eventColor" => "#ffffff",
                         "url" => URL::to('/vehicle/calendar_trip/' . $data->vehicle_id)

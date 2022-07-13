@@ -30,7 +30,7 @@ class msgAccomplished extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET ACCOMPLISHED')->view('mail.msg_accomplished')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - ACCOMPLISHED')->view('mail.msg_accomplished')->with('data', $this->data);
 
     }
 }

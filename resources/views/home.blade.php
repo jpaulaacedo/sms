@@ -44,6 +44,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
             background-color: #22856c !important;
             color: white !important;
         }
+
+        .fc-event-title {
+            font-size: 13px !important;
+        }
+
+        /* .fc-basic-view .fc-body .fc-row{
+            min-height: 2em;
+        } */
+
     </style>
 
 
@@ -102,9 +111,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <small><b>Legend:</b></small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-success" href="#"><i class="fas fa-square"></i></a><small> Messengerial</small>
+                                <a class="text-success"><i class="fas fa-square"></i></a><small> Messengerial</small>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-danger" href="#"><i class="fas fa-square"></i></a><small> Vehicle</small>
+                                <a class="text-primary"><i class="fas fa-square"></i></a><small> Vehicle</small>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -166,19 +175,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     console.log(response);
                     var calendar = new FullCalendar.Calendar(calendarEl, {
                         headerToolbar: {
+
                             left: 'prev,next today',
                             center: 'title',
+                            description: 'long description',
                             right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
                         },
                         // initialDate: '2020-09-12',
                         navLinks: true, // can click day/week names to navigate views
                         businessHours: true, // display business hours
                         editable: false,
+                        expandRows: true,
                         selectable: false,
                         googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
                         events: response
 
                     });
+
 
                     calendar.render();
                 },
@@ -186,9 +199,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 contentType: false,
                 processData: false
             });
-            
+
 
         });
+       
     </script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script src="{{asset('js/table.js')}}"></script>

@@ -30,6 +30,6 @@ class msgResched extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET RESCHEDULED')->view('mail.msg_resched')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - RESCHEDULED')->view('mail.msg_resched')->with('data', $this->data);
     }
 }

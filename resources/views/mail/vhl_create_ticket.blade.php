@@ -5,6 +5,7 @@
 
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Vehicle</b><br>
+    Destination:<b> {{ $data['destination'] }} </b><br>
     Purpose:<b> {{ $data['purpose'] }} </b><br>
     <br>
 
@@ -19,6 +20,7 @@
 
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Vehicle</b><br>
+    Destination:<b> {{ $data['destination'] }} </b><br>
     Purpose:<b> {{ $data['purpose'] }} </b><br>
     <br>
 

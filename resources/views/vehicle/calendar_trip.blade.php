@@ -22,23 +22,17 @@
 					<tbody>
 						@foreach($vehicle as $data)
 
-						@if($data->status != "Filing" || $data->status == "For DC Approval")
+						@if($data->status != "Filing" || $data->status != "For DC Approval")
 						<tr>
 							<td style="text-align:right">DRIVER:&nbsp;</td>
 							<td><b>{{$data->driver}}</b></td>
 						</tr>
 						@endif
-						@if($data->status == "For CAO Approval" || $data->status == "Confirmed")
+
 						<tr>
-							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
-							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->assigned_pickupdate)) }}</b></td>
+							<td style="text-align:right">TIME DEPARTURE:&nbsp;</td>
+							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->otw_date)) }}</b></td>
 						</tr>
-						@else
-						<tr>
-							<td style="text-align:right">PICKUP DATE:&nbsp;</td>
-							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->otw_pickupdate)) }}</b></td>
-						</tr>
-						@endif
 						@if($data->status == "Accomplished")
 						<tr>
 							<td style="text-align:right">ACCOMPLISHED DATE:&nbsp;</td>
@@ -48,6 +42,10 @@
 						<tr>
 							<td style="text-align:right">STATUS:&nbsp;</td>
 							<td>
+								@if($data->urgency == "urgent")
+								<span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
+								@endif
+								
 								@if($data->status=='Filing')
 								<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 

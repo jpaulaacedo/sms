@@ -70,14 +70,21 @@
 								</td>
 								<td>
 									@if($data->status!='Filing')
-									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
-									</button>
+									</button> |
 									@endif
 
 									<button type="submit" onclick="_approveDC('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
 									</button>
+
+									@if($data->status=='Cancelled')
+									<button class="btn btn-warning btn-sm" onclick="_cancelReasonVehicle('{{$data->id}}')">
+										<span class="fa fa-times"></span> reason
+									</button>
+									@endif
+
 									@if($data->status =='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
 										<span class="fa fa-file"></span>
@@ -120,8 +127,14 @@
 								</td>
 								<td>
 									@if($data->status!='Filing')
-									<button onclick="_viewPassenger('{{$data->id}}', '{{$my_date_req}}', '{{$my_date_needed}}')" class="btn btn-sm btn-info">
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
+									</button> |
+									@endif
+
+									@if($data->status=='Cancelled')
+									<button class="btn btn-warning btn-sm" onclick="_cancelReasonVehicle('{{$data->id}}')">
+										<span class="fa fa-times"></span> reason
 									</button>
 									@endif
 
@@ -146,60 +159,48 @@
 </div>
 
 
-
-
-<!-- TRIP/VEHICLE Modal-->
-<div class="modal fade" id="trip_modal" tabindex="-1" aria-labelledby="trip_modalLabel" aria-hidden="true">
-	<div class="modal-dialog modal modal-dialog-centered">
+<!-- cancel modal -->
+<div class="modal fade" id="cancel_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="request_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header bg-info">
-				<h5 class="modal-title" id="trip_modalLabel">
-					<span class="fa fa-truck"></span>
-					<span id="trip_header">Vehicle Request/ Trip Ticket</span>
-
+				<h5 class="modal-title" id="request_modalLabel">
+					<span class="fa fa-times"></span>&nbsp;
+					<span id="cancel_header"> Request </span>
 				</h5>
 			</div>
-			<form action="{{URL::to('/vehicle/store')}}" method="POST">
-				<div class="modal-body">
-					@csrf
-					<div class="row">
-						<input type="hidden" id="vehicle_id" name="vehicle_id">
-						<div class="col-sm">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="row">
-										<div class="col-md-6">
-											<label>Date and Time Needed
-												<span class="text-red">*</span>
-											</label>
-											<input type="datetime-local" class="form-control" name="date_needed" id="date_needed" required>
-										</div>
+			<form action="{{URL::to('/vehicle/cancel')}}" method="post">
+				@csrf
+				<input type="hidden" id="vcl_cancel_id" name="vehicle_id">
 
-										<div class="col-md-12">
-											<label>Purpose of Trip</label>
-											<span class="text-red">*</span>
-											<textarea placeholder="purpose of trip..." id="purpose" name="purpose" class="form-control" rows="4" required></textarea>
-										</div>
-										<div class="col-md-12">
-											<label>Destination(Address)
-												<span class="text-red">*</span>
-											</label>
-											<textarea placeholder="complete address..." class="form-control" rows="4" id="destination" required name="destination"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-							<br>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm">
+							<label id="lbl_reason">Reason for Cancellation </label>
+							@if(isset($data))
+							@if($data->status=='Cancelled')
+							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" readonly></textarea>
+							@else
+							<textarea id="cancel_reason" rows="4" class="form-control" name="cancel_reason" placeholder="Type here..." required></textarea>
+							@endif
+							@endif
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div id="cancel_note" class="col-sm">
+							<small>
+								<span class="fa fa-exclamation-circle text-red"></span>
+								<span><b>Note:</b> Make sure to provide reason if you want to cancel your request.</span>
+							</small>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#trip_modal">
-						Close
-					</button>
-					<button id="btn_add" type="submit" class="btn btn-success">
-						<span id="icon_submit" class="fa fa-check"></span>
-						<span id="btn_submit">Save</span>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button id="btn_cancelRequest" type="submit" class="btn btn-warning">
+						<span id="icon_submit" class="fa fa-times"></span>
+						<span>Cancel</span>
 					</button>
 				</div>
 			</form>
@@ -207,102 +208,98 @@
 	</div>
 </div>
 
-<div class="modal fade" id="passenger_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="passenger_modalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-md modal-dialog-centered">
+<!-- VIEW TRIP/VEHICLE Modal-->
+<div class="modal fade" id="view_trip_modal" tabindex="-1" aria-labelledby="view_trip_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal modal-lg modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header bg-info">
-				<h5 class="modal-title" id="trip_modalLabel">
-					<span class="fa fa-users"></span>
-					<span id="passenger_header">Passenger(s)</span>
+				<h5 class="modal-title" id="view_trip_modalLabel">
+					<span class="fa fa-truck"></span>
+					<span id="view_trip_header">Vehicle Request/ Trip Ticket</span>
 				</h5>
 			</div>
-
 			<div class="modal-body">
 				<div class="row">
-					<input type="hidden" id="psg_vehicle_id" name="psg_vehicle_id">
-					<div class="col-sm">
-						<table>
-							<tbody>
-
-								<tr>
-									<td style="text-align:right"><b>DATE OF REQUEST:&nbsp;</b></td>
-									<td id="td_date_req"></td>
-								</tr>
-								<tr>
-									<td style="text-align:right"><b>PURPOSE:&nbsp;</b></td>
-									<td id="td_purpose"></td>
-								</tr>
-								<tr>
-									<td style="text-align:right"><b>DATE NEEDED:&nbsp;</b></td>
-									<td id="td_date_needed"></td>
-								</tr>
-								<tr>
-									<td style="text-align:right"><b>DESTINATION:&nbsp;</b></td>
-									<td id="td_destination"></td>
-								</tr>
-								<tr>
-									<td style="text-align:right"><b>STATUS:&nbsp;</b></td>
-									<td id="td_status" style="color:blue"></td>
-								</tr>
-							</tbody>
-						</table>
-						<br>
+					<input type="hidden" id="vehicle_id" name="vehicle_id">
+					<div class="col-sm-12">
 						<div class="row">
-							<div class="col-md-12">
-								<label id="lbl_passenger">Add Passenger:</label>
-								<span id="asterisk" class="text-red">*</span>
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;
-								<small><label>Total:</label>
-									<span id="psg_count"></span>
-								</small>
-								<div class="input-group">
-									<input type="text" placeholder="Type passenger name here..." class="form-control" name="passenger" id="passenger">
-									<div class="input-group-append">
-										<button class="btn btn-primary" name="btn_passenger" id="btn_passenger" type="button" onclick="add_psg_list($('#passenger').val())">+</button>
+							<div class="col-sm-12">
+								<div class="row">
+									<div class="col-sm-6">
+										<label>Date and Time Needed
+											<span class="text-red">*</span>
+										</label>
+										<input type="datetime-local" class="form-control" name="view_date_needed" id="view_date_needed" readonly>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent" readonly>
+												<label class="form-check-label" for="view_urgency">
+													Not Urgent
+												</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent" readonly>
+												<label class="form-check-label" for="view_urgency">
+													Urgent
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-sm-6">
+										<label>Purpose of Trip</label>
+										<span class="text-red">*</span>
+										<textarea id="view_purpose" name="view_purpose" class="form-control" rows="4" readonly></textarea>
+										<br>
+										<label>Destination(Address)
+											<span class="text-red">*</span>
+										</label>
+										<textarea class="form-control" rows="4" id="view_destination" readonly name="view_destination"></textarea>
+									</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<label id="view_lbl_passenger">&nbsp; Passenger(s):</label>
+											<span id="asterisk" class="text-red">*</span>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;
+											<small><label>Total:</label>
+												<span id="view_psg_count"></span>
+											</small>
+											<br>
+											<div class='scrolledTable' style="height:300px; width:460px; overflow:auto;">
+												<table class="table table-striped table-bordered table-sm" id="view_my_passenger_table">
+													<tbody id="view_my_tbody">
+													</tbody>
+												</table>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<br>
-						<div class="row">
-							<div class="col-md-12">
-								<div class='scrolledTable' style="height:300px; width:460px; overflow:auto;">
-									<table class="table table-striped table-bordered table-sm">
-										<tbody id="my_tbody">
-										</tbody>
-									</table>
-								</div>
-							</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_trip_modal">
+								Close
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#passenger_modal">
-					Close
-				</button>
-
-				@foreach($vehicle as $data)
-				@if($data->status=='Filing')
-				<button ame="submit_button" id='submit_button' class="btn btn-success btn" onclick="_submitVehicle()">
-					<span class="fa fa-check"></span> Submit
-				</button>
-				@endif
-				@endforeach
-			</div>
 		</div>
 	</div>
 </div>
+
 
 @endsection
 

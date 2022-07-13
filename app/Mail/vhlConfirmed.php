@@ -29,6 +29,6 @@ class vhlConfirmed extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET CONFIRMED')->view('mail.vhl_confirmed')->with('data', $this->data);
+        return $this->subject('VEHICLE TICKET - CONFIRMED')->view('mail.vhl_confirmed')->with('data', $this->data);
     }
 }

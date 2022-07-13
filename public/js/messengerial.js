@@ -113,7 +113,8 @@ function _editMessengerial(data) {
             $('#instruction').val(response.instruction);
             $('#due_date').val(response.date_needed);
             $('#msg_id').val(response.id);
-
+            $("input[name=urgency][value=" + response.urgency + "]").attr('checked', 'checked');
+            $(':radio:not(:checked)').attr('disabled', false);
             $('#btn_add').removeClass('btn-info');
             $('#btn_add').addClass('btn-success');
 
@@ -122,7 +123,7 @@ function _editMessengerial(data) {
 
             $('#btn_submit').html("Save Changes");
             $('#recipient_title').html("Edit Messengerial Request");
-            console.log(response);
+            console.log(response.urgency);
         },
         cache: false,
         contentType: false,
@@ -145,6 +146,9 @@ function _viewMessengerial(data) {
             $('#view_recipient').val(response.recipient);
             $('#view_contact').val(response.contact);
             $('#view_destination').val(response.destination);
+            var urgency = response.urgency;
+            $("input[name=view_urgency][value=" + urgency + "]").attr('checked', 'checked');
+            $(':radio:not(:checked)').attr('disabled', true);
             $('#view_delivery_item').val(response.delivery_item);
             $('#view_instruction').val(response.instruction);
             $('#view_due_date').val(response.date_needed);
@@ -168,6 +172,7 @@ function _add() {
     $('#destination').val('');
     $('#delivery_item').val('');
     $('#instruction').val('');
+    $(':radio:not(:checked)').attr('disabled', false);
     $('#due_date').val('');
     $('#btn_submit').html("Create");
     $('#icon_submit').removeClass('fa-check');
@@ -309,9 +314,9 @@ function _deleteMessengerial(messengerial_id, recipient) {
 }
 
 //   Messengerial Button SUBMIT
-function _submitMessengerial(data, control_num) {
+function _submitMessengerial(data) {
     Swal.fire({
-        title: 'Submit ' + control_num + ' Messengerial Request?',
+        title: 'Submit Messengerial Request?',
         text: "You won't be able to revert this.",
         type: 'question',
         showCancelButton: true,
@@ -354,23 +359,137 @@ function _submitMessengerial(data, control_num) {
     })
 }
 
+//   Messengerial Button SUBMIT
+function submitResched(data) {
+    var pref_date = $('#rschd_pref_date').val();
+    var missing = "";
+    if ($('#pref_sched :selected').val() == "none") {
+        missing = "from dropdown";
+    } else {
+        missing = "Preferred Date";
+    }
+    if (($('#pref_sched :selected').val() == "by_requestor" && pref_date != "")) {
+        Swal.fire({
+            title: 'Submit Reschedule?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                console.log(rschd_pref_date)
+                formData.append('data_id', data);
+                formData.append('pref_date', pref_date);
+                formData.append('pref_sched', $('#pref_sched :selected').val());
+                $.ajax({
+                    url: global_path + "/messengerial/submitResched",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial";
+                            })
 
-function _attachmentAgent(data) {
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    }
+    else if ($('#pref_sched :selected').val() == "by_agent") {
+
+        Swal.fire({
+            title: 'Submit Reschedule?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                console.log(rschd_pref_date)
+                formData.append('data_id', data);
+                formData.append('pref_sched', $('#pref_sched :selected').val());
+                $.ajax({
+                    url: global_path + "/messengerial/submitResched",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    }
+    else {
+        Swal.fire(
+            'Required field missing',
+            'Select ' + missing + '.',
+            'warning'
+        )
+    }
+}
+
+function accomplish_modal(data, outfordel_date) {
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
-        url: global_path + "/messengerial/attachment",
+        url: global_path + "/messengerial/mark_accomplish_modal",
         method: 'post',
         data: formData,
         dataType: 'json',
         success: function (response) {
             $('#recipient').empty();
+            $('#accomplished_date').empty();
             $('#recipient').html(response.recipient);
+            $('#outfordel_date').val(outfordel_date);
             $('#accomplish_modal').modal('show');
             _loadFileAgent(data);
             $('#attachment').val("");
             $('.custom-file-label').html("");
             $('#remarks').val(response.remarks);
+            $('#accomplished_date').val(response.accomplished_date);
             $('#messengerial_id').val(data);
         },
         cache: false,
@@ -379,6 +498,61 @@ function _attachmentAgent(data) {
     });
 }
 
+function acc_accomplish_modal(data, outfordel_date) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: global_path + "/messengerial/acc_accomplish_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $('#acc_recipient').empty();
+            $('#acc_accomplished_date').val('');
+            $('#acc_recipient').html(response.recipient);
+            $('#acc_outfordel_date').val(outfordel_date);
+            $('#acc_remarks').val(response.remarks);
+            $('#acc_accomplished_date').val(response.accomplished_date);
+            $('#acc_accomplish_modal').modal('show');
+            _loadFile(data);
+            $('#acc_attachment').val("");
+            $('.custom-file-label').html("");
+            $('#acc_messengerial_id').val(data);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+}
+
+function _loadFileAgent(data) {
+    var formData = new FormData();
+    formData.append('messengerial_id', data);
+    $.ajax({
+        url: global_path + "/load_file",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            $('#file_body').empty();
+
+            $.each(response, function (key, value,) {
+                if (value.attachment != "") {
+                    $('#file_body').append(
+                        '<tr class="text-center">' +
+                        '<td width="30%"><a href="' + global_path + '/images/messengerial/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
+                        '<td width="5%"><button onclick="_deleteFile(' + value.id + ')" class="btn btn-danger btn-circle"><span class="fa fa-trash"></span></button></td>' +
+                        '</tr>'
+                    )
+                }
+
+            });
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+}
 
 function _attachment(data) {
     var formData = new FormData();
@@ -393,7 +567,7 @@ function _attachment(data) {
             $('#recipient').html(response.recipient);
             $('#accomplish_modal').modal('show');
             // _loadRecipient(data);
-            _loadFile(data);
+            _loadFileAgent(data);
             $('#attachment').val("");
             $('.custom-file-label').html("");
             $('#remarks').val(response.remarks);
@@ -504,7 +678,6 @@ function _approveCAO(data) {
 }
 function _assign_modal(data) {
     $('#driver').val('');
-    $('#assigned_pickupdate').val('');
     $('#assign_modal').modal('show');
     $('#submit_msg_id').val(data);
 }
@@ -519,10 +692,92 @@ function _resched_modal(data) {
         dataType: 'json',
 
         success: function (response) {
+            console.log(response)
             $('#resched_modal').modal('show');
             $('#due_date').val(response.date_needed);
             $('#resched_msg_id').val(response.id);
             $('#resched_reason').val("");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+// $(function () {
+//     var selected = $('#pref_sched :selected').val();
+//     document.getElementById("rschd_pref_date").disabled = true;
+//     if (selected == "by_requestor") {
+//         console.log(selected)
+//         document.getElementById("rschd_pref_date").disabled = false;
+//     }
+//     else {
+//         document.getElementById("rschd_pref_date").disabled = true;
+//     }
+// });
+
+$('select').on('change', function () {
+
+    var selected = $('#pref_sched :selected').val();
+
+    if (selected == 'by_requestor') {
+        console.log(selected)
+        document.getElementById("rschd_pref_date").disabled = false;
+    }
+    else {
+        document.getElementById("rschd_pref_date").disabled = true;
+    }
+});
+
+function rschd_modal(data) {
+
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/accomplish/rschd",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#rschd_modal').modal('show');
+            $('#rschd_old_due_date').val(response.old_date_needed);
+            $('#rschd_due_date').val(response.date_needed);
+            $('#rschd_msg_id').val(response.id);
+            $('#rschd_reason').val(response.resched_reason);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function view_rschd_modal(data) {
+
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/view_rschd",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            $('#view_rschd_modal').modal('show');
+            $('#view_rschd_old_due_date').val(response.old_date_needed);
+            $('#view_rschd_due_date').val(response.date_needed);
+            $('#view_rschd_msg_id').val(response.id);
+            $('#view_rschd_pref_date').val(response.pref_date);
+            $('#view_rschd_reason').val(response.resched_reason);
+            var preferred_sched = response.pref_sched;
+            console.log(preferred_sched)
+            if (preferred_sched == 'by_requestor') {
+                console.log(preferred_sched == 'by_requestor')
+                document.getElementById('view_pref_sched').value = 'by_requestor';
+            } else {
+                document.getElementById('view_pref_sched').value = 'by_agent';
+            }
         },
         cache: false,
         contentType: false,
@@ -596,39 +851,33 @@ function _outfordel_modal(data) {
 //     $('#accomplished_date').val('');
 // }
 
-function mark_accomplish_modal(data) {
-    $('#accomplished_date').val('');
-    var formData = new FormData();
-    formData.append('data_id', data);
-    $.ajax({
-        url: "/messengerial/mark_accomplish_modal",
-        method: 'post',
-        data: formData,
-        dataType: 'json',
+// function mark_accomplish_modal(data) {
+//     $('#accomplished_date').val('');
+//     var formData = new FormData();
+//     formData.append('data_id', data);
+//     $.ajax({
+//         url: "/messengerial/mark_accomplish_modal",
+//         method: 'post',
+//         data: formData,
+//         dataType: 'json',
 
-        success: function (response) {
-            $('#mark_accomplish_modal').modal('show');
-            $('#outfordel_pickup_date').val(response.outfordel_pickupdate);
-            $('#cntrl_num').val(response.control_num);
-            $('#mark_msg_id').val(response.id);
-            $('#markacc_msg_id').val(response.id);
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    })
-}
+//         success: function (response) {
+//             $('#mark_accomplish_modal').modal('show');
+//             $('#outfordel_date').val(response.outfordel_date);
+//             $('#cntrl_num').val(response.control_num);
+//             $('#mark_msg_id').val(response.id);
+//             $('#markacc_msg_id').val(response.id);
+//         },
+//         cache: false,
+//         contentType: false,
+//         processData: false
+//     })
+// }
 
 function _assign() {
-    var missing = "";
     var driver = $('#driver').val();
-    var assigned_pickupdate = $('#assigned_pickupdate').val();
-    if (driver == null) {
-        missing = "Driver";
-    } else {
-        missing = "Pickup Date";
-    }
-    if (driver != null && assigned_pickupdate != "") {
+
+    if (driver != null) {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this.",
@@ -636,14 +885,13 @@ function _assign() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, assign.'
+            confirmButtonText: 'Yes, assign driver.'
         }).then((result) => {
             if (result.value) {
                 var formData = new FormData();
                 //AJAX to Controller
                 formData.append('data_id', $('#submit_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
                 formData.append('driver', $('#driver').val());
-                formData.append('assigned_pickupdate', $('#assigned_pickupdate').val());
                 $.ajax({
                     url: global_path + "/messengerial/accomplish/assign",
                     method: 'post',
@@ -652,7 +900,7 @@ function _assign() {
                     success: function (response) {
                         if (response == "success") {
                             Swal.fire(
-                                'Driver and Pickup Date Assigned.',
+                                'Driver Assigned.',
                                 response,
                                 'success'
                             ).then((result2) => {
@@ -677,75 +925,64 @@ function _assign() {
     } else {
         Swal.fire(
             'Required field missing.',
-            'Please select ' + missing + ' from dropdown.',
+            'Please select driver from dropdown.',
             'warning'
         )
     }
 }
 
-function _outfordel() {
-    var outfordel_pickupdate = $('#outfordel_pickupdate').val();
+function _outfordel(data) {
 
-    if (outfordel_pickupdate != "") {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this.",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, out for delivery.'
-        }).then((result) => {
-            if (result.value) {
-                var formData = new FormData();
-                //AJAX to Controller
-                formData.append('data_id', $('#sub_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
-                formData.append('outfordel_pickupdate', $('#outfordel_pickupdate').val());
-                $.ajax({
-                    url: global_path + "/messengerial/accomplish/outfordel",
-                    method: 'post',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response == "success") {
-                            Swal.fire(
-                                'Out For Delivery.',
-                                response,
-                                'success'
-                            ).then((result2) => {
-                                window.location.href = global_path + "/messengerial/accomplish";
-                            })
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this.",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, out for delivery.'
+    }).then((result) => {
+        if (result.value) {
+            var formData = new FormData();
+            //AJAX to Controller
+            formData.append('data_id', data); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+            $.ajax({
+                url: global_path + "/messengerial/accomplish/outfordel",
+                method: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == "success") {
+                        Swal.fire(
+                            'Out For Delivery.',
+                            response,
+                            'success'
+                        ).then((result2) => {
+                            window.location.href = global_path + "/messengerial/accomplish";
+                        })
 
-                        } else {
-                            Swal.fire(
-                                'DB Error.',
-                                response,
-                                'error'
-                            )
-                        }
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
+                    } else {
+                        Swal.fire(
+                            'DB Error.',
+                            response,
+                            'error'
+                        )
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
 
-            }
-        })
-    } else {
-        Swal.fire(
-            'Required field missing.',
-            'Please select pickup date from dropdown.',
-            'warning'
-        )
-    }
+        }
+    })
 }
-
 // mark Accomplish modal  
-function _markAccomplish() {
+function _markAccomplish(data, control_num) {
     var accomplished_date = $('#accomplished_date').val();
     if (accomplished_date != "") {
         Swal.fire({
-            title: 'Mark ' + $('#cntrl_num').val() + ' as Accomplished?',
+            title: 'Mark ' + control_num + ' as accomplished?',
             text: "You won't be able to revert this.",
             type: 'question',
             showCancelButton: true,
@@ -755,8 +992,9 @@ function _markAccomplish() {
         }).then((result) => {
             if (result.value) {
                 var formData = new FormData();
-                formData.append('data_id', $('#markacc_msg_id').val());
+                formData.append('data_id', data);
                 formData.append('accomplished_date', $('#accomplished_date').val());
+                formData.append('remarks', $('#remarks').val());
                 $.ajax({
                     url: global_path + "/messengerial/mark_accomplish",
                     method: 'post',
@@ -823,38 +1061,6 @@ function _markAccomplish() {
 //     });
 // }
 
-function _loadFileAgent(data) {
-    var formData = new FormData();
-    formData.append('messengerial_id', data);
-    $.ajax({
-        url: global_path + "/load_file",
-        method: 'post',
-        data: formData,
-        dataType: 'json',
-        success: function (response) {
-            $('#file_body').empty();
-
-            $.each(response, function (key, value,) {
-                if (value.remarks == null) {
-                    value.remarks = "--";
-                } else {
-                    value.remarks;
-                }
-
-                $('#file_body').append(
-                    '<tr class="text-center">' +
-                    '<td width="30%"><a href="' + global_path + '/images/messengerial/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="50%">' + value.remarks + '</td>' +
-                    '<td width="5%"><button onclick="_deleteFile(' + value.id + ')" class="btn btn-danger btn-circle"><span class="fa fa-trash"></span></button></td>' +
-                    '</tr>'
-                )
-            });
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-}
 
 function _loadFile(data) {
     var formData = new FormData();
@@ -865,19 +1071,12 @@ function _loadFile(data) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#file_body').empty();
+            $('#acc_file_body').empty();
 
             $.each(response, function (key, value,) {
-                if (value.remarks == null) {
-                    value.remarks = "--";
-                } else {
-                    value.remarks;
-                }
-
-                $('#file_body').append(
+                $('#acc_file_body').append(
                     '<tr class="text-center">' +
                     '<td width="30%"><a href="' + global_path + '/images/messengerial/' + value.attachment + '" target="_blank">' + value.attachment + '</a></td>' +
-                    '<td width="50%">' + value.remarks + '</td>' +
                     '</tr>'
                 )
             });
@@ -891,7 +1090,6 @@ function _loadFile(data) {
 function _submitFile() {
     var formData = new FormData();
     formData.append('recipient', $('#recipient').val());
-    formData.append('remarks', $('#remarks').val());
     formData.append('messengerial_id', $('#messengerial_id').val());
     formData.append('attachment', $('#attachment')[0].files[0]);
     $.ajax({
@@ -900,12 +1098,20 @@ function _submitFile() {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#attachment').val("");
-            $('.custom-file-label').html("");
-            _loadFileAgent(
-                $("#messengerial_id").val()
-            );
-            $('#remarks').val("");
+            if ($('#attachment')[0].files[0] == null) {
+                Swal.fire(
+                    'No file chosen.',
+                    'Please browse file to upload.',
+                    'warning'
+                )
+            }
+            else {
+                $('#attachment').val("");
+                $('.custom-file-label').html("");
+                _loadFileAgent(
+                    $("#messengerial_id").val()
+                );
+            }
         },
         cache: false,
         contentType: false,

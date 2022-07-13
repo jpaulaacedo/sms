@@ -29,6 +29,6 @@ class vhlResched extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET RESCHEDULED')->view('mail.vhl_resched')->with('data', $this->data);
+        return $this->subject('VEHICLE TICKET - RESCHEDULED')->view('mail.vhl_resched')->with('data', $this->data);
     }
 }

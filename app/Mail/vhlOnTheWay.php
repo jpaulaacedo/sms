@@ -29,7 +29,7 @@ class vhlOnTheWay extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET ON THE WAY')->view('mail.vhl_ontheway')->with('data', $this->data);
+        return $this->subject('VEHICLE TICKET - ON THE WAY')->view('mail.vhl_ontheway')->with('data', $this->data);
 
     }
 }

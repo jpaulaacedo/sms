@@ -5,6 +5,7 @@
 
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Vehicle</b><br>
+    Destination:<b> {{ $data['destination'] }} </b><br>
     Purpose:<b> {{ $data['purpose'] }} </b><br>
     <br>
 
@@ -16,10 +17,12 @@
 @else
 <p>Hi {{ $data['emp_name'] }}!
 
-<p>Your ticket is APPROVED by CAO {{$data['cao']}} and is now CONFIRMED.
-
+<p>Your ticket is APPROVED by CAO {{$data['cao']}}. <br>
+<p>Please handover the documents to Mr. Percus Imperio.</p>
+<br>
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Vehicle</b><br>
+    Destination:<b> {{ $data['destination'] }} </b><br>
     Purpose:<b> {{ $data['purpose'] }} </b><br>
     Driver: <b>{{ $data['driver'] }}</b><br>
     <br>

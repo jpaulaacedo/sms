@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class vhlAssigned extends Mailable
+class vhlForAssignment extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -29,6 +29,6 @@ class vhlAssigned extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET ASSIGNED')->view('mail.vhl_assigned')->with('data', $this->data);
+        return $this->subject('VEHICLE TICKET - FOR ASSIGNMENT')->view('mail.vhl_for_assignment')->with('data', $this->data);
     }
 }

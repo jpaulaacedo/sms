@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class msgAssigned extends Mailable
+class msgForAssignment extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -30,6 +30,6 @@ class msgAssigned extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET ASSIGNED')->view('mail.msg_assigned')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - FOR ASSIGNMENT')->view('mail.msg_for_assignment')->with('data', $this->data);
     }
 }

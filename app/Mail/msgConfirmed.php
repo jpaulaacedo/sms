@@ -29,7 +29,7 @@ class msgConfirmed extends Mailable
      */
     public function build()
     {
-        return $this->subject('TICKET CONFIRMED')->view('mail.msg_confirmed')->with('data', $this->data);
+        return $this->subject('MESSENGERIAL TICKET - CONFIRMED')->view('mail.msg_confirmed')->with('data', $this->data);
 
     }
 }

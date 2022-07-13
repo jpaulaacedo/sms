@@ -41,6 +41,8 @@ Route::get('/messengerial_form/{messengerial_id}', 'MessengerialController@print
 
 Route::post('/messengerial/submit', 'MessengerialController@submit_messengerial');
 
+Route::post('/messengerial/submitResched', 'MessengerialController@submitResched_messengerial');
+
 // DC APPROVAL
 Route::get('/messengerial/dc/approval', 'MessengerialController@dc_approval_messengerial');
 
@@ -59,6 +61,10 @@ Route::get('/messengerial/report', 'MessengerialController@report_messengerial')
 Route::post('/messengerial/edit', 'MessengerialController@edit_messengerial');
 
 Route::post('/messengerial/accomplish/resched', 'MessengerialController@resched_messengerial');
+
+Route::post('/messengerial/accomplish/rschd', 'MessengerialController@rschd_messengerial');
+
+Route::post('/messengerial/view_rschd', 'MessengerialController@view_rschd_messengerial');
 
 Route::post('/messengerial/view', 'MessengerialController@view_messengerial');
 
@@ -87,16 +93,16 @@ Route::post('/messengerial/accomplish/outfordel', 'MessengerialController@outfor
 Route::get('/messengerial/all', 'MessengerialController@all_messengerial');
 
 
-Route::post('/messengerial/accomplish', 'MessengerialController@accomplish_modal');
-
-Route::post('/messengerial/attachment', 'MessengerialController@messengerial_attachment');
+Route::post('/messengerial/accomplish', 'MessengerialController@accomplish_messengerial');
 
 
 Route::post('/load_recipient', 'MessengerialController@load_recipient');
 
-Route::post('/messengerial/mark_accomplish', 'MessengerialController@messengerial_mark_accomplish');
+Route::post('/messengerial/mark_accomplish', 'MessengerialController@mark_accomplish_messengerial');
 
 Route::post('/messengerial/mark_accomplish_modal', 'MessengerialController@msg_mark_accomplish_modal');
+
+Route::post('/messengerial/acc_accomplish_modal', 'MessengerialController@msg_acc_accomplish_modal');
 
 Route::post('/load_file', 'MessengerialController@load_file');
 
@@ -131,6 +137,8 @@ Route::get('/vehicle/trip/{vehicle_id}', 'VehicleController@get_trip');
 
 Route::post('/vehicle/edit', 'VehicleController@edit_vehicle');
 
+Route::post('/vehicle/view', 'VehicleController@view_vehicle');
+
 Route::post('/vehicle/delete', 'VehicleController@delete_vehicle');
 
 Route::post('/vehicle/trip/store', 'VehicleController@store_trip');
@@ -155,7 +163,7 @@ Route::get('/vehicle/accomplish', 'VehicleController@to_accomplish_vehicle');
 
 Route::post('/vehicle/accomplish/otw', 'VehicleController@otw_vehicle');
 
-Route::post('/vehicle/mark_accomplish', 'VehicleController@vehicle_mark_accomplish');
+Route::post('/vehicle/mark_accomplish', 'VehicleController@mark_accomplish_vehicle');
 
 Route::post('/vehicle/attachment', 'VehicleController@vehicle_attachment');
 
@@ -190,6 +198,8 @@ Route::post('/vehicle/view/passenger', 'VehicleController@view_passenger');
 Route::post('/vehicle/view/vehicle', 'VehicleController@view_vehicle');
 
 Route::post('/vehicle/mark_accomplish_modal', 'VehicleController@vhl_mark_accomplish_modal');
+
+Route::post('/vehicle/acc_accomplish_modal', 'VehicleController@vhl_acc_accomplish_modal');
 
 Route::get('/vehicle_form/{vehicle_id}', 'VehicleController@print_vehicle');
 
