@@ -10,8 +10,10 @@ use App\Mail\vhlCreateTicket;
 use App\Mail\vhlApproved;
 use App\Mail\vhlAccomplished;
 use App\Mail\vhlConfirmed;
-use App\Mail\vhlForAssignment;
 use App\Mail\vhlResched;
+use App\Mail\vhlsubmitResched;
+use App\Mail\vhlacceptResched;
+use App\Mail\vhlForAssignment;
 use App\Mail\vhlOnTheWay;
 use Illuminate\Support\Facades\Mail;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -115,6 +117,174 @@ class VehicleController extends Controller
         return json_encode($view);
     }
 
+    public function reschedAgent_modal_vehicle(Request $request)
+    {
+        $resched = Vehicle::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($resched->date_needed));
+        $due_time = date("H:i", strtotime($resched->date_needed));
+
+        $resched->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($resched);
+    }
+
+    public function reschedAgent_vehicle(Request $request)
+    {
+        try {
+            $update = Vehicle::where('id', $request->data_id)->first();
+            $update->resched_reason = $request->resched_reason;
+            $update->old_date_needed = $update->date_needed;
+            $update->date_needed = $request->suggest_due_date;
+            $update->status = "For Rescheduling";
+            $update->save();
+
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+            $data = array(
+                'agent' => $agent->name,
+                'emp_name' => $employee->name,
+                'status' => $update->status,
+                'destination' => $update->destination,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'purpose' => $update->purpose,
+                'link'  =>  URL::to('/vehicle')
+            );
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
+
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function view_reschedAgent_vehicle(Request $request)
+    {
+        $rschd = Vehicle::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
+        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
+
+        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
+        $due_time = date("H:i", strtotime($rschd->date_needed));
+
+        $rschd->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($rschd);
+    }
+
+    public function reschedAgentbyR_modal_vehicle(Request $request)
+    {
+        $resched = Vehicle::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($resched->date_needed));
+        $due_time = date("H:i", strtotime($resched->date_needed));
+
+        $resched->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($resched);
+    }
+
+    public function acceptResched_vehicle(Request $request)
+    {
+        try {
+            $update = Vehicle::where('id', $request->data_id)->first(); //model
+            $update->date_needed = $request->pref_date;
+            $update->status = "For Assignment";
+            $update->save();
+
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'agency' => $update->agency,
+                'pref_sched' => $update->pref_sched,
+                'pref_date' => $update->pref_date,
+                'delivery_item' => $update->delivery_item,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'link'  =>  URL::to('/messengerial'),
+            );
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlacceptResched($data));
+
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function resched_modal_vehicle(Request $request)
+    {
+        $view = Vehicle::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($view->old_date_needed));
+        $old_due_time = date("H:i", strtotime($view->old_date_needed));
+
+        $view->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($view->date_needed));
+        $due_time = date("H:i", strtotime($view->date_needed));
+
+        $view->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($view);
+    }
+
+
+    public function submitResched_vehicle(Request $request)
+    {
+        try {
+            $update = Vehicle::where('id', $request->data_id)->first(); //model
+            $update->pref_sched = $request->pref_sched;
+            if ($update->pref_sched == "by_agent") {
+                $update->status = "For Assignment";
+            } else {
+                $update->pref_date = $request->pref_date;
+            }
+            $update->save();
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+            $data = array(
+                'agent' => $agent->name,
+                'pref_sched' => $update->pref_sched,
+                'pref_date' => $update->pref_date,
+                'status' => $update->status,
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'agency' => $update->agency,
+                'delivery_item' => $update->delivery_item,
+                'agent_link'  =>  URL::to('/messengerial/accomplish')
+            );
+
+            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlsubmitResched($data));
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function view_resched_modal_vehicle(Request $request)
+    {
+        $rschd = Vehicle::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
+        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
+
+        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
+        $due_time = date("H:i", strtotime($rschd->date_needed));
+
+        $rschd->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($rschd);
+    }
+
     // DELETE VEHICLE REC
     public function delete_vehicle(Request $request)
     {
@@ -202,7 +372,7 @@ class VehicleController extends Controller
                 'dc_link'  =>  URL::to('/vehicle/dc/approval'),
                 'link'  =>  URL::to('/vehicle/dc/approval')
             );
-            
+
             if ($update->status == "For DC Approval") {
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
             } else {
@@ -249,7 +419,7 @@ class VehicleController extends Controller
                 'cao_link'  =>  URL::to('/vehicle/cao/approval'),
             );
 
-            // Mail::to([$employee->email])->send(new msgApproved($data));
+            // Mail::to([$employee->email])->send(new vhlApproved($data));
             if ($update->status == "Confirmed") {
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlConfirmed($data));
             } else {
@@ -345,9 +515,9 @@ class VehicleController extends Controller
                 'cao_approved_link'  =>  URL::to('/vehicle')
             );
 
-            // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
+            // Mail::to($agent->email)->cc([$employee->email])->send(new vhlCreateTicket($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlConfirmed($data));
-            // Mail::to([$employee->email])->send(new msgApproved($data));
+            // Mail::to([$employee->email])->send(new vhlApproved($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlApproved($data));
 
             $chosen_driver = $update->driver;
@@ -394,7 +564,7 @@ class VehicleController extends Controller
                 'link'  =>  URL::to('/vehicle'),
             );
 
-            // Mail::to($agent->email)->cc([$employee->email])->send(new msgCreateTicket($data));
+            // Mail::to($agent->email)->cc([$employee->email])->send(new vhlCreateTicket($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlOnTheWay($data));
 
             // send SMS Notif
@@ -456,7 +626,7 @@ class VehicleController extends Controller
                 'link'  =>  URL::to('/vehicle'),
             );
 
-            // Mail::to([$employee->email])->send(new msgAccomplished($data));
+            // Mail::to([$employee->email])->send(new vhlAccomplished($data));
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlAccomplished($data));
 
             return json_encode('success');
@@ -679,7 +849,7 @@ class VehicleController extends Controller
                 'resched_reason' => $update->resched_reason,
                 'link'  =>  URL::to('/vehicle'),
             );
-            // Mail::to([$employee->email])->send(new msgApproved($data));
+            // Mail::to([$employee->email])->send(new vhlApproved($data));
 
             Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
 

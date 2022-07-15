@@ -64,11 +64,11 @@
                                     </button> |
 
                                     @if($data->pref_sched == "")
-                                    <button onclick="_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
                                     @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
-                                    <button onclick="view_rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
                                     @endif
@@ -108,16 +108,12 @@
                                         <span class="fa fa-users"></span>
                                     </button> |
 
-                                    @if($data->pref_sched == "by_agent")
-                                    <button onclick="view_rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    @if($data->pref_sched == "by_agent" || $data->pref_sched == "")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
                                     @elseif($data->pref_sched == "by_requestor")
-                                    <button onclick="suggest_rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-calendar"></span>
-                                    </button>
-                                    @elseif($data->pref_sched == "")
-                                    <button onclick="rschd_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    <button onclick="reschedAgentbyR_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
                                     @endif
@@ -293,42 +289,50 @@
     </div>
 </div>
 
-<!-- view rschd modal -->
-<div class="modal fade" id="view_rschd_modal" tabindex="-1" aria-labelledby="view_rschd_modalLabel" aria-hidden="true">
+<!--resched modal-->
+<div class="modal fade" id="reschedAgent_modal" tabindex="-1" aria-labelledby="reschedA_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="view_rschd_modalLabel">
+                <h5 class="modal-title" id="reschedA_modalLabel">
                     <span class="fa fa-truck"></span>
                     &nbsp;For Rescheduling
                 </h5>
             </div>
-            <!-- BLADE TO AJAX -->
-            <!-- use this id below in ajax -->
-            <input type="hidden" id="view_rschd_msg_id" name="view_rschd_msg_id">
+            <input type="hidden" id="reschedA_msg_id" name="reschedA_msg_id">
             <div class="modal-body">
+                <b>Agent Portion</b>
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="view_rschd_old_due_date">Date Needed:</label>
+                                <label class="input-group-text" for="reschedA_due_date">Date Needed:</label>
                             </div>
-                            <input type="datetime-local" class="form-control" name="view_rschd_old_due_date" id="view_rschd_old_due_date" readonly>
+                            <input type="datetime-local" class="form-control" name="reschedA_due_date" id="reschedA_due_date" readonly>
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="view_rschd_due_date">Suggested Date:</label>
+                                <label class="input-group-text" for="suggestA_due_date">Suggested Date:</label>
                             </div>
-                            <input type="datetime-local" class="form-control" name="view_rschd_due_date" id="view_rschd_due_date" readonly>
+                            <input type="datetime-local" class="form-control" name="suggestA_due_date" id="suggestA_due_date">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm">
+                        <label>Reason for Rescheduling:
+                        </label>
+                        <textarea class="form-control" rows="3" id="reschedA_reason" name="reschedA_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
                         <div class="input-group mb-3">
-                            <select id="view_pref_sched" disabled class="custom-select" aria-label="view_pref_sched">
+                            <select readonly id="prefA_sched" disabled class="custom-select" aria-label="prefA_sched">
                                 <option value="by_agent">Proceed with the schedule set by Agent.</option>
                                 <option value="by_requestor">Set preferred schedule.</option>
                             </select>
@@ -337,25 +341,169 @@
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="view_rschd_pref_date">Preferred Date:</label>
+                                <label class="input-group-text" for="prefA_date">Preferred Date:</label>
                             </div>
-                            <input type="datetime-local" class="form-control" name="view_rschd_pref_date" id="view_rschd_pref_date" readonly>
+                            <input type="datetime-local" class="form-control" name="prefA_date" id="prefA_date" readonly>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#reschedAgent_modal">
+                    Close
+                </button>
+                <button onclick="reschedAgent()" class="btn btn-info float-right">
+                    <span class="fa fa-calendar"></span>
+                    <span>Reschedule</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--resched modal if BY_REQUESTOR PREFERRED DATE -->
+<div class="modal fade" id="reschedAgentbyR_modal" tabindex="-1" aria-labelledby="reschedAbyR_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="reschedAbyR_modalLabel">
+                    <span class="fa fa-calendar"></span>
+                    &nbsp;For Rescheduling
+                </h5>
+            </div>
+            <input type="hidden" id="reschedAbyR_msg_id" name="reschedAbyR_msg_id">
+            <div class="modal-body">
+                <b>Agent Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="reschedAbyR_due_date">Date Needed:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="reschedAbyR_due_date" id="reschedAbyR_due_date" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="suggestAbyR_due_date">Suggested Date:</label>
+                            </div>
+                            <input type="datetime-local" readonly class="form-control" name="suggestAbyR_due_date" id="suggestAbyR_due_date">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm">
                         <label>Reason for Rescheduling:
                         </label>
-                        <textarea class="form-control" rows="3" id="view_rschd_reason" name="view_rschd_reason" readonly></textarea>
+                        <textarea class="form-control" rows="3" readonly id="reschedAbyR_reason" name="reschedAbyR_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <select readonly id="prefAbyR_sched" disabled class="custom-select" aria-label="prefAbyR_sched">
+                                <option value="by_agent">Proceed with the schedule set by Agent.</option>
+                                <option value="by_requestor">Set preferred schedule.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="prefAbyR_date">Preferred Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="prefAbyR_date" id="prefAbyR_date" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_rschd_modal">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#reschedAgentbyR_modal">
+                    Close
+                </button>
+                <button onclick="reschedAgent_modal()" class="btn btn-primary btn">
+                    <span class="fa fa-calendar"></span>
+                    Reschedule
+                </button>
+                <button onclick="acceptResched()" class="btn btn-success btn">
+                    <span class="fa fa-check"></span>
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--view_resched modal -->
+<div class="modal fade" id="view_reschedAgent_modal" tabindex="-1" aria-labelledby="view_reschedA_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="view_reschedA_modalLabel">
+                    <span class="fa fa-calendar"></span>
+                    @if($data->status == "For Assignment" && $data->pref_date == $data->date_needed)
+					&nbsp;Preferred Date Accepted
+                    @elseif($data->status == "For Assignment" && $data->pref_sched == "by_agent")
+					&nbsp;Suggested Date Accepted
+					@else
+					&nbsp;For Rescheduling
+					@endif
+                </h5>
+            </div>
+            <input type="hidden" id="view_reschedA_msg_id" name="view_reschedA_msg_id">
+            <div class="modal-body">
+                <b>Agent Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_reschedA_due_date">Date Needed:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="view_reschedA_due_date" id="view_reschedA_due_date" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_suggestA_due_date">Suggested Date:</label>
+                            </div>
+                            <input type="datetime-local" readonly class="form-control" name="view_suggestA_due_date" id="view_suggestA_due_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <label>Reason for Rescheduling:
+                        </label>
+                        <textarea class="form-control" rows="3" readonly id="view_reschedA_reason" name="view_reschedA_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <select id="view_prefA_sched" disabled class="custom-select" aria-label="view_prefA_sched">
+                                <option value="by_agent">Proceed with the schedule set by Agent.</option>
+                                <option value="by_requestor">Set preferred schedule.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_prefA_date">Preferred Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="view_prefA_date" id="view_prefA_date" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_reschedA_modal">
                     Close
                 </button>
             </div>
@@ -508,7 +656,7 @@
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="assign_modalLabel">
-                    <span class="fa fa-truck"></span>
+                    <span class="fa fa-calendar"></span>
                     &nbsp;Assign Driver
                 </h5>
             </div>
@@ -551,118 +699,6 @@
                 <button onclick="_assign()" class="btn btn-success">
                     <span class="fa fa-truck"></span>
                     Assign
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- resched modal -->
-<div class="modal fade" id="resched_modal" tabindex="-1" aria-labelledby="resched_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h5 class="modal-title" id="resched_modalLabel">
-                    <span class="fa fa-truck"></span>
-                    &nbsp;Reschedule Date Needed
-                </h5>
-            </div>
-            <!-- BLADE TO AJAX -->
-            <!-- use this id below in ajax -->
-            <form action="{{URL::to('/messengerial/accomplish/reschedule')}}" method="POST">
-                @csrf
-                <input type="hidden" id="resched_msg_id" name="resched_msg_id">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="due_date">Date Needed:</label>
-                                </div>
-                                <input type="datetime-local" class="form-control" name="due_date" id="due_date" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="due_date">Resched to:</label>
-                                </div>
-                                <input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm">
-                            <label>Reason for Rescheduling
-                                <span class="text-red">*</span>
-                            </label>
-                            <textarea class="form-control" rows="3" id="resched_reason" name="resched_reason" required></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#resched_modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-calendar"></span>
-                        Reschedule
-                    </button>
-
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- rschd modal -->
-<div class="modal fade" id="rschd_modal" tabindex="-1" aria-labelledby="rschd_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h5 class="modal-title" id="rschd_modalLabel">
-                    <span class="fa fa-truck"></span>
-                    &nbsp;For Rescheduling
-                </h5>
-            </div>
-            <!-- BLADE TO AJAX -->
-            <!-- use this id below in ajax -->
-            <input type="hidden" id="rschd_msg_id" name="rschd_msg_id">
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="rschd_old_due_date">Date Needed:</label>
-                            </div>
-                            <input type="datetime-local" class="form-control" name="rschd_old_due_date" id="rschd_old_due_date" readonly>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="rschd_due_date">Resched to:</label>
-                            </div>
-                            <input type="datetime-local" class="form-control" name="rschd_due_date" id="rschd_due_date" readonly>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        <label>Reason for Rescheduling
-                            <span class="text-red">*</span>
-                        </label>
-                        <textarea class="form-control" rows="3" id="rschd_reason" name="rschd_reason" readonly></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#rschd_modal">
-                    Close
                 </button>
             </div>
         </div>

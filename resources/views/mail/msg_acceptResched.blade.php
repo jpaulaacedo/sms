@@ -1,9 +1,15 @@
 <p>Hi {{ $data['emp_name'] }}!
 
-<p>Your ticket is RESCHEDULED to {{ date('F j, Y g:i A', strtotime($data['date_needed'])) }}.
+<p>Your ticket that is subject for rescheduling is now SET.
     <br>
-    Reason for Rescheduling: {{ $data['resched_reason'] }} 
-<br>
+ @if($data['pref_sched'] == "by_requestor")
+<p>Preferred Schedule: <b>Set preferred schedule.</b> <br>
+    Preferred Date: <b>{{ date('F j, Y g:i A', strtotime($data['pref_date'])) }}</b> <br>
+@else
+<p>Preferred Schedule: <b>Proceed with the schedule set by {{ $data['agent'] }}.</b> <br>
+@endif
+    New Date Needed: <b>{{ date('F j, Y g:i A', strtotime($data['date_needed'])) }}</b> <br>
+    <br>
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Messengerial</b><br>
     Recipient:<b> {{ $data['recipient'] }} </b><br>

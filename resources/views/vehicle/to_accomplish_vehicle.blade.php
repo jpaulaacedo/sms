@@ -55,9 +55,17 @@
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    <button onclick="_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+
+                                    @if($data->pref_sched == "")
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
+                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
+
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -87,9 +95,15 @@
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    <button onclick="_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                    @if($data->pref_sched == "by_agent" || $data->pref_sched == "")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
+                                    @elseif($data->pref_sched == "by_requestor")
+                                    <button onclick="reschedAgentbyR_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -98,6 +112,7 @@
                             </tr>
                             @endif
                             @endforeach
+
 
                             @foreach($vehicle as $data)
                             @if($data->status=='For CAO Approval')
@@ -259,145 +274,318 @@
 
 <!-- VIEW TRIP/VEHICLE Modal-->
 <div class="modal fade" id="view_trip_modal" tabindex="-1" aria-labelledby="view_trip_modalLabel" aria-hidden="true">
-	<div class="modal-dialog modal modal-lg modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header bg-info">
-				<h5 class="modal-title" id="view_trip_modalLabel">
-					<span class="fa fa-truck"></span>
-					<span id="view_trip_header">Vehicle Request/ Trip Ticket</span>
-				</h5>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<input type="hidden" id="vehicle_id" name="vehicle_id">
-					<div class="col-sm-12">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="row">
-									<div class="col-sm-6">
-										<label>Date and Time Needed
-											<span class="text-red">*</span>
-										</label>
-										<input type="datetime-local" class="form-control" name="view_date_needed" id="view_date_needed" readonly>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<div class="form-check">
-												<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent" readonly>
-												<label class="form-check-label" for="view_urgency">
-													Not Urgent
-												</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent" readonly>
-												<label class="form-check-label" for="view_urgency">
-													Urgent
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="col-sm-6">
-										<label>Purpose of Trip</label>
-										<span class="text-red">*</span>
-										<textarea id="view_purpose" name="view_purpose" class="form-control" rows="4" readonly></textarea>
-										<br>
-										<label>Destination(Address)
-											<span class="text-red">*</span>
-										</label>
-										<textarea class="form-control" rows="4" id="view_destination" readonly name="view_destination"></textarea>
-									</div>
-									<div class="col-sm-6">
-										<div class="row">
-											<label id="view_lbl_passenger">&nbsp; Passenger(s):</label>
-											<span id="asterisk" class="text-red">*</span>
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											&nbsp;&nbsp;
-											<small><label>Total:</label>
-												<span id="view_psg_count"></span>
-											</small>
-											<br>
-											<div class='scrolledTable' style="height:300px; width:460px; overflow:auto;">
-												<table class="table table-striped table-bordered table-sm" id="view_my_passenger_table">
-													<tbody id="view_my_tbody">
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_trip_modal">
-								Close
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- resched modal -->
-<div class="modal fade" id="resched_modal" tabindex="-1" aria-labelledby="resched_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-dialog modal modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="resched_modalLabel">
+                <h5 class="modal-title" id="view_trip_modalLabel">
                     <span class="fa fa-truck"></span>
-                    &nbsp;Reschedule Date Needed
+                    <span id="view_trip_header">Vehicle Request/ Trip Ticket</span>
                 </h5>
             </div>
-            <!-- BLADE TO AJAX -->
-            <!-- use this id below in ajax -->
-            <form action="{{URL::to('/vehicle/accomplish/reschedule')}}" method="POST">
-                @csrf
-                <input type="hidden" id="resched_vhl_id" name="resched_vhl_id">
-                <div class="modal-body">
-
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="due_date">Change Date Needed:</label>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="vehicle_id" name="vehicle_id">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Date and Time Needed
+                                            <span class="text-red">*</span>
+                                        </label>
+                                        <input type="datetime-local" class="form-control" name="view_date_needed" id="view_date_needed" readonly>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent" readonly>
+                                                <label class="form-check-label" for="view_urgency">
+                                                    Not Urgent
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent" readonly>
+                                                <label class="form-check-label" for="view_urgency">
+                                                    Urgent
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="datetime-local" class="form-control" name="due_date" id="due_date" required>
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Purpose of Trip</label>
+                                        <span class="text-red">*</span>
+                                        <textarea id="view_purpose" name="view_purpose" class="form-control" rows="4" readonly></textarea>
+                                        <br>
+                                        <label>Destination(Address)
+                                            <span class="text-red">*</span>
+                                        </label>
+                                        <textarea class="form-control" rows="4" id="view_destination" readonly name="view_destination"></textarea>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <label id="view_lbl_passenger">&nbsp; Passenger(s):</label>
+                                            <span id="asterisk" class="text-red">*</span>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;
+                                            <small><label>Total:</label>
+                                                <span id="view_psg_count"></span>
+                                            </small>
+                                            <br>
+                                            <div class='scrolledTable' style="height:300px; width:460px; overflow:auto;">
+                                                <table class="table table-striped table-bordered table-sm" id="view_my_passenger_table">
+                                                    <tbody id="view_my_tbody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm">
-                            <label>Reason for Reschedule
-                                <span class="text-red">*</span>
-                            </label>
-                            <textarea class="form-control" rows="3" id="resched_reason" name="resched_reason" required></textarea>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_trip_modal">
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#resched_modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-calendar"></span>
-                        Reschedule
-                    </button>
-
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<!--resched modal-->
+<div class="modal fade" id="reschedAgent_modal" tabindex="-1" aria-labelledby="reschedA_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="reschedA_modalLabel">
+                    <span class="fa fa-truck"></span>
+                    &nbsp;For Rescheduling
+                </h5>
+            </div>
+            <input type="hidden" id="reschedA_vhl_id" name="reschedA_vhl_id">
+            <div class="modal-body">
+                <b>Agent Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="reschedA_due_date">Date Needed:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="reschedA_due_date" id="reschedA_due_date" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="suggestA_due_date">Suggested Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="suggestA_due_date" id="suggestA_due_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <label>Reason for Rescheduling:
+                        </label>
+                        <textarea class="form-control" rows="3" id="reschedA_reason" name="reschedA_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <select readonly id="prefA_sched" disabled class="custom-select" aria-label="prefA_sched">
+                                <option value="by_agent">Proceed with the schedule set by Agent.</option>
+                                <option value="by_requestor">Set preferred schedule.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="prefA_date">Preferred Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="prefA_date" id="prefA_date" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#reschedAgent_modal">
+                    Close
+                </button>
+                <button onclick="reschedAgent()" class="btn btn-info float-right">
+                    <span class="fa fa-calendar"></span>
+                    <span>Reschedule</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--resched modal if BY_REQUESTOR PREFERRED DATE -->
+<div class="modal fade" id="reschedAgentbyR_modal" tabindex="-1" aria-labelledby="reschedAbyR_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="reschedAbyR_modalLabel">
+                    <span class="fa fa-calendar"></span>
+                    &nbsp;For Rescheduling
+                </h5>
+            </div>
+            <input type="hidden" id="reschedAbyR_vhl_id" name="reschedAbyR_vhl_id">
+            <div class="modal-body">
+                <b>Agent Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="reschedAbyR_due_date">Date Needed:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="reschedAbyR_due_date" id="reschedAbyR_due_date" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="suggestAbyR_due_date">Suggested Date:</label>
+                            </div>
+                            <input type="datetime-local" readonly class="form-control" name="suggestAbyR_due_date" id="suggestAbyR_due_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <label>Reason for Rescheduling:
+                        </label>
+                        <textarea class="form-control" rows="3" readonly id="reschedAbyR_reason" name="reschedAbyR_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <select readonly id="prefAbyR_sched" disabled class="custom-select" aria-label="prefAbyR_sched">
+                                <option value="by_agent">Proceed with the schedule set by Agent.</option>
+                                <option value="by_requestor">Set preferred schedule.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="prefAbyR_date">Preferred Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="prefAbyR_date" id="prefAbyR_date" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#reschedAgentbyR_modal">
+                    Close
+                </button>
+                <button onclick="reschedAgent_modal()" class="btn btn-primary btn">
+                    <span class="fa fa-calendar"></span>
+                    Reschedule
+                </button>
+                <button onclick="acceptResched()" class="btn btn-success btn">
+                    <span class="fa fa-check"></span>
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--view_resched modal -->
+<div class="modal fade" id="view_reschedAgent_modal" tabindex="-1" aria-labelledby="view_reschedA_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="view_reschedA_modalLabel">
+                    <span class="fa fa-calendar"></span>
+                    @if($data->status == "For Assignment" && $data->pref_date == $data->date_needed)
+                    &nbsp;Preferred Date Accepted
+                    @elseif($data->status == "For Assignment" && $data->pref_sched == "by_agent")
+                    &nbsp;Suggested Date Accepted
+                    @else
+                    &nbsp;For Rescheduling
+                    @endif
+                </h5>
+            </div>
+            <input type="hidden" id="view_reschedA_vhl_id" name="view_reschedA_vhl_id">
+            <div class="modal-body">
+                <b>Agent Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_reschedA_due_date">Date Needed:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="view_reschedA_due_date" id="view_reschedA_due_date" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_suggestA_due_date">Suggested Date:</label>
+                            </div>
+                            <input type="datetime-local" readonly class="form-control" name="view_suggestA_due_date" id="view_suggestA_due_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <label>Reason for Rescheduling:
+                        </label>
+                        <textarea class="form-control" rows="3" readonly id="view_reschedA_reason" name="view_reschedA_reason"></textarea>
+                    </div>
+                </div>
+                <br>
+                <b>Requestor Portion</b>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <select id="view_prefA_sched" disabled class="custom-select" aria-label="view_prefA_sched">
+                                <option value="by_agent">Proceed with the schedule set by Agent.</option>
+                                <option value="by_requestor">Set preferred schedule.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="view_prefA_date">Preferred Date:</label>
+                            </div>
+                            <input type="datetime-local" class="form-control" name="view_prefA_date" id="view_prefA_date" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#view_reschedA_modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Assign modal -->
 <div class="modal fade" id="assign_modal" tabindex="-1" aria-labelledby="assign_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">
@@ -463,7 +651,7 @@
             </div>
             <form action="{{URL::to('/messengerial/cancel')}}" method="POST">
                 @csrf
-                <input type="hidden" id="msg_cancel_id" name="msg_cancel_id">
+                <input type="hidden" id="vhl_cancel_id" name="vhl_cancel_id">
 
                 <div class="modal-body">
                     <div class="row">

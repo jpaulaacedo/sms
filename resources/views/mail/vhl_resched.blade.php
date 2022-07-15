@@ -2,8 +2,8 @@
 
 <p>Your ticket is RESCHED to {{ date('F j, Y g:i A', strtotime($data['date_needed'])) }} .
     <br>
-    {{ $data['resched_reason'] }} 
-
+    Reason for Rescheduling: {{ $data['resched_reason'] }}
+    <br>
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Vehicle</b><br>
     Destination:<b> {{ $data['destination'] }} </b><br>

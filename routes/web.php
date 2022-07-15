@@ -41,8 +41,6 @@ Route::get('/messengerial_form/{messengerial_id}', 'MessengerialController@print
 
 Route::post('/messengerial/submit', 'MessengerialController@submit_messengerial');
 
-Route::post('/messengerial/submitResched', 'MessengerialController@submitResched_messengerial');
-
 // DC APPROVAL
 Route::get('/messengerial/dc/approval', 'MessengerialController@dc_approval_messengerial');
 
@@ -60,11 +58,23 @@ Route::get('/messengerial/report', 'MessengerialController@report_messengerial')
 
 Route::post('/messengerial/edit', 'MessengerialController@edit_messengerial');
 
-Route::post('/messengerial/accomplish/resched', 'MessengerialController@resched_messengerial');
+//agent's view
+Route::post('/messengerial/accomplish/reschedAgent_modal', 'MessengerialController@reschedAgent_modal_messengerial');
 
-Route::post('/messengerial/accomplish/rschd', 'MessengerialController@rschd_messengerial');
+Route::post('/messengerial/accomplish/reschedAgent', 'MessengerialController@reschedAgent_messengerial');
 
-Route::post('/messengerial/view_rschd', 'MessengerialController@view_rschd_messengerial');
+Route::post('/messengerial/accomplish/reschedAgentbyR_modal', 'MessengerialController@reschedAgentbyR_modal_messengerial');
+
+Route::post('/messengerial/accomplish/view_reschedAgent', 'MessengerialController@view_reschedAgent_messengerial');
+
+Route::post('/messengerial/accomplish/acceptResched', 'MessengerialController@acceptResched_messengerial');
+
+//requestor's view
+Route::post('/messengerial/resched_modal', 'MessengerialController@resched_modal_messengerial');
+
+Route::post('/messengerial/submitResched', 'MessengerialController@submitResched_messengerial');
+
+Route::post('/messengerial/view_resched_modal', 'MessengerialController@view_resched_modal_messengerial');
 
 Route::post('/messengerial/view', 'MessengerialController@view_messengerial');
 
@@ -206,6 +216,24 @@ Route::get('/vehicle_form/{vehicle_id}', 'VehicleController@print_vehicle');
 Route::post('/calendar/feed', 'HomeController@feed_calendar');
 
 Route::get('/vehicle/calendar/view', 'VehicleController@vehicle_calendar');
+
+//agent's view
+Route::post('/vehicle/accomplish/reschedAgent_modal', 'VehicleController@reschedAgent_modal_vehicle');
+
+Route::post('/vehicle/accomplish/reschedAgent', 'VehicleController@reschedAgent_vehicle');
+
+Route::post('/vehicle/accomplish/reschedAgentbyR_modal', 'VehicleController@reschedAgentbyR_modal_vehicle');
+
+Route::post('/vehicle/accomplish/view_reschedAgent', 'VehicleController@view_reschedAgent_vehicle');
+
+Route::post('/vehicle/accomplish/acceptResched', 'VehicleController@acceptResched_vehicle');
+
+//requestor's view
+Route::post('/vehicle/resched_modal', 'VehicleController@resched_modal_vehicle');
+
+Route::post('/vehicle/submitResched', 'VehicleController@submitResched_vehicle');
+
+Route::post('/vehicle/view_resched_modal', 'VehicleController@view_resched_modal_vehicle');
 
 // Route::get('/send-mail', function(){
 

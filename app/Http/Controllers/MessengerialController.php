@@ -12,6 +12,8 @@ use App\Mail\msgConfirmed;
 use App\Mail\msgApproved;
 use App\Mail\msgForAssignment;
 use App\Mail\msgResched;
+use App\Mail\msgsubmitResched;
+use App\Mail\msgacceptResched;
 use App\Mail\msgAccomplished;
 use App\Mail\msgOutForDel;
 use Illuminate\Support\Facades\Mail;
@@ -99,7 +101,6 @@ class MessengerialController extends Controller
         return view('messengerial.print_messengerial', compact('recipient', 'messengerial_file', 'messengerial'));
     }
 
-
     public function submit_messengerial(Request $request)
     {
         try {
@@ -149,40 +150,6 @@ class MessengerialController extends Controller
             if ($update->status == "For DC Approval") {
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
             }
-            return json_encode('success');
-        } catch (\Exception $e) {
-            return json_encode($e->getMessage());
-        }
-    }
-
-    public function submitResched_messengerial(Request $request)
-    {
-        try {
-            $update = Messengerial::where('id', $request->data_id)->first(); //model
-            $update->pref_sched = $request->pref_sched;
-            if ($update->pref_sched == "by_agent") {
-                $update->status = "For Assignment";
-            } else {
-                $update->pref_date = $request->pref_date;
-            }
-            $update->save();
-            $user_id = $update->user_id;
-            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-
-            $data = array(
-                'dc_name' => $dc->name,
-                'status' => $update->status,
-                'emp_name' => $employee->name,
-                'recipient' => $update->recipient,
-                'agency' => $update->agency,
-                'delivery_item' => $update->delivery_item,
-                'dc_link'  =>  URL::to('/messengerial/dc/approval')
-            );
-
-            // if ($update->status == "For DC Approval") {
-            // Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
-            // }
             return json_encode('success');
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
@@ -295,7 +262,7 @@ class MessengerialController extends Controller
         return json_encode($edit);
     }
 
-    public function resched_messengerial(Request $request)
+    public function reschedAgent_modal_messengerial(Request $request)
     {
         $resched = Messengerial::where('id', $request->data_id)->first();
         $due_date = date("Y-m-d", strtotime($resched->date_needed));
@@ -306,44 +273,162 @@ class MessengerialController extends Controller
         return json_encode($resched);
     }
 
-    public function rschd_messengerial(Request $request)
+    public function reschedAgent_messengerial(Request $request)
     {
-        $rschd = Messengerial::where('id', $request->data_id)->first();
-        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
-        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
+        try {
+            $update = Messengerial::where('id', $request->data_id)->first();
+            $update->resched_reason = $request->resched_reason;
+            $update->old_date_needed = $update->date_needed;
+            $update->date_needed = $request->suggest_due_date;
+            $update->status = "For Rescheduling";
+            $update->save();
 
-        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
 
-        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
-        $due_time = date("H:i", strtotime($rschd->date_needed));
+            $data = array(
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'agency' => $update->agency,
+                'delivery_item' => $update->delivery_item,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'link'  =>  URL::to('/messengerial'),
+            );
+            // Mail::to([$employee->email])->send(new msgApproved($data));
 
-        $rschd->date_needed = $due_date . "T" . $due_time;
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgResched($data));
 
-        return json_encode($rschd);
-    }
-
-    public function view_rschd_messengerial(Request $request)
-    {
-        $rschd = Messengerial::where('id', $request->data_id)->first();
-        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
-        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
-
-        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
-
-        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
-        $due_time = date("H:i", strtotime($rschd->date_needed));
-
-        $rschd->date_needed = $due_date . "T" . $due_time;
-
-        if ($rschd->pref_sched == "by_requestor") {
-            $pref_due_date = date("Y-m-d", strtotime($rschd->pref_date));
-            $pref_due_time = date("H:i", strtotime($rschd->pref_date));
-
-            $rschd->pref_date = $pref_due_date . "T" . $pref_due_time;
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
         }
+    } 
+
+    public function view_reschedAgent_messengerial(Request $request)
+    {
+        $rschd = Messengerial::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
+        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
+
+        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
+        $due_time = date("H:i", strtotime($rschd->date_needed));
+
+        $rschd->date_needed = $due_date . "T" . $due_time;
+
         return json_encode($rschd);
     }
 
+    public function reschedAgentbyR_modal_messengerial(Request $request)
+    {
+        $resched = Messengerial::where('id', $request->data_id)->first();
+        $due_date = date("Y-m-d", strtotime($resched->date_needed));
+        $due_time = date("H:i", strtotime($resched->date_needed));
+
+        $resched->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($resched);
+    }
+
+    public function acceptResched_messengerial(Request $request)
+    {
+        try {
+            $update = Messengerial::where('id', $request->data_id)->first(); //model
+            $update->date_needed = $request->pref_date;
+            $update->status = "For Assignment";
+            $update->save();
+
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+
+            $data = array(
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'agency' => $update->agency,
+                'pref_sched' => $update->pref_sched,
+                'pref_date' => $update->pref_date,
+                'delivery_item' => $update->delivery_item,
+                'date_needed' => $update->date_needed,
+                'resched_reason' => $update->resched_reason,
+                'link'  =>  URL::to('/messengerial'),
+            );
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgacceptResched($data));
+
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+
+    public function resched_modal_messengerial(Request $request)
+    {
+        $view = Messengerial::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($view->old_date_needed));
+        $old_due_time = date("H:i", strtotime($view->old_date_needed));
+
+        $view->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($view->date_needed));
+        $due_time = date("H:i", strtotime($view->date_needed));
+
+        $view->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($view);
+    }  
+
+    
+    public function submitResched_messengerial(Request $request)
+    {
+        try {
+            $update = Messengerial::where('id', $request->data_id)->first(); //model
+            $update->pref_sched = $request->pref_sched;
+            if ($update->pref_sched == "by_agent") {
+                $update->status = "For Assignment";
+            } else {
+                $update->pref_date = $request->pref_date;
+            }
+            $update->save();
+            $user_id = $update->user_id;
+            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+            $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+            $data = array(
+                'agent' => $agent->name,
+                'pref_sched' => $update->pref_sched,
+                'pref_date' => $update->pref_date,
+                'status' => $update->status,
+                'emp_name' => $employee->name,
+                'recipient' => $update->recipient,
+                'agency' => $update->agency,
+                'delivery_item' => $update->delivery_item,
+                'agent_link'  =>  URL::to('/messengerial/accomplish')
+            );
+
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgsubmitResched($data));
+            return json_encode('success');
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+    }
+    
+    public function view_resched_modal_messengerial(Request $request)
+    {
+        $rschd = Messengerial::where('id', $request->data_id)->first();
+        $old_due_date = date("Y-m-d", strtotime($rschd->old_date_needed));
+        $old_due_time = date("H:i", strtotime($rschd->old_date_needed));
+
+        $rschd->old_date_needed = $old_due_date . "T" . $old_due_time;
+
+        $due_date = date("Y-m-d", strtotime($rschd->date_needed));
+        $due_time = date("H:i", strtotime($rschd->date_needed));
+
+        $rschd->date_needed = $due_date . "T" . $due_time;
+
+        return json_encode($rschd);
+    }
+  
     public function view_messengerial(Request $request)
     {
         $view = Messengerial::where('id', $request->data_id)->first();
@@ -580,41 +665,6 @@ class MessengerialController extends Controller
             return json_encode('success');
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
-        }
-    }
-
-    public function reschedule_messengerial(Request $request)
-    {
-        try {
-            $update = Messengerial::where('id', $request->resched_msg_id)->first();
-
-            $update->resched_reason = $request->resched_reason;
-            $update->old_date_needed = $update->date_needed;
-            $update->date_needed = $request->due_date;
-            $update->status = "For Rescheduling";
-            $update->save();
-
-            $user_id = $update->user_id;
-
-            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $agent = User::select('name', 'email')->where('user_type', '3')->first();
-
-            $data = array(
-                'emp_name' => $employee->name,
-                'recipient' => $update->recipient,
-                'agency' => $update->agency,
-                'delivery_item' => $update->delivery_item,
-                'date_needed' => $update->date_needed,
-                'resched_reason' => $update->resched_reason,
-                'link'  =>  URL::to('/messengerial'),
-            );
-            // Mail::to([$employee->email])->send(new msgApproved($data));
-
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new msgResched($data));
-
-            return redirect()->back()->with('message', 'success');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('message', $e->getMessage());
         }
     }
 

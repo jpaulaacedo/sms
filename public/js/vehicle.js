@@ -6,18 +6,269 @@ $(document).ready(function () {
     });
 });
 
-//SAVE VEHICLE : CREATE NEW VEHICLE REQ
-// function _addRequest() {
-//     $('#trip_modal').modal('show');
-//     $('#purpose').val("");
-//     $('#destination').val("");
-//     $('#vehicle_id').val("");
-//     $('#my_tbody').empty();
-//     $(':radio:not(:checked)').attr('disabled', true);
-//     $('#icon_submit').removeClass('fa-check');
-//     $('#icon_submit').addClass('fa-plus');
-//     $('#btn_submit').html("Create");
-// }
+function reschedAgent_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/accomplish/reschedAgent_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#reschedAgent_modal').modal('show');
+            $('#reschedAgentbyR_modal').modal('hide');
+            $('#reschedA_due_date').val(response.date_needed);
+            $('#reschedA_vhl_id').val(response.id);
+            $('#reschedA_reason').val("");
+            $('#prefA_sched').val("");
+            $('#prefA_date').val("");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function reschedAgentbyR_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/accomplish/reschedAgentbyR_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#reschedAgentbyR_modal').modal('show');
+            $('#reschedAbyR_due_date').val(response.old_date_needed);
+            $('#suggestAbyR_due_date').val(response.date_needed);
+            $('#reschedAbyR_vhl_id').val(response.id);
+            $('#reschedAbyR_reason').val(response.resched_reason);
+            $('#prefAbyR_sched').val(response.pref_sched);
+            $('#prefAbyR_date').val(response.pref_date);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/resched_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#resched_modal').modal('show');
+            $('#resched_due_date').val(response.old_date_needed);
+            $('#suggest_due_date').val(response.date_needed);
+            $('#resched_vhl_id').val(response.id);
+            $('#resched_reason').val(response.resched_reason);
+
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+//view reschedAgent_modal
+function view_reschedAgent_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/accomplish/view_reschedAgent",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#view_reschedAgent_modal').modal('show');
+            $('#view_reschedA_due_date').val(response.old_date_needed);
+            $('#view_suggestA_due_date').val(response.date_needed);
+            $('#view_reschedA_vhl_id').val(response.id);
+            $('#view_reschedA_reason').val(response.resched_reason);
+            $('#view_prefA_sched').val(response.pref_sched);
+            if($('#view_prefA_sched').val() == "by_requestor"){
+                $('#view_prefA_date').val(response.pref_date);
+            }
+            else{
+                $('#view_prefA_date').disabled = true;
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function view_resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/vehicle/view_resched_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#view_resched_modal').modal('show');
+            $('#view_resched_due_date').val(response.old_date_needed);
+            $('#view_suggest_due_date').val(response.date_needed);
+            $('#view_resched_vhl_id').val(response.id);
+            $('#view_resched_reason').val(response.resched_reason);
+            $('#view_pref_sched').val(response.pref_sched);
+            if($('#view_pref_sched').val() == "by_requestor"){
+                $('#view_pref_date').val(response.pref_date);
+            }
+            else{
+                $('#view_pref_date').disabled = true;
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+$('select').on('change', function () {
+
+    var selected = $('#pref_sched :selected').val();
+    console.log(selected);
+    if (selected == 'by_requestor') {
+        console.log(selected)
+        document.getElementById("pref_date").disabled = false;
+    }
+    else {
+        document.getElementById("pref_date").value = "";
+        document.getElementById("pref_date").disabled = true;
+    }
+});
+
+function acceptResched(data) {
+    var data = $('#reschedAbyR_vhl_id').val();
+    var pref_date = $('#prefAbyR_date').val();
+    console.log(data, pref_date)
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this.",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Accept Reschedule Date.'
+    }).then((result) => {
+        if (result.value) {
+            var formData = new FormData();
+            formData.append('data_id', data);
+            formData.append('pref_date', pref_date);
+            $.ajax({
+                url: global_path + "/vehicle/accomplish/acceptResched",
+                method: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == "success") {
+                        Swal.fire(
+                            'Submitted.',
+                            response,
+                            'success'
+                        ).then((result2) => {
+                            window.location.href = global_path + "/vehicle/accomplish";
+                        })
+
+                    } else {
+                        Swal.fire(
+                            'DB Error.',
+                            response,
+                            'error'
+                        )
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        }
+    })
+
+}
+function reschedAgent() {
+    var suggest_due_date = $('#suggestA_due_date').val();
+    var data = $('#reschedA_vhl_id').val();
+    var resched_reason = $('#reschedA_reason').val();
+    var missing = "";
+
+    console.log(suggest_due_date, data, resched_reason);
+    if (suggest_due_date == "") {
+        missing = "Suggest Due Date";
+    } else {
+        missing = "Reason for Rescheduling";
+    }
+    if (suggest_due_date != "" && resched_reason != "") {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Reschedule.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', data); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+                formData.append('resched_reason', resched_reason);
+                formData.append('suggest_due_date', suggest_due_date);
+                $.ajax({
+                    url: global_path + "/vehicle/accomplish/reschedAgent",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/vehicle/accomplish";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    } else {
+        Swal.fire(
+            'Required missing field.',
+            'Add ' + missing + '.',
+            'warning'
+        )
+    }
+}
 
 // ENABLE SUBMIT REQUEST ONLY IF RECIPIENT IS NOT EMPTY
 $(function () {
@@ -1149,7 +1400,7 @@ function print_report(data) {
             $('#attachment').val("");
             $('.custom-file-label').html("");
             $('#remarks').val(response.remarks);
-            $('#messengerial_id').val(data);
+            $('#vehicle_id').val(data);
         },
         cache: false,
         contentType: false,
@@ -1210,11 +1461,123 @@ function generate_report() {
     }
 }
 
+function submitResched() {
+    var pref_date = $('#pref_date').val();
+    var data = $('#resched_vhl_id').val();
+    
+    var missing = "";
+    if ($('#pref_sched :selected').val() == "none") {
+        missing = "from dropdown";
+    } else {
+        missing = "Preferred Date";
+    }
+    if (($('#pref_sched :selected').val() == "by_requestor" && pref_date != "")) {
+        Swal.fire({
+            title: 'Submit Reschedule?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', data);
+                formData.append('pref_date', pref_date);
+                formData.append('pref_sched', $('#pref_sched :selected').val());
+                $.ajax({
+                    url: global_path + "/vehicle/submitResched",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/vehicle";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    }
+    else if ($('#pref_sched :selected').val() == "by_agent") {
+
+        Swal.fire({
+            title: 'Submit Reschedule?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit.'
+        }).then((result) => {
+            if (result.value) {
+                console.log(data, $('#pref_sched :selected').val())
+                var formData = new FormData();
+                formData.append('data_id', data);
+                formData.append('pref_sched', $('#pref_sched :selected').val());
+                $.ajax({
+                    url: global_path + "/messengerial/submitResched",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    }
+    else {
+        Swal.fire(
+            'Required field missing',
+            'Select ' + missing + '.',
+            'warning'
+        )
+    }
+}
+
 function _resched_modal(data) {
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
-        url: "/vehicle/accomplish/resched",
+        url: "/vehicle/resched_modal",
         method: 'post',
         data: formData,
         dataType: 'json',

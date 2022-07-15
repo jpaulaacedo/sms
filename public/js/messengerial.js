@@ -360,8 +360,10 @@ function _submitMessengerial(data) {
 }
 
 //   Messengerial Button SUBMIT
-function submitResched(data) {
-    var pref_date = $('#rschd_pref_date').val();
+function submitResched() {
+    var pref_date = $('#pref_date').val();
+    var data = $('#resched_msg_id').val();
+    
     var missing = "";
     if ($('#pref_sched :selected').val() == "none") {
         missing = "from dropdown";
@@ -380,7 +382,6 @@ function submitResched(data) {
         }).then((result) => {
             if (result.value) {
                 var formData = new FormData();
-                console.log(rschd_pref_date)
                 formData.append('data_id', data);
                 formData.append('pref_date', pref_date);
                 formData.append('pref_sched', $('#pref_sched :selected').val());
@@ -427,8 +428,8 @@ function submitResched(data) {
             confirmButtonText: 'Yes, submit.'
         }).then((result) => {
             if (result.value) {
+                console.log(data, $('#pref_sched :selected').val())
                 var formData = new FormData();
-                console.log(rschd_pref_date)
                 formData.append('data_id', data);
                 formData.append('pref_sched', $('#pref_sched :selected').val());
                 $.ajax({
@@ -682,11 +683,62 @@ function _assign_modal(data) {
     $('#submit_msg_id').val(data);
 }
 
-function _resched_modal(data) {
+function reschedAgent_modal() {
+    var data = $('#reschedAbyR_msg_id').val();
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
-        url: "/messengerial/accomplish/resched",
+        url: "/messengerial/accomplish/reschedAgent_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#reschedAgent_modal').modal('show');
+            $('#reschedAgentbyR_modal').modal('hide');
+            $('#reschedA_due_date').val(response.date_needed);
+            $('#reschedA_msg_id').val(response.id);
+            $('#reschedA_reason').val("");
+            $('#prefA_sched').val("");
+            $('#prefA_date').val("");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function reschedAgentbyR_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/accomplish/reschedAgentbyR_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+
+        success: function (response) {
+            console.log(response)
+            $('#reschedAgentbyR_modal').modal('show');
+            $('#reschedAbyR_due_date').val(response.old_date_needed);
+            $('#suggestAbyR_due_date').val(response.date_needed);
+            $('#reschedAbyR_msg_id').val(response.id);
+            $('#reschedAbyR_reason').val(response.resched_reason);
+            $('#prefAbyR_sched').val(response.pref_sched);
+            $('#prefAbyR_date').val(response.pref_date);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
+
+function resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/resched_modal",
         method: 'post',
         data: formData,
         dataType: 'json',
@@ -694,9 +746,11 @@ function _resched_modal(data) {
         success: function (response) {
             console.log(response)
             $('#resched_modal').modal('show');
-            $('#due_date').val(response.date_needed);
+            $('#resched_due_date').val(response.old_date_needed);
+            $('#suggest_due_date').val(response.date_needed);
             $('#resched_msg_id').val(response.id);
-            $('#resched_reason').val("");
+            $('#resched_reason').val(response.resched_reason);
+
         },
         cache: false,
         contentType: false,
@@ -704,79 +758,29 @@ function _resched_modal(data) {
     })
 }
 
-// $(function () {
-//     var selected = $('#pref_sched :selected').val();
-//     document.getElementById("rschd_pref_date").disabled = true;
-//     if (selected == "by_requestor") {
-//         console.log(selected)
-//         document.getElementById("rschd_pref_date").disabled = false;
-//     }
-//     else {
-//         document.getElementById("rschd_pref_date").disabled = true;
-//     }
-// });
-
-$('select').on('change', function () {
-
-    var selected = $('#pref_sched :selected').val();
-
-    if (selected == 'by_requestor') {
-        console.log(selected)
-        document.getElementById("rschd_pref_date").disabled = false;
-    }
-    else {
-        document.getElementById("rschd_pref_date").disabled = true;
-    }
-});
-
-function rschd_modal(data) {
-
+//view reschedAgent_modal
+function view_reschedAgent_modal(data) {
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
-        url: "/messengerial/accomplish/rschd",
+        url: "/messengerial/accomplish/view_reschedAgent",
         method: 'post',
         data: formData,
         dataType: 'json',
 
         success: function (response) {
             console.log(response)
-            $('#rschd_modal').modal('show');
-            $('#rschd_old_due_date').val(response.old_date_needed);
-            $('#rschd_due_date').val(response.date_needed);
-            $('#rschd_msg_id').val(response.id);
-            $('#rschd_reason').val(response.resched_reason);
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    })
-}
-
-function view_rschd_modal(data) {
-
-    var formData = new FormData();
-    formData.append('data_id', data);
-    $.ajax({
-        url: "/messengerial/view_rschd",
-        method: 'post',
-        data: formData,
-        dataType: 'json',
-
-        success: function (response) {
-            $('#view_rschd_modal').modal('show');
-            $('#view_rschd_old_due_date').val(response.old_date_needed);
-            $('#view_rschd_due_date').val(response.date_needed);
-            $('#view_rschd_msg_id').val(response.id);
-            $('#view_rschd_pref_date').val(response.pref_date);
-            $('#view_rschd_reason').val(response.resched_reason);
-            var preferred_sched = response.pref_sched;
-            console.log(preferred_sched)
-            if (preferred_sched == 'by_requestor') {
-                console.log(preferred_sched == 'by_requestor')
-                document.getElementById('view_pref_sched').value = 'by_requestor';
-            } else {
-                document.getElementById('view_pref_sched').value = 'by_agent';
+            $('#view_reschedAgent_modal').modal('show');
+            $('#view_reschedA_due_date').val(response.old_date_needed);
+            $('#view_suggestA_due_date').val(response.date_needed);
+            $('#view_reschedA_msg_id').val(response.id);
+            $('#view_reschedA_reason').val(response.resched_reason);
+            $('#view_prefA_sched').val(response.pref_sched);
+            if($('#view_pref_sched').val() == "by_requestor"){
+                $('#view_pref_date').val(response.pref_date);
+            }
+            else{
+                $('#view_pref_date').disabled = true;
             }
         },
         cache: false,
@@ -785,58 +789,164 @@ function view_rschd_modal(data) {
     })
 }
 
-// function _resched() {
-//     var due_date = $('#due_date').val();
-//     var resched_reason = $('#resched_reason').val();
+function view_resched_modal(data) {
+    var formData = new FormData();
+    formData.append('data_id', data);
+    $.ajax({
+        url: "/messengerial/view_resched_modal",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
 
-//     if (due_date != null && resched_reason != "") {
-//         Swal.fire({
-//             title: 'Are you sure?',
-//             text: "You won't be able to revert this.",
-//             type: 'question',
-//             showCancelButton: true,
-//             confirmButtonColor: '#3085d6',
-//             cancelButtonColor: '#d33',
-//             confirmButtonText: 'Yes, reschedule.'
-//         }).then((result) => {
-//             if (result.value) {
-//                 var formData = new FormData();
-//                 //AJAX to Controller
-//                 formData.append('data_id', $('#resched_msg_id').val()); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
-//                 formData.append('resched_reason', $('#resched_reason').val());
-//                 formData.append('date_needed', $('#due_date').val());
-//                 $.ajax({
-//                     url: global_path + "/messengerial/accomplish/resched",
-//                     method: 'post',
-//                     data: formData,
-//                     dataType: 'json',
-//                     success: function (response) {
-//                         if (response == "success") {
-//                             Swal.fire(
-//                                 'Reschedule Date Needed Sent',
-//                                 response,
-//                                 'success'
-//                             ).then((result2) => {
-//                                 window.location.href = global_path + "/messengerial/accomplish";
-//                             })
+        success: function (response) {
+            console.log(response)
+            $('#view_resched_modal').modal('show');
+            $('#view_resched_due_date').val(response.old_date_needed);
+            $('#view_suggest_due_date').val(response.date_needed);
+            $('#view_resched_msg_id').val(response.id);
+            $('#view_resched_reason').val(response.resched_reason);
+            $('#view_pref_sched').val(response.pref_sched);
+            if($('#view_pref_sched').val() == "by_requestor"){
+                $('#view_pref_date').val(response.pref_date);
+            }
+            else{
+                $('#view_pref_date').disabled = true;
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
+}
 
-//                         } else {
-//                             Swal.fire(
-//                                 'DB Error.',
-//                                 response,
-//                                 'error'
-//                             )
-//                         }
-//                     },
-//                     cache: false,
-//                     contentType: false,
-//                     processData: false
-//                 });
+$('select').on('change', function () {
 
-//             }
-//         })
-//     }
-// }
+    var selected = $('#pref_sched :selected').val();
+    console.log(selected);
+    if (selected == 'by_requestor') {
+        console.log(selected)
+        document.getElementById("pref_date").disabled = false;
+    }
+    else {
+        document.getElementById("pref_date").value = "";
+        document.getElementById("pref_date").disabled = true;
+    }
+});
+
+function acceptResched(data) {
+    var data = $('#reschedAbyR_msg_id').val();
+    var pref_date = $('#prefAbyR_date').val();
+    console.log(data, pref_date)
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this.",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Accept Reschedule Date.'
+    }).then((result) => {
+        if (result.value) {
+            var formData = new FormData();
+            formData.append('data_id', data);
+            formData.append('pref_date', pref_date);
+            $.ajax({
+                url: global_path + "/messengerial/accomplish/acceptResched",
+                method: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == "success") {
+                        Swal.fire(
+                            'Submitted.',
+                            response,
+                            'success'
+                        ).then((result2) => {
+                            window.location.href = global_path + "/messengerial/accomplish";
+                        })
+
+                    } else {
+                        Swal.fire(
+                            'DB Error.',
+                            response,
+                            'error'
+                        )
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        }
+    })
+
+}
+function reschedAgent() {
+    var suggest_due_date = $('#suggestA_due_date').val();
+    var data = $('#reschedA_msg_id').val();
+    var resched_reason = $('#reschedA_reason').val();
+    var missing = "";
+
+    console.log(suggest_due_date, data, resched_reason);
+    if (suggest_due_date == "") {
+        missing = "Suggest Due Date";
+    } else {
+        missing = "Reason for Rescheduling";
+    }
+    if (suggest_due_date != "" && resched_reason != "") {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this.",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Reschedule.'
+        }).then((result) => {
+            if (result.value) {
+                var formData = new FormData();
+                formData.append('data_id', data); // formData.append('<var to be use in controller (eg.in controller = $request-><my_var_name>)>',  $('#<my_element_id>').val());
+                formData.append('resched_reason', resched_reason);
+                formData.append('suggest_due_date', suggest_due_date);
+                $.ajax({
+                    url: global_path + "/messengerial/accomplish/reschedAgent",
+                    method: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "success") {
+                            Swal.fire(
+                                'Submitted.',
+                                response,
+                                'success'
+                            ).then((result2) => {
+                                window.location.href = global_path + "/messengerial/accomplish";
+                            })
+
+                        } else {
+                            Swal.fire(
+                                'DB Error.',
+                                response,
+                                'error'
+                            )
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+            }
+        })
+    } else {
+        Swal.fire(
+            'Required missing field.',
+            'Add ' + missing + '.',
+            'warning'
+        )
+    }
+}
 
 function _outfordel_modal(data) {
     $('#outfordel_pickupdate').val('');
