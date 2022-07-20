@@ -114,7 +114,7 @@
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')
@@ -218,7 +218,7 @@
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')
@@ -321,7 +321,7 @@
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')
@@ -425,7 +425,7 @@
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')
@@ -528,7 +528,7 @@
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
 
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')
@@ -631,7 +631,7 @@
 									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
 
 									@if($data->urgency == "urgent" && $data->status !='Accomplished')

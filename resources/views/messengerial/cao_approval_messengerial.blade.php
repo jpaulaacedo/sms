@@ -32,7 +32,7 @@
 								<th width="10%">Control Number</th>
 								<th width="15%">Requested By</th>
 								<th width="10%">Request Date</th>
-								<th width="15%">Destination</th>
+								<th width="10%">Destination</th>
 								<th width="10%">Date Needed</th>
 								<th width="15%">Status</th>
 								<th width="20%">Action</th>
@@ -60,7 +60,7 @@
 									</button> |
 
 									<button type="submit" onclick="_approveCAO('{{$data->id}}')" class="btn btn-success btn-sm">
-										<span class="fa fa-thumbs-up"></span>
+										<span class="fa fa-thumbs-up"></span>Approve
 									</button>
 									<a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
@@ -147,7 +147,7 @@
 								<td>{{$data->destination}}</td>
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									<br>
 									<small>Driver: {{$data->driver}} <br> Departure Time: {{ date('F j, Y g:i A', strtotime($data->outfordel_date)) }} <br>
 										Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>

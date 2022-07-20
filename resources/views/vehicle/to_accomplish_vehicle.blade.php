@@ -196,7 +196,7 @@
                                         <span class="fa fa-users"></span>
                                     </button> |
                                     <button onclick="_otw('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
+                                        <span class="fa fa-truck"></span> On The Way
                                     </button>
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
@@ -281,10 +281,10 @@
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
                                     <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
-                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
                                     <br>
                                     <small>Driver: {{$data->driver}} <br> Time Departure: {{ date('F j, Y g:i A', strtotime($data->otw_date)) }}

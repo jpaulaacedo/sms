@@ -53,7 +53,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>PSRTI - vamrs</title>
+        <title>PSRTI - VAMRS</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
@@ -67,18 +67,18 @@
         <br><br>
         <center>
             <div>
-                <label for=""> <b>MONTHLY REPORT ON MESSENGERIAL REQUEST</b></label>
+                <label for=""> <b>MESSENGERIAL REPORT</b></label>
             </div>
+            <br>
+
             <div class="row">
                 {{$my_date}}
-
             </div>
         </center>
 
-
+        <br>
         <div class="row">
             <table>
-
                 <thead>
                     <div class="row" style="text-align: center">
                         <div class="col">
@@ -97,6 +97,9 @@
                         <th width="15%" class="text-center">Name/Type of Document</th>
                         <th width="15%" class="text-center">Agency/Office</th>
                         <th width="15%" class="text-center">Address</th>
+                        <th width="15%" class="text-center">Driver</th>
+                        <th width="10%" class="text-center">Star Rating</th>
+                        <th width="15%" class="text-center">Feedback</th>
                     </div>
                 </thead>
                 <tbody>
@@ -135,16 +138,25 @@
                             @endphp
                             {{$division}}
                         </td>
-                        <td width="15%" class="text-left">
+                        <td class="text-left">
                             {{App\Messengerial::get_del_item($data->id)}}
                         </td>
 
-                        <td width="15%" class="text-left">
+                        <td>
                             {{App\Messengerial::get_agency($data->id)}}
                         </td>
 
-                        <td width="15%" class="text-left">
+                        <td>
                             {{App\Messengerial::get_dest($data->id)}}
+                        </td>
+                        <td>
+                            {{App\Messengerial::get_driver($data->id)}}
+                        </td>
+                        <td>
+                            {{App\Messengerial::get_star($data->id)}}
+                        </td>
+                        <td>
+                            {{App\Messengerial::get_feedback($data->id)}}
                         </td>
                     </tr>
                     @endif
@@ -190,6 +202,15 @@
                     </div>
                 </div>
             </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-sm">
+                    <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average Rating: {{$avg_rating}}</small> 
+                </div>
+            </div>
+        </div>
         </div>
         <script type="text/javascript">
             window.onload = function() {

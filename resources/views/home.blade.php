@@ -94,7 +94,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="content-wrapper">
             <div class="content">
                 <br>
-                <div class="col-md-8 offset-md-2">
+                <div class="col-md">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">

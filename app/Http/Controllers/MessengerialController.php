@@ -81,10 +81,10 @@ class MessengerialController extends Controller
     public function rate_messengerial(Request $request)
     {
         try {
-                $save = Messengerial::where('id', $request->rate_msg_id)->first();
-                $save->feedback = $request->feedback;
-                $save->star = $request->rating;
-                $save->save();
+            $save = Messengerial::where('id', $request->rate_msg_id)->first();
+            $save->feedback = $request->feedback;
+            $save->star = $request->rating;
+            $save->save();
 
             return redirect()->back()->with('message', 'success');
         } catch (\Exception $e) {
@@ -196,73 +196,143 @@ class MessengerialController extends Controller
     }
 
     // REPORTS
-    public function report_messengerial()
+
+    public function messengerial_report($start_date, $end_date, $driver)
     {
-        $messengerial = Messengerial::orderBy('id', 'desc')->get();
-        return view('messengerial.report_messengerial', compact('messengerial'));
-    }
 
-    public function messengerial_monthly_report($month, $year)
-    {
-        $messengerial = Messengerial::whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+        if ($driver == "All") {
+            $messengerial = Messengerial::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
 
-        $my_date = date("M Y", strtotime($messengerial[0]["accomplished_date"]));
+            $avg_rating = Messengerial::whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->avg('star');
+        } else {
+            $messengerial = Messengerial::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
 
-        $kmd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
-            ->leftjoin('users', 'messengerial.user_id', 'users.id')
-            ->where('status', 'Accomplished')
-            ->where('division', 'Knowledge Management Division')
-            ->whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+            $avg_rating = Messengerial::whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->avg('star');
+        }
+
+        $my_date = date("M d, Y", strtotime($start_date)) . ' - ' . date("M d, Y", strtotime($end_date));
+
+
+        if ($driver == "All") {
+            $kmd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Knowledge Management Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $kmd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Knowledge Management Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
         $kmd_count = count($kmd_cnt);
 
-        $oed_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
-            ->leftjoin('users', 'messengerial.user_id', 'users.id')
-            ->where('status', 'Accomplished')
-            ->where('division', 'Office of the Executive Director')
-            ->whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+        if ($driver == "All") {
+            $oed_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Office of the Executive Director')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $oed_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Office of the Executive Director')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
         $oed_count = count($oed_cnt);
 
-        $td_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
-            ->leftjoin('users', 'messengerial.user_id', 'users.id')
-            ->where('status', 'Accomplished')
-            ->where('division', 'Training Division')
-            ->whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+        if ($driver == "All") {
+            $td_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Training Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $td_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Training Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
         $td_count = count($td_cnt);
 
-        $rd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
-            ->leftjoin('users', 'messengerial.user_id', 'users.id')
-            ->where('status', 'Accomplished')
-            ->where('division', 'Research Division')
-            ->whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+        if ($driver == "All") {
+            $rd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Research Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $rd_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Research Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
         $rd_count = count($rd_cnt);
 
-        $fad_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
-            ->leftjoin('users', 'messengerial.user_id', 'users.id')
-            ->where('status', 'Accomplished')
-            ->where('division', 'Finance and Administrative Division')
-            ->whereYear('accomplished_date', $year)
-            ->whereMonth('accomplished_date', $month)
-            ->get();
+        if ($driver == "All") {
+            $fad_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Finance and Administrative Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $fad_cnt = Messengerial::select('messengerial.*', 'users.*', 'messengerial.id as messengerial_id')
+                ->leftjoin('users', 'messengerial.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Finance and Administrative Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
         $fad_count = count($fad_cnt);
 
-        return view('messengerial.monthly_report', compact('messengerial', 'my_date', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
+        return view('messengerial.messengerial_report', compact('messengerial', 'my_date', 'avg_rating', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
     }
 
-    public function messengerial_check_monthly_report(Request $request)
+    public function messengerial_check_report(Request $request)
     {
-        $messengerial = Messengerial::whereYear('accomplished_date', $request->year)
-            ->whereMonth('accomplished_date', $request->month)
-            ->get();
+        if ($request->driver == "All") {
+            $messengerial = Messengerial::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)->get();
+        } else {
+            $messengerial = Messengerial::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)
+                ->where('driver', $request->driver)
+                ->get();
+        }
         return json_encode(count($messengerial));
     }
 

@@ -122,9 +122,9 @@ Route::post('/submit_file', 'MessengerialController@submit_file');
 
 Route::post('/delete_file', 'MessengerialController@delete_file');
 
-Route::post('/messengerial/check_monthly_report', 'MessengerialController@messengerial_check_monthly_report');
+Route::post('/messengerial/check_report', 'MessengerialController@messengerial_check_report');
 
-Route::get('/messengerial/monthly_report/{month}/{year}', 'MessengerialController@messengerial_monthly_report');
+Route::get('/messengerial/messengerial_report/{start_date}/{end_date}/{driver}', 'MessengerialController@messengerial_report');
 
 
 

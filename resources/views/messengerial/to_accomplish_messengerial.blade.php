@@ -203,7 +203,7 @@
                                         <span class="fa fa-users"></span>
                                     </button> |
                                     <button onclick="_outfordel('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-truck"></span>
+                                        <span class="fa fa-truck"></span> Out For Delivery
                                     </button>
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
@@ -291,7 +291,7 @@
                                     {{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
                                 </td>
                                 <td>
-                                    <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
                                     <br>
                                     <small>Driver: {{$data->driver}} <br> Departure Time: {{ date('F j, Y g:i A', strtotime($data->outfordel_date)) }}
                                         <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
@@ -552,9 +552,9 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="accomplish_modalLabel">
                     <span id="modal_header" class="fa fa-file"></span>&nbsp;
-                    <span>Mark recipient "</span>
-                    <span id="recipient"></span>
-                    <span>" as Accomplished</span>
+                    <span>Mark</span>
+                    <span id="control_num"></span>
+                    <span>as Accomplished</span>
                 </h5>
             </div>
             <input type="hidden" id="messengerial_id" name="messengerial_id">
@@ -595,10 +595,12 @@
                 <br>
                 <div class="row">
                     <div class="col-sm">
+                        @if(isset($data))
                         <button id="btn_editRequest" type="submit" onclick="_submitFile()" class="btn btn-info float-right">
                             <span class="fa fa-plus"></span>
                             <span>Add to List</span>
                         </button>
+                        @endif
                     </div>
                 </div>
                 <br>
@@ -619,12 +621,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    @if(isset($data))
-                    <button class="btn btn-success" onclick="_markAccomplish('{{$data->id}}','{{$data->control_num}}')" class="btn btn-success btn-sm">
+                    <button class="btn btn-success" onclick="_markAccomplish()" class="btn btn-success btn-sm">
                         <span class="fa fa-check"></span>
                         Submit
                     </button>
-                    @endif
                 </div>
             </div>
         </div>
@@ -637,8 +637,8 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="acc_accomplish_modalLabel">
                     <span id="modal_header" class="fa fa-file"></span>&nbsp;
-                    <span>Attachment for Recipient - </span>
-                    <span id="acc_recipient"></span>
+                    <span>Attachment - </span>
+                    <span id="acc_control_num"></span>
                 </h5>
             </div>
             <input type="hidden" id="acc_msg_id" name="acc_msg_id">
@@ -793,53 +793,6 @@
         </div>
     </div>
 </div>
-
-<!-- Mark Accomplish modal -->
-<div class="modal fade" id="mark_accomplish_modal" tabindex="-1" aria-labelledby="mark_accomplish_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h5 class="modal-title" id="mark_accomplish_modalLabel">
-                    <span class="fa fa-envelope"></span>
-                    &nbsp;Mark Accomplished
-                </h5>
-            </div>
-            <!-- BLADE TO AJAX -->
-            <!-- use this id below in ajax -->
-            <input type="hidden" id="markacc_msg_id" name="markacc_msg_id">
-            <input type="hidden" id="mark_msg_id" name="mark_msg_id">
-            <input type="hidden" id="cntrl_num" name="cntrl_num">
-            <div class="modal-body">
-                <div class="row">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="outfordel_date">Departure Time &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        </div>
-                        <input type="datetime-local" class="form-control" readonly name="outfordel_date" id="outfordel_date" required>
-
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="accomplished_date">Accomplished Date</label>
-                        </div>
-                        <input type="datetime-local" class="form-control" name="accomplished_date" id="accomplished_date" required>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#mark_accomplish_modal">
-                    Close
-                </button>
-                <button class="btn btn-success" onclick="_markAccomplish()" class="btn btn-success btn-sm">
-                    <span class="fa fa-check"></span>
-                    Accomplished
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- View Messengerial Modal-->
 <div class="modal fade" id="view_msg_modal" tabindex="-1" aria-labelledby="view_msg_modalLabel" aria-hidden="true">

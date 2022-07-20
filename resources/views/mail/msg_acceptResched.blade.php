@@ -1,6 +1,8 @@
 <p>Hi {{ $data['emp_name'] }}!
 
-<p>Your ticket that is subject for rescheduling is now SET.
+<p>The schedule for your ticket is now set.
+    <br>
+See details below.
     <br>
  @if($data['pref_sched'] == "by_requestor")
 <p>Preferred Schedule: <b>Set preferred schedule.</b> <br>

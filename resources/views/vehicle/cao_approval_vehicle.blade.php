@@ -30,9 +30,9 @@
 								<th width="15%">Purpose of Trip</th>
 								<th width="10%">Date and Time Needed</th>
 								<th width="10%">Requested By</th>
-								<th width="15%">Destination</th>
+								<th width="10%">Destination</th>
 								<th width="15%">Status</th>
-								<th width="10%">Action</th>
+								<th width="20%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -55,7 +55,7 @@
 										<span class="fa fa-users"></span>
 									</button> |
 									<button type="submit" onclick="_approveCAO('{{$data->id}}')" class="btn btn-success btn-sm">
-										<span class="fa fa-thumbs-up"></span>
+										<span class="fa fa-thumbs-up"></span> Approve
 									</button>
 
 									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
@@ -145,7 +145,7 @@
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
 								<td>
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									<span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
 									<br>
 									<small>Driver: {{$data->driver}} <br> Time Departure: {{ date('F j, Y g:i A', strtotime($data->outfordel_pickupdate)) }}
 										<br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>

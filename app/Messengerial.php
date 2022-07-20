@@ -32,6 +32,24 @@ class Messengerial extends Model
         return $messengerial->destination;
     }
 
+    public static function get_driver($user_id)
+    {
+        $messengerial = Self::where('id', $user_id)->first();
+        return $messengerial->driver;
+    }
+
+    public static function get_star($user_id)
+    {
+        $messengerial = Self::where('id', $user_id)->first();
+        return $messengerial->star;
+    }
+
+    public static function get_feedback($user_id)
+    {
+        $messengerial = Self::where('id', $user_id)->first();
+        return $messengerial->feedback;
+    }
+
     public static function staff_messengerial()
     {
         $ctr = 0;

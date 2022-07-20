@@ -385,7 +385,7 @@ function _submitMessengerial(data) {
 function submitResched() {
     var pref_date = $('#pref_date').val();
     var data = $('#resched_msg_id').val();
-    
+
     var missing = "";
     if ($('#pref_sched :selected').val() == "none") {
         missing = "from dropdown";
@@ -503,9 +503,9 @@ function accomplish_modal(data, outfordel_date) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#recipient').empty();
+            $('#control_num').empty();
             $('#accomplished_date').empty();
-            $('#recipient').html(response.recipient);
+            $('#control_num').html(response.control_num);
             $('#outfordel_date').val(outfordel_date);
             $('#accomplish_modal').modal('show');
             _loadFileAgent(data);
@@ -514,6 +514,7 @@ function accomplish_modal(data, outfordel_date) {
             $('#remarks').val(response.remarks);
             $('#accomplished_date').val(response.accomplished_date);
             $('#messengerial_id').val(data);
+            $('#control_num').html(response.control_num);
         },
         cache: false,
         contentType: false,
@@ -530,9 +531,9 @@ function acc_accomplish_modal(data, outfordel_date) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#acc_recipient').empty();
+            $('#acc_control_num').empty();
             $('#acc_accomplished_date').val('');
-            $('#acc_recipient').html(response.recipient);
+            $('#acc_control_num').html(response.control_num);
             $('#acc_outfordel_date').val(outfordel_date);
             $('#acc_remarks').val(response.remarks);
             $('#acc_accomplished_date').val(response.accomplished_date);
@@ -586,8 +587,8 @@ function _attachment(data) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            $('#recipient').empty();
-            $('#recipient').html(response.recipient);
+            $('#control_num').empty();
+            $('#control_num').html(response.control_num);
             $('#accomplish_modal').modal('show');
             // _loadRecipient(data);
             _loadFileAgent(data);
@@ -797,10 +798,10 @@ function view_reschedAgent_modal(data) {
             $('#view_reschedA_msg_id').val(response.id);
             $('#view_reschedA_reason').val(response.resched_reason);
             $('#view_prefA_sched').val(response.pref_sched);
-            if($('#view_prefA_sched').val() == "by_requestor"){
+            if ($('#view_prefA_sched').val() == "by_requestor") {
                 $('#view_prefA_date').val(response.pref_date);
             }
-            else{
+            else {
                 $('#view_prefA_date').disabled = true;
             }
         },
@@ -827,10 +828,10 @@ function view_resched_modal(data) {
             $('#view_resched_msg_id').val(response.id);
             $('#view_resched_reason').val(response.resched_reason);
             $('#view_pref_sched').val(response.pref_sched);
-            if($('#view_pref_sched').val() == "by_requestor"){
+            if ($('#view_pref_sched').val() == "by_requestor") {
                 $('#view_pref_date').val(response.pref_date);
             }
-            else{
+            else {
                 $('#view_pref_date').disabled = true;
             }
         },
@@ -840,7 +841,7 @@ function view_resched_modal(data) {
     })
 }
 
-$('select').on('change', function () {
+$('#pref_sched').on('change', function () {
 
     var selected = $('#pref_sched :selected').val();
     console.log(selected);
@@ -1108,9 +1109,13 @@ function _outfordel(data) {
         }
     })
 }
+
 // mark Accomplish modal  
-function _markAccomplish(data, control_num) {
+function _markAccomplish() {
     var accomplished_date = $('#accomplished_date').val();
+    var control_num = $('#control_num').html();
+    var data = $('#messengerial_id').val();
+    console.log(data)
     if (accomplished_date != "") {
         Swal.fire({
             title: 'Mark ' + control_num + ' as accomplished?',
@@ -1220,7 +1225,6 @@ function _loadFile(data) {
 
 function _submitFile() {
     var formData = new FormData();
-    formData.append('recipient', $('#recipient').val());
     formData.append('messengerial_id', $('#messengerial_id').val());
     formData.append('attachment', $('#attachment')[0].files[0]);
     $.ajax({
@@ -1279,7 +1283,7 @@ function _deleteFile(data_id) {
 //     e.preventDefault();
 
 //     let month = $('#month_search option:selected');
-//     let year = $('#year_search').val();
+//     let year = $('#end_date').val();
 
 //     if (!month || !year) {
 //         Swal.fire({
@@ -1323,47 +1327,50 @@ function print_report(data) {
 }
 
 function generate_report() {
-    var my_month = $('#month_search').val();
-    var my_year = $('#year_search').val();
+    var start_date = $('#start_date').val();
+    var end_date = $('#end_date').val();
+    var driver = $('#report_driver').val();
+    console.log(driver);
 
-    if (my_month == null) {
+    if (start_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select month from dropdown.',
+            'Please select Start Date.',
             'warning'
         )
     }
-    if (my_year == null) {
+    if (end_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select year from dropdown.',
+            'Please select End Date.',
             'warning'
         )
     }
-    if (my_month == null && my_year == null) {
+    if (start_date == "" && end_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select moth and year from dropdown.',
+            'Please select Start and End Date.',
             'warning'
         )
     }
-    if (my_month != null && my_year != null) {
+    if (start_date != "" && end_date != "") {
 
         var formData = new FormData();
-        formData.append('month', my_month);
-        formData.append('year', my_year);
+        formData.append('start_date', start_date);
+        formData.append('end_date', end_date);
+        formData.append('driver', driver);
         $.ajax({
-            url: global_path + "/messengerial/check_monthly_report",
+            url: global_path + "/messengerial/check_report",
             method: 'post',
             data: formData,
             dataType: 'json',
             success: function (response) {
                 if (response >= 1) {
-                    window.open(global_path + "/messengerial/monthly_report/" + my_month + '/' + my_year, '_blank');
+                    window.open(global_path + "/messengerial/messengerial_report/" + start_date + '/' + end_date  + '/' + driver, '_blank');
                 } else {
                     Swal.fire(
                         'Record not found.',
-                        'No records found for the month of ' + $('#month_search option:selected').text() + " " + $('#year_search option:selected').text(),
+                        'No records found from ' + $('#start_date').text() + " " + "to" + "" + $('#end_date').text(),
                         'info'
                     )
                 }

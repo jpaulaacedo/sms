@@ -75,7 +75,7 @@
 								<span class="right badge badge-info">{{ ucwords(strtoupper($messengerial->status)) }}</span>
 
 								@elseif($messengerial->status=='Accomplished')
-								<span class="right badge badge-success">{{ ucwords(strtoupper($messengerial->status)) }}</span>
+								<span class="right badge badge-default">{{ ucwords(strtoupper($messengerial->status)) }}</span>
 								@endif
 
 								@if($messengerial->urgency == "urgent")

@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="col-sm">
-                <button class="btn btn-secondary float-right" data-dismiss="modal" data-toggle="modal" data-target="#monthly_report_modal"><span class="fa fa-print"></span> Print Monthly Report</button>
+                <button class="btn btn-secondary float-right" data-dismiss="modal" data-toggle="modal" data-target="#monthly_report_modal"><span class="fa fa-print"></span> Print Report</button>
             </div>
         </div>
 
