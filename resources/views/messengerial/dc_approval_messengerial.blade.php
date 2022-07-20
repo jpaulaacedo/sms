@@ -77,6 +77,9 @@
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -100,6 +103,9 @@
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -122,6 +128,9 @@
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -169,6 +178,9 @@
 								<td>{{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}</td>
 								<td>
 									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
 								</td>
 								<td>
 									<button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -240,14 +252,14 @@
 							<div class="col-sm">
 								<div class="form-group">
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="urgency" id="urgency" value="not_urgent">
-										<label class="form-check-label" for="urgency">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent">
+										<label class="form-check-label" for="view_urgency">
 											Not Urgent
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="urgency" id="urgency" value="urgent">
-										<label class="form-check-label" for="urgency">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent">
+										<label class="form-check-label" for="view_urgency">
 											Urgent
 										</label>
 									</div>

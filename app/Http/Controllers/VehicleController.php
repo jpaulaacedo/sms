@@ -136,24 +136,21 @@ class VehicleController extends Controller
             $update->old_date_needed = $update->date_needed;
             $update->date_needed = $request->suggest_due_date;
             $update->status = "For Rescheduling";
+            $update->view_edit = "view";
             $update->save();
 
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-            $agent = User::select('name', 'email')->where('user_type', '3')->first();
 
             $data = array(
-                'agent' => $agent->name,
                 'emp_name' => $employee->name,
-                'status' => $update->status,
+                'purpose' => $update->purpose,
                 'destination' => $update->destination,
                 'date_needed' => $update->date_needed,
                 'resched_reason' => $update->resched_reason,
-                'purpose' => $update->purpose,
                 'link'  =>  URL::to('/vehicle')
             );
-            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -194,6 +191,7 @@ class VehicleController extends Controller
             $update = Vehicle::where('id', $request->data_id)->first(); //model
             $update->date_needed = $request->pref_date;
             $update->status = "For Assignment";
+            $update->view_edit = "view";
             $update->save();
 
             $user_id = $update->user_id;
@@ -201,16 +199,15 @@ class VehicleController extends Controller
 
             $data = array(
                 'emp_name' => $employee->name,
-                'recipient' => $update->recipient,
-                'agency' => $update->agency,
                 'pref_sched' => $update->pref_sched,
                 'pref_date' => $update->pref_date,
-                'delivery_item' => $update->delivery_item,
+                'purpose' => $update->purpose,
+                'destination' => $update->destination,
                 'date_needed' => $update->date_needed,
                 'resched_reason' => $update->resched_reason,
                 'link'  =>  URL::to('/messengerial'),
             );
-            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlacceptResched($data));
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlacceptResched($data));
 
             return json_encode('success');
         } catch (\Exception $e) {
@@ -240,6 +237,7 @@ class VehicleController extends Controller
         try {
             $update = Vehicle::where('id', $request->data_id)->first(); //model
             $update->pref_sched = $request->pref_sched;
+            $update->view_edit = "edit";
             if ($update->pref_sched == "by_agent") {
                 $update->status = "For Assignment";
             } else {
@@ -254,15 +252,15 @@ class VehicleController extends Controller
                 'agent' => $agent->name,
                 'pref_sched' => $update->pref_sched,
                 'pref_date' => $update->pref_date,
+                'old_date_needed' => $update->old_date_needed,
+                    'purpose' => $update->purpose,
+                'destination' => $update->destination,
                 'status' => $update->status,
                 'emp_name' => $employee->name,
-                'recipient' => $update->recipient,
-                'agency' => $update->agency,
-                'delivery_item' => $update->delivery_item,
                 'agent_link'  =>  URL::to('/messengerial/accomplish')
             );
 
-            // Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlsubmitResched($data));
+            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlsubmitResched($data));
             return json_encode('success');
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
@@ -537,7 +535,8 @@ class VehicleController extends Controller
 
     public function to_accomplish_vehicle()
     {
-        $vehicle = Vehicle::orderBy('id', 'desc')->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+        $status = array("For Assignment","For CAO Approval","For Rescheduling","Confirmed","Cancelled","Out For Delivery","Accomplished","To Rate");
+        $vehicle = Vehicle::orderBy('id', 'desc')->whereIn('status',$status)->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
         return view('vehicle.to_accomplish_vehicle', compact('vehicle')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
 
     }

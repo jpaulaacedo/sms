@@ -252,14 +252,14 @@
 							<div class="col-sm">
 								<div class="form-group">
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="urgency" id="urgency" value="not_urgent">
-										<label class="form-check-label" for="urgency">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="not_urgent">
+										<label class="form-check-label" for="view_urgency">
 											Not Urgent
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="urgency" id="urgency" value="urgent">
-										<label class="form-check-label" for="urgency">
+										<input class="form-check-input" type="radio" name="view_urgency" id="view_urgency" value="urgent">
+										<label class="form-check-label" for="view_urgency">
 											Urgent
 										</label>
 									</div>

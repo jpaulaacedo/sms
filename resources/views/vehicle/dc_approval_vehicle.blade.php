@@ -38,8 +38,7 @@
 						<tbody>
 
 							@foreach($vehicle as $data)
-
-							@if(Auth::user()->user_type == 2 && $data->status=='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
+							@if((Auth::user()->user_type == 2 && $data->status=='For DC Approval') && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
@@ -47,25 +46,10 @@
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
 								<td>
-									@if($data->status=='Filing')
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
 									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@elseif($data->status == "Cancelled")
-									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "On The Way")
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "For Assignment")
-									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
-									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
 									@endif
 								</td>
 								<td>
@@ -78,25 +62,13 @@
 									<button type="submit" onclick="_approveDC('{{$data->id}}')" class="btn btn-success btn-sm">
 										<span class="fa fa-thumbs-up"></span>
 									</button>
-
-									@if($data->status=='Cancelled')
-									<button class="btn btn-warning btn-sm" onclick="_cancelReasonVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> reason
-									</button>
-									@endif
-
-									@if($data->status =='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
-										<span class="fa fa-file"></span>
-
-									</button>
-									@endif
 									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>
 							</tr>
 							@endif
-							@if(Auth::user()->user_type == 2 && $data->status!='For DC Approval' && (App\User::get_division($data->user_id) == Auth::user()->division))
-
+							@endforeach
+							@foreach($vehicle as $data)
+							@if($data->status=='For Assignment' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
 							<tr class="text-center">
 								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
 								<td>{{$data->purpose}}</td>
@@ -104,25 +76,10 @@
 								<td>{{App\User::get_user($data->user_id)}}</td>
 								<td>{{$data->destination}}</td>
 								<td>
-									@if($data->status=='Filing')
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "For CAO Approval" || $data->status == "For DC Approval")
-									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "Cancelled")
-									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status=='Confirmed')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "On The Way")
-									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
-
-									@elseif($data->status == "For Assignment")
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
-									@elseif($data->status=='Accomplished')
-									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
 									@endif
 								</td>
 								<td>
@@ -131,18 +88,139 @@
 										<span class="fa fa-users"></span>
 									</button> |
 									@endif
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+								</td>
+							</tr>
+							@endif
+							@endforeach
+							@foreach($vehicle as $data)
+							@if($data->status=='For CAO Approval' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->purpose}}</td>
+								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{$data->destination}}</td>
+								<td>
+									<span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									@if($data->status=='Cancelled')
-									<button class="btn btn-warning btn-sm" onclick="_cancelReasonVehicle('{{$data->id}}')">
-										<span class="fa fa-times"></span> reason
-									</button>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
 									@endif
+								</td>
+								<td>
+									@if($data->status!='Filing')
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
+									@endif
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+								</td>
+							</tr>
+							@endif
+							@endforeach
 
-									@if($data->status =='Accomplished')
-									<button class="btn btn-warning btn-sm" onclick="_attachment('{{$data->id}}')">
-										<span class="fa fa-file"></span>
+							@foreach($vehicle as $data)
+							@if($data->status=='Confirmed' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->purpose}}</td>
+								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{$data->destination}}</td>
+								<td>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 
-									</button>
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+								</td>
+								<td>
+									@if($data->status!='Filing')
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
+									@endif
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+								</td>
+							</tr>
+							@endif
+							@endforeach
+
+							@foreach($vehicle as $data)
+							@if($data->status=='Cancelled' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->purpose}}</td>
+								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{$data->destination}}</td>
+								<td>
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+								</td>
+								<td>
+									@if($data->status!='Filing')
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
+									@endif
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+								</td>
+							</tr>
+							@endif
+							@endforeach
+
+							@foreach($vehicle as $data)
+							@if($data->status=='Out For Delivery' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->purpose}}</td>
+								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{$data->destination}}</td>
+								<td>
+									<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+								</td>
+								<td>
+									@if($data->status!='Filing')
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
+									@endif
+									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
+								</td>
+							</tr>
+							@endif
+							@endforeach
+
+							@foreach($vehicle as $data)
+							@if($data->status=='Accomplished' && (App\User::get_division($data->user_id) == Auth::user()->division) && App\User::get_user($data->user_id) != Auth::user()->name)
+							<tr class="text-center">
+								<td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
+								<td>{{$data->purpose}}</td>
+								<td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+								<td>{{App\User::get_user($data->user_id)}}</td>
+								<td>{{$data->destination}}</td>
+								<td>
+									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+								</td>
+								<td>
+									@if($data->status!='Filing')
+									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
+										<span class="fa fa-users"></span>
+									</button> |
 									@endif
 									<a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
 								</td>

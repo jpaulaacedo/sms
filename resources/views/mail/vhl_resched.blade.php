@@ -1,6 +1,6 @@
 <p>Hi {{ $data['emp_name'] }}!
 
-<p>Your ticket is RESCHED to {{ date('F j, Y g:i A', strtotime($data['date_needed'])) }} .
+<p>Your ticket is RESCHEDULED to {{ date('F j, Y g:i A', strtotime($data['date_needed'])) }} .
     <br>
     Reason for Rescheduling: {{ $data['resched_reason'] }}
     <br>

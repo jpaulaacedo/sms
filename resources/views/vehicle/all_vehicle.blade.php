@@ -30,7 +30,7 @@
 								<th width="10%">Date Needed</th>
 								<th width="15%">Requested By</th>
 								<th width="15%">Destination</th>
-								<th width="10%">Status</th>
+								<th width="20%">Status</th>
 								<th width="10%">Action</th>
 							</tr>
 						</thead>
@@ -64,6 +64,9 @@
 									<span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+									@endif
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
 									@endif
 								</td>
 								<td>

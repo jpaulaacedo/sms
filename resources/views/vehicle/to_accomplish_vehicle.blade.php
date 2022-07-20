@@ -40,13 +40,21 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    @if(App\Messengerial::same_date($data->date_needed) == 'same')
+                                    <span class="right badge badge-warning">
+                                        {{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    </span>
+                                    @else
+                                    {{ date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    @endif
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-info">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
@@ -65,7 +73,6 @@
                                         <span class="fa fa-calendar"></span>
                                     </button>
                                     @endif
-
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -80,13 +87,21 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    @if(App\Messengerial::same_date($data->date_needed) == 'same')
+                                    <span class="right badge badge-warning">
+                                        {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    </span>
+                                    @else
+                                    {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    @endif
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
@@ -95,11 +110,11 @@
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    @if($data->pref_sched == "by_agent" || $data->pref_sched == "")
+                                    @if($data->view_edit == "view")
                                     <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
-                                    @elseif($data->pref_sched == "by_requestor")
+                                    @else
                                     <button onclick="reschedAgentbyR_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
@@ -119,16 +134,25 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    @if(App\Messengerial::same_date($data->date_needed) == 'same')
+                                    <span class="right badge badge-warning">
+                                        {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    </span>
+                                    @else
+                                    {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    @endif
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-warning">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif<br>
+                                    @endif
+                                    <br>
                                     <small>Driver: {{$data->driver}}</small>
                                 </td>
                                 <td>
@@ -146,16 +170,25 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    @if(App\Messengerial::same_date($data->date_needed) == 'same')
+                                    <span class="right badge badge-warning">
+                                        {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    </span>
+                                    @else
+                                    {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    @endif
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif<br>
+                                    @endif
+                                    <br>
                                     <small>Driver: {{$data->driver}} <br></small>
                                 </td>
                                 <td>
@@ -176,16 +209,13 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
-                                    @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @else
-                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif
                                 </td>
                                 <td>
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
@@ -205,13 +235,21 @@
                             <tr class="text-center">
                                 <td>{{ $my_date_req = date('F j, Y g:i A', strtotime($data->created_at)) }}</td>
                                 <td>{{$data->purpose}}</td>
-                                <td>{{ $my_date_needed = date('F j, Y g:i A', strtotime($data->date_needed)) }}</td>
+                                <td>
+                                    @if(App\Messengerial::same_date($data->date_needed) == 'same')
+                                    <span class="right badge badge-warning">
+                                        {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    </span>
+                                    @else
+                                    {{ $my_date_needed = date('F j, Y', strtotime($data->date_needed)) }} <br> {{ date('g:i A', strtotime($data->date_needed)) }}
+                                    @endif
+                                </td>
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
                                     @endif
@@ -243,11 +281,12 @@
                                 <td>{{$data->destination}}</td>
                                 <td>
                                     @if($data->urgency == "urgent")
-                                    <span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
+                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
                                     @else
                                     <span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif<br>
+                                    @endif
+                                    <br>
                                     <small>Driver: {{$data->driver}} <br> Time Departure: {{ date('F j, Y g:i A', strtotime($data->otw_date)) }}
                                         <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
                                 </td>
@@ -403,6 +442,7 @@
                     </div>
                 </div>
                 <br>
+                <hr>
                 <b>Requestor Portion</b>
                 <div class="row">
                     <div class="col-sm">
@@ -475,6 +515,7 @@
                     </div>
                 </div>
                 <br>
+                <hr>
                 <b>Requestor Portion</b>
                 <div class="row">
                     <div class="col-sm">
@@ -519,12 +560,14 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="view_reschedA_modalLabel">
                     <span class="fa fa-calendar"></span>
+                    @if(isset($data))
                     @if($data->status == "For Assignment" && $data->pref_date == $data->date_needed)
                     &nbsp;Preferred Date Accepted
                     @elseif($data->status == "For Assignment" && $data->pref_sched == "by_agent")
                     &nbsp;Suggested Date Accepted
                     @else
                     &nbsp;For Rescheduling
+                    @endif
                     @endif
                 </h5>
             </div>
@@ -557,6 +600,7 @@
                     </div>
                 </div>
                 <br>
+                <hr>
                 <b>Requestor Portion</b>
                 <div class="row">
                     <div class="col-sm">
@@ -766,10 +810,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    @if(isset($data))
                     <button class="btn btn-success" onclick="_markAccomplish('{{$data->id}}','{{$data->destination}}')" class="btn btn-success btn-sm">
                         <span class="fa fa-check"></span>
                         Submit
                     </button>
+                    @endif
                 </div>
             </div>
         </div>

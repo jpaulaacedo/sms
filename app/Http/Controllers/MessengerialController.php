@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Messengerial;
 use App\MessengerialItem;
 use App\MessengerialFile;
-use Auth;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use App\Mail\msgCreateTicket;
 use App\Mail\msgConfirmed;
 use App\Mail\msgApproved;
@@ -78,6 +78,19 @@ class MessengerialController extends Controller
         }
     }
 
+    public function rate_messengerial(Request $request)
+    {
+        try {
+                $save = Messengerial::where('id', $request->rate_msg_id)->first();
+                $save->feedback = $request->feedback;
+                $save->star = $request->rating;
+                $save->save();
+
+            return redirect()->back()->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('message', $e->getMessage());
+        }
+    }
 
     public function calendar_recipient($messengerial_id)
     {
@@ -159,7 +172,8 @@ class MessengerialController extends Controller
     // DC  APPROVAL
     public function dc_approval_messengerial()
     {
-        $messengerial = Messengerial::orderBy('id', 'desc')->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+        $staff_div = User::select('id')->where('division', Auth::user()->division)->get();
+        $messengerial = Messengerial::orderBy('id', 'desc')->whereIn('user_id', $staff_div)->get();
         return view('messengerial.dc_approval_messengerial', compact('messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
     }
 
@@ -175,7 +189,8 @@ class MessengerialController extends Controller
     // AGENT TO ACCOMPLISH
     public function to_accomplish_messengerial()
     {
-        $messengerial = Messengerial::orderBy('id', 'desc')->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "Cancelled", "Out For Delivery", "Accomplished", "To Rate");
+        $messengerial = Messengerial::orderBy('id', 'desc')->whereIn('status', $status)->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
         return view('messengerial.to_accomplish_messengerial', compact('messengerial')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
 
     }
@@ -281,6 +296,7 @@ class MessengerialController extends Controller
             $update->old_date_needed = $update->date_needed;
             $update->date_needed = $request->suggest_due_date;
             $update->status = "For Rescheduling";
+            $update->view_edit = "view";
             $update->save();
 
             $user_id = $update->user_id;
@@ -303,7 +319,7 @@ class MessengerialController extends Controller
         } catch (\Exception $e) {
             return json_encode($e->getMessage());
         }
-    } 
+    }
 
     public function view_reschedAgent_messengerial(Request $request)
     {
@@ -338,6 +354,7 @@ class MessengerialController extends Controller
             $update = Messengerial::where('id', $request->data_id)->first(); //model
             $update->date_needed = $request->pref_date;
             $update->status = "For Assignment";
+            $update->view_edit = "view";
             $update->save();
 
             $user_id = $update->user_id;
@@ -376,14 +393,15 @@ class MessengerialController extends Controller
         $view->date_needed = $due_date . "T" . $due_time;
 
         return json_encode($view);
-    }  
+    }
 
-    
+
     public function submitResched_messengerial(Request $request)
     {
         try {
             $update = Messengerial::where('id', $request->data_id)->first(); //model
             $update->pref_sched = $request->pref_sched;
+            $update->view_edit = "edit";
             if ($update->pref_sched == "by_agent") {
                 $update->status = "For Assignment";
             } else {
@@ -398,6 +416,7 @@ class MessengerialController extends Controller
                 'agent' => $agent->name,
                 'pref_sched' => $update->pref_sched,
                 'pref_date' => $update->pref_date,
+                'old_date_needed' => $update->old_date_needed,
                 'status' => $update->status,
                 'emp_name' => $employee->name,
                 'recipient' => $update->recipient,
@@ -412,7 +431,7 @@ class MessengerialController extends Controller
             return json_encode($e->getMessage());
         }
     }
-    
+
     public function view_resched_modal_messengerial(Request $request)
     {
         $rschd = Messengerial::where('id', $request->data_id)->first();
@@ -428,7 +447,7 @@ class MessengerialController extends Controller
 
         return json_encode($rschd);
     }
-  
+
     public function view_messengerial(Request $request)
     {
         $view = Messengerial::where('id', $request->data_id)->first();

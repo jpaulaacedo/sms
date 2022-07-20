@@ -1,5 +1,44 @@
 @extends('partials._layout')
+@section('css')
+<style>
+	.rating {
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: center;
+	}
 
+	.rating>input {
+		display: none;
+	}
+
+	.rating>label {
+		position: relative;
+		width: 1em;
+		font-size: 3vw;
+		color: #FFD600;
+		cursor: pointer;
+	}
+
+	.rating>label::before {
+		content: "\2605";
+		position: absolute;
+		opacity: 0;
+	}
+
+	.rating>label:hover:before,
+	.rating>label:hover~label:before {
+		opacity: 1 !important;
+	}
+
+	.rating>input:checked~label:before {
+		opacity: 1;
+	}
+
+	.rating:hover>input:checked~label:before {
+		opacity: 0.4;
+	}
+</style>
+@endsection
 @section('content')
 <div class="card">
 	<div class="card-header card-header-vhl">
@@ -20,7 +59,7 @@
 					</div>
 
 					<div class="col-sm">
-						<button onclick="_addRequest()" class="btn btn-vhl float-right">
+						<button onclick="_addRequest()" class="btn btn-vhl float-right" {{App\Vehicle::count_rate()}}>
 							<span class="fas fa-plus"></span>&nbsp;Create Request
 						</button>
 					</div>
@@ -77,12 +116,28 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -97,21 +152,12 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "edit")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
@@ -174,12 +220,28 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -193,21 +255,12 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "edit")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
@@ -270,12 +323,29 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
+
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -289,21 +359,12 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "edit")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
@@ -366,12 +427,29 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
+
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -385,25 +463,15 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "edit")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
-
 									@if($data->status!='Cancelled' && $data->status!='Filing' && $data->status!='Accomplished')
 									<button class="btn btn-warning btn-sm" onclick="_cancelVehicle('{{$data->id}}')">
 										<span class="fa fa-times"></span>
@@ -462,12 +530,29 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
+
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -481,21 +566,12 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "view")if($data->status=='For Rescheduling' && $data->view_edit == "edit")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
@@ -557,12 +633,29 @@
 									@elseif($data->status=='Accomplished')
 									<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 									@endif
+
+									@if($data->urgency == "urgent" && $data->status !='Accomplished')
+									<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
+									@endif
+									@if($data->status =='Accomplished' && $data->feedback == "")
+									<span class="right badge badge-warning">TO RATE</span>
+									@endif
+
 								</td>
 								<td>
 									@if($data->status!='Filing')
 									<button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
 										<span class="fa fa-users"></span>
 									</button> |
+									@endif
+									@if($data->status=='Accomplished' && $data->feedback != "")
+									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+										<span class="fa fa-star"></span>
+									</button>
+									@elseif($data->status=='Accomplished' && $data->feedback == "")
+									<button class="btn btn-success btn-sm" onclick="rate_modal('{{$data->id}}')">
+										<span class="fa fa-star"></span> Rate
+									</button>
 									@endif
 									@if($data->status=='Filing')
 									<button class="btn btn-success btn-sm" onclick="_submitVehicle('{{$data->id}}')">
@@ -581,25 +674,16 @@
 									</button>
 									@endif
 
-									@if($data->status=='For Assignment' && $data->pref_sched != "")
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" || $data->pref_date == $data->date_needed)
-									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-										<span class="fa fa-calendar"></span>
-									</button>
-
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "")
+									@if($data->status=='For Rescheduling' && $data->view_edit == "view")
 									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
-									@elseif($data->status=='For Rescheduling' && $data->pref_sched == "by_requestor" && $data->pref_date != $data->date_needed)
-									<button onclick="resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+									@elseif($data->status=='For Rescheduling' && $data->view_edit == "view")
+									<button onclick="view_resched_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
 										<span class="fa fa-calendar"></span>
 									</button>
 									@endif
-									
+
 									@if($data->status=='Cancelled')
 									<button class="btn btn-warning btn-sm" onclick="_cancelReasonVehicle('{{$data->id}}')">
 										<span class="fa fa-times"></span> reason
@@ -621,12 +705,12 @@
 							@endforeach
 						</tbody>
 					</table>
-					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 <!-- cancel modal -->
 <div class="modal fade" id="cancel_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="request_modalLabel" aria-hidden="true">
@@ -980,7 +1064,7 @@
 				<button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#resched_modal">
 					Close
 				</button>
-				<button onclick="submitResched()" class="btn btn-info float-right">
+				<button onclick="submitResched('{{$data->id}}')" class="btn btn-info float-right">
 					<span class="fa fa-calendar"></span>
 					<span>Reschedule</span>
 				</button>
@@ -996,12 +1080,14 @@
 			<div class="modal-header bg-info">
 				<h5 class="modal-title" id="view_resched_modalLabel">
 					<span class="fa fa-calendar"></span>
+					@if(isset($data))
 					@if($data->status == "For Assignment" && $data->pref_date == $data->date_needed)
 					&nbsp;Preferred Date Accepted
 					@elseif($data->status == "For Assignment" && $data->pref_sched == "by_agent")
 					&nbsp;Suggested Date Accepted
 					@else
 					&nbsp;For Rescheduling
+					@endif
 					@endif
 				</h5>
 			</div>
@@ -1059,6 +1145,53 @@
 					Close
 				</button>
 			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- rate Modal-->
+<div class="modal fade" id="rate_modal" tabindex="-1" aria-labelledby="rate_modalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-md modal-dialog-centered">
+		<div class="modal-content">
+
+			<form action="{{URL::to('/vehicle/rate')}}" method="POST">
+				<div class="modal-body bg-dark">
+					@csrf
+					<div class="row">
+						<input type="hidden" id="rate_vhl_id" name="rate_vhl_id">
+						<div class="col-sm">
+							<center>
+								<h4>Add Rating</h4>
+							</center>
+							<div class="rating form-group">
+								<input type="radio" required name="rating" id="5" value="5"><label for="5">☆</label>
+								<input type="radio" required name="rating" id="4" value="4"><label for="4">☆</label>
+								<input type="radio" required name="rating" id="3" value="3"><label for="3">☆</label>
+								<input type="radio" required name="rating" id="2" value="2"><label for="2">☆</label>
+								<input type="radio" required name="rating" id="1" value="1"><label for="1">☆</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm">
+							<b>Feedback</b>
+							<span class="text-red">*</span>
+							<textarea placeholder="Type your feedback here..." class="form-control" rows="5" id="feedback" required name="feedback"></textarea>
+						</div>
+					</div>
+					&nbsp;
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#rate_modal">
+							Close
+						</button>
+						<button id="btn_rate" type="submit" class="btn btn-success">
+							<span id="icon_rate" class="fa fa-star"></span>
+							<span>Rate</span>
+						</button>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

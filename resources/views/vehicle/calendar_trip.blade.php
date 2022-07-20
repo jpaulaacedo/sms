@@ -29,10 +29,12 @@
 						</tr>
 						@endif
 
+						@if($data->status == "Out For Delivery")
 						<tr>
 							<td style="text-align:right">TIME DEPARTURE:&nbsp;</td>
 							<td style="text-align:right"><b>{{ date('F j, Y g:i A', strtotime($data->otw_date)) }}</b></td>
 						</tr>
+						@endif
 						@if($data->status == "Accomplished")
 						<tr>
 							<td style="text-align:right">ACCOMPLISHED DATE:&nbsp;</td>
@@ -42,9 +44,6 @@
 						<tr>
 							<td style="text-align:right">STATUS:&nbsp;</td>
 							<td>
-								@if($data->urgency == "urgent")
-								<span class="right badge badge-warning">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
-								@endif
 								
 								@if($data->status=='Filing')
 								<span class="right badge badge-primary">{{ ucwords(strtoupper($data->status)) }}</span>
@@ -66,6 +65,11 @@
 								@elseif($data->status=='Accomplished')
 								<span class="right badge badge-success">{{ ucwords(strtoupper($data->status)) }}</span>
 								@endif
+
+								@if($data->urgency == "urgent")
+								<span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span> <br>
+								@endif
+								
 							</td>
 						</tr>
 						@endforeach

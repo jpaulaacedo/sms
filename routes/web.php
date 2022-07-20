@@ -58,6 +58,8 @@ Route::get('/messengerial/report', 'MessengerialController@report_messengerial')
 
 Route::post('/messengerial/edit', 'MessengerialController@edit_messengerial');
 
+Route::post('/messengerial/rate', 'MessengerialController@rate_messengerial');
+
 //agent's view
 Route::post('/messengerial/accomplish/reschedAgent_modal', 'MessengerialController@reschedAgent_modal_messengerial');
 

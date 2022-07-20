@@ -29,7 +29,10 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-envelope nav-icon"></i>
-              <p>Messengerial</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Messengerial</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Messengerial::dc_messengerial()}}</span>
+              </p>
             </a>
           </li>
 
@@ -39,7 +42,10 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-truck nav-icon"></i>
-              <p>Vehicle</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Vehicle</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Vehicle::dc_vehicle()}}</span>
+              </p>
             </a>
           </li>
         </ul>
@@ -102,7 +108,10 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-envelope nav-icon"></i>
-              <p>Messengerial</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Messengerial</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Messengerial::cao_messengerial()}}</span>
+              </p>
             </a>
           </li>
 
@@ -112,7 +121,10 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-truck nav-icon"></i>
-              <p>Vehicle</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Vehicle</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Vehicle::cao_vehicle()}}</span>
+              </p>
             </a>
           </li>
         </ul>
@@ -139,8 +151,11 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
-              <i class="fa fa-envelope nav-icon"></i>
-              <p>Messengerial</p>
+              <i class="nav-icon fa fa-envelope"></i>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Messengerial</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Messengerial::agent_messengerial()}}</span>
+              </p>
             </a>
           </li>
 
@@ -150,7 +165,10 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-truck nav-icon"></i>
-              <p>Vehicle</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Vehicle</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Vehicle::agent_vehicle()}}</span>
+              </p>
             </a>
           </li>
         </ul>
@@ -176,8 +194,11 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
-              <i class="fa fa-envelope nav-icon"></i>
-              <p>Messengerial</p>
+              <i class="nav-icon fa fa-envelope"></i>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Messengerial</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger"></span>
+              </p>
             </a>
           </li>
 
@@ -211,17 +232,24 @@
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
-              <i class="fa fa-envelope nav-icon"></i>
-              <p>Messengerial</p>
+              <i class="nav-icon fa fa-envelope"></i>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Messengerial</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Messengerial::staff_messengerial()}}</span>
+              </p>
             </a>
           </li>
+
           <li class="nav-item">
             <a href="{{ URL::to('vehicle') }}" class="nav-link {{ request()->is('vehicle') ? 'active' : '' }}">
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <i class="fa fa-truck nav-icon"></i>
-              <p>Vehicle</p>
+              <p style="position:absolute;width:65%;">
+                <span style="float: left;"> Vehicle</span>
+                <span style="float: right;margin-top:0.35em" class="badge badge-danger">{{App\Vehicle::staff_vehicle()}}</span>
+              </p>
             </a>
           </li>
         </ul>

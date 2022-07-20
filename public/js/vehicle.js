@@ -155,6 +155,28 @@ $('select').on('change', function () {
     }
 });
 
+//RATE
+function rate_modal(data) {
+    $('#rate_modal').modal('show');
+    $('#btn_rate').show();
+    $('#rate_title').html("Add Feedback");
+    $('#rate_vhl_id').val(data);
+    $('#feedback').html("");
+    $("input[name='rating']").removeAttr('disabled');
+    $("input[name='rating']").prop('checked', false);
+}
+
+function view_rate_modal(data, feedback, star) {
+    $('#rate_modal').modal('show');
+    $('#btn_rate').hide();
+    $('#rate_title').html("Feedback");
+    $('#rate_vhl_id').val(data);
+    $('#feedback').html(feedback);
+    $("input[name='rating']").attr('disabled', 'disabled');
+    $("input[name=rating][value=" + star + "]").prop('checked', true);
+
+}
+
 function acceptResched(data) {
     var data = $('#reschedAbyR_vhl_id').val();
     var pref_date = $('#prefAbyR_date').val();
@@ -209,7 +231,6 @@ function reschedAgent() {
     var data = $('#reschedA_vhl_id').val();
     var resched_reason = $('#reschedA_reason').val();
     var missing = "";
-
     console.log(suggest_due_date, data, resched_reason);
     if (suggest_due_date == "") {
         missing = "Suggest Due Date";
@@ -1534,7 +1555,7 @@ function submitResched() {
                 formData.append('data_id', data);
                 formData.append('pref_sched', $('#pref_sched :selected').val());
                 $.ajax({
-                    url: global_path + "/messengerial/submitResched",
+                    url: global_path + "/vehicle/submitResched",
                     method: 'post',
                     data: formData,
                     dataType: 'json',
@@ -1545,7 +1566,7 @@ function submitResched() {
                                 response,
                                 'success'
                             ).then((result2) => {
-                                window.location.href = global_path + "/messengerial";
+                                window.location.href = global_path + "/vehicle";
                             })
 
                         } else {

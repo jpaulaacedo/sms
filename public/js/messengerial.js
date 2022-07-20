@@ -181,6 +181,28 @@ function _add() {
 
 }
 
+
+//RATE
+function rate_modal(data) {
+    $('#rate_modal').modal('show');
+    $('#btn_rate').show();
+    $('#rate_title').html("Add Feedback");
+    $('#rate_msg_id').val(data);
+    $('#feedback').html("");
+    $("input[name='rating']").removeAttr('disabled');
+    $("input[name='rating']").prop('checked', false);
+}
+
+function view_rate_modal(data, feedback, star) {
+    $('#rate_modal').modal('show');
+    $('#btn_rate').hide();
+    $('#rate_title').html("Feedback");
+    $('#rate_msg_id').val(data);
+    $('#feedback').html(feedback);
+    $("input[name='rating']").attr('disabled', 'disabled');
+    $("input[name=rating][value=" + star + "]").prop('checked', true);
+
+}
 // //SAVE MESSENGERIAL : CREATE NEW MESSSENGERIAL REQ
 // function _addRequest() {
 //     $('#request_modal').modal('show');
@@ -683,8 +705,7 @@ function _assign_modal(data) {
     $('#submit_msg_id').val(data);
 }
 
-function reschedAgent_modal() {
-    var data = $('#reschedAbyR_msg_id').val();
+function reschedAgent_modal(data) {
     var formData = new FormData();
     formData.append('data_id', data);
     $.ajax({
@@ -776,11 +797,11 @@ function view_reschedAgent_modal(data) {
             $('#view_reschedA_msg_id').val(response.id);
             $('#view_reschedA_reason').val(response.resched_reason);
             $('#view_prefA_sched').val(response.pref_sched);
-            if($('#view_pref_sched').val() == "by_requestor"){
-                $('#view_pref_date').val(response.pref_date);
+            if($('#view_prefA_sched').val() == "by_requestor"){
+                $('#view_prefA_date').val(response.pref_date);
             }
             else{
-                $('#view_pref_date').disabled = true;
+                $('#view_prefA_date').disabled = true;
             }
         },
         cache: false,
