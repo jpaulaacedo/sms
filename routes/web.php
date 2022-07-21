@@ -50,8 +50,6 @@ Route::get('/messengerial/cao/approval', 'MessengerialController@cao_approval_me
 // AGENT TO ACCOMPLISH
 Route::get('/messengerial/accomplish', 'MessengerialController@to_accomplish_messengerial');
 
-Route::get('/messengerial/report', 'MessengerialController@report_messengerial');
-
 // Route::post('/messengerial/recipient/edit', 'MessengerialController@edit_recipient');
 
 // Route::post('/messengerial/recipient/delete', 'MessengerialController@delete_recipient');
@@ -122,6 +120,8 @@ Route::post('/submit_file', 'MessengerialController@submit_file');
 
 Route::post('/delete_file', 'MessengerialController@delete_file');
 
+Route::get('/messengerial/report', 'MessengerialController@report_messengerial');
+
 Route::post('/messengerial/check_report', 'MessengerialController@messengerial_check_report');
 
 Route::get('/messengerial/messengerial_report/{start_date}/{end_date}/{driver}', 'MessengerialController@messengerial_report');
@@ -191,11 +191,13 @@ Route::post('/vehicle/cancel', 'VehicleController@cancel_vehicle');
 
 Route::post('/vehicle/cancel_reason', 'VehicleController@cancel_reason_vehicle');
 
+Route::post('/vehicle/rate', 'VehicleController@rate_vehicle');
+
 Route::get('/vehicle/report', 'VehicleController@report_vehicle');
 
-Route::post('/vehicle/check_monthly_report', 'VehicleController@vehicle_check_monthly_report');
+Route::post('/vehicle/check_report', 'VehicleController@vehicle_check_report');
 
-Route::get('/vehicle/monthly_report/{month}/{year}', 'VehicleController@vehicle_monthly_report');
+Route::get('/vehicle/vehicle_report/{start_date}/{end_date}/{driver}', 'VehicleController@vehicle_report');
 
 Route::post('/vehicle/trip/passenger', 'VehicleController@add_passenger');
 

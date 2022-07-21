@@ -114,4 +114,23 @@ class Vehicle extends Model
             return "";
         }
     }
+
+    public static function get_driver($user_id)
+    {
+        $vehicle = Self::where('id', $user_id)->first();
+        return $vehicle->driver;
+    }
+
+    public static function get_star($user_id)
+    {
+        $vehicle = Self::where('id', $user_id)->first();
+        return $vehicle->star;
+    }
+
+    public static function get_feedback($user_id)
+    {
+        $vehicle = Self::where('id', $user_id)->first();
+        return $vehicle->feedback;
+    }
+
 }

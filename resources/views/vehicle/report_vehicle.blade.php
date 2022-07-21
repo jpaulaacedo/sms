@@ -35,6 +35,10 @@
                             <th width="10%" class="text-center">Destination</th>
                             <th width="15%" class="text-center">Purpose</th>
                             <th width="10%" class="text-center">Passengers</th>
+                            <th width="15%" class="text-center">Driver</th>
+
+                            <th width="10%" class="text-center">Rating</th>
+                            <th width="15%" class="text-center">Feedback</th>
                         </div>
                     </thead>
                     <tbody>
@@ -72,6 +76,15 @@
                                 <br>
                                 @endforeach
                             </td>
+                            <td>
+                                {{App\Vehicle::get_driver($data->id)}}
+                            </td>
+                            <td>
+                                {{App\Vehicle::get_star($data->id)}}
+                            </td>
+                            <td>
+                                {{App\Vehicle::get_feedback($data->id)}}
+                            </td>
                         </tr>
                         @endif
                         @endforeach
@@ -88,50 +101,43 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="recipient_modalLabel">
                     <span class="fa fa-calendar"></span>
-                    &nbsp;Monthly Report
+                    &nbsp;Vehicle Report
                 </h5>
             </div>
             <div class="modal-body">
+                <label for="">Filter By Date:<span class="text-red">*</span></label>
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="month_search">Month:</label>
+                                <label class="input-group-text" for="start_date">Start Date:</label>
                             </div>
-                            <select class="custom-select" id="month_search">
-                                <option selected value="" disabled>-- select --</option>
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
+                            <input type="date" class="form-control" name="start_date" id="start_date">
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="year_search">Year:</label>
+                                <label class="input-group-text" for="end_date">End Date:</label>
                             </div>
-                            @php
-                            $earliest_year = 2022;
-                            $now = date('Y');
-                            @endphp
-                            <select class="custom-select" id="year_search">
-                                <option selected value="" disabled>-- select --</option>
-                                @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}">{{ $x }}</option>
-                                @endforeach
+                            <input type="date" class="form-control" name="end_date" id="end_date">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <label for="">Filter By Driver: <small>(optional)</small></label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="report_driver">Driver:</label>
+                            </div>
+                            <select class="custom-select" id="report_driver">
+                                <option selected value="All">-- all --</option>
+                                <option value="Elmo">Elmo</option>
+                                <option value="Ruben">Ruben</option>
                             </select>
                         </div>
-
                     </div>
                 </div>
             </div>

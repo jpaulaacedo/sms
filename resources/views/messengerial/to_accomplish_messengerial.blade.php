@@ -165,6 +165,15 @@
                                     <button name="view" id="view" onclick="_viewMessengerial('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
+                                    @if($data->pref_sched == "")
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -205,6 +214,15 @@
                                     <button onclick="_outfordel('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-truck"></span> Out For Delivery
                                     </button>
+                                    @if($data->pref_sched == "")
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
                                     <a href="{{URL::to('/messengerial_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>

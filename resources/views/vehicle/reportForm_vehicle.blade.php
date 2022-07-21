@@ -67,7 +67,7 @@
     <br><br>
     <center>
         <div>
-            <label for=""> <b>MONTHLY REPORT ON VEHICLE REQUEST</b></label>
+            <label for=""> <b>VEHICLE REPORT</b></label>
         </div>
         <div class="row">
             {{$my_date}}
@@ -88,6 +88,9 @@
                 <th width="15%" class="text-center">Destination</th>
                 <th width="15%" class="text-center">Purpose</th>
                 <th width="15%" class="text-center">Passenger</th>
+                <th width="15%" class="text-center">Driver</th>
+                <th width="10%" class="text-center">Star Rating</th>
+                <th width="15%" class="text-center">Feedback</th>
     </div>
     </thead>
     <tbody>
@@ -130,6 +133,15 @@
                 <br>
                 @endforeach
             </td>
+            <td>
+                {{App\Vehicle::get_driver($data->id)}}
+            </td>
+            <td>
+                {{App\Vehicle::get_star($data->id)}}
+            </td>
+            <td>
+                {{App\Vehicle::get_feedback($data->id)}}
+            </td>
         </tr>
         @endif
         @endforeach
@@ -139,7 +151,7 @@
     <div class="row">
         <div class="col-sm">
             <div class="row">
-                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary of <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vehicle Request</small>
+                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary of <br>&nbsp;&nbsp;&nbsp;Vehicle Request</small>
             </div>
             <div class="row">
                 <table>
@@ -148,8 +160,6 @@
                         <th>No. of <br>Request</th>
                     </thead>
                     <tbody>
-
-
                         <tr>
                             <td>KMD</td>
                             <td>{{$kmd_count}}</td>
@@ -170,13 +180,17 @@
                             <td>TD</td>
                             <td>{{$td_count}}</td>
                         </tr>
-
                     </tbody>
-
                 </table>
             </div>
+
+            <br>
+            <div class="row">
+                <div class="col-sm">
+                    <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average Rating: {{$avg_rating}}</small>
+                </div>
+            </div>
         </div>
-    </div>
     </div>
     <script type="text/javascript">
         window.onload = function() {

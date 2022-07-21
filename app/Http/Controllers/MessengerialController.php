@@ -196,7 +196,6 @@ class MessengerialController extends Controller
     }
 
     // REPORTS
-
     public function messengerial_report($start_date, $end_date, $driver)
     {
 
@@ -321,7 +320,14 @@ class MessengerialController extends Controller
         }
         $fad_count = count($fad_cnt);
 
-        return view('messengerial.messengerial_report', compact('messengerial', 'my_date', 'avg_rating', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
+        return view('messengerial.reportForm_messengerial', compact('messengerial', 'my_date', 'avg_rating', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
+    }
+
+    public function report_messengerial()
+    {
+
+        $messengerial = Messengerial::orderBy('id', 'desc')->get();
+        return view('messengerial.report_messengerial', compact('messengerial'));
     }
 
     public function messengerial_check_report(Request $request)
@@ -333,7 +339,7 @@ class MessengerialController extends Controller
                 ->where('driver', $request->driver)
                 ->get();
         }
-        return json_encode(count($messengerial));
+        return json_encode(count($messengerial),);
     }
 
     public function edit_messengerial(Request $request)

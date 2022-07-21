@@ -37,6 +37,7 @@
                             <th width="10%" class="text-center">Name/Type of Document</th>
                             <th width="10%" class="text-center">Agency/Office</th>
                             <th width="15%" class="text-center">Address</th>
+                            <th width="15%" class="text-center">Driver</th>
 
                             <th width="10%" class="text-center">Rating</th>
                             <th width="15%" class="text-center">Feedback</th>
@@ -85,15 +86,17 @@
 
                             <td width="15%">
                                 {{App\Messengerial::get_agency($data->id)}}
-
                             </td>
 
                             <td width="15%">
                                 {{App\Messengerial::get_dest($data->id)}}
-
+                            </td>
+                        
+                            <td width="15%">
+                                {{App\Messengerial::get_driver($data->id)}}
                             </td>
                             <td>
-                                {{App\Messengerial::get_star($data->id)}}
+                            {{App\Messengerial::get_star($data->id)}}
                             </td>
                             <td>
                                 {{App\Messengerial::get_feedback($data->id)}}
@@ -108,40 +111,18 @@
     </div>
 </div>
 
-<div class="modal fade" id="report_modal" tabindex="-1" aria-labelledby="recipient_modalLabel" aria-hidden="true">
+<div class="modal fade" id="report_modal" tabindex="-1" aria-labelledby="report_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="recipient_modalLabel">
+                <h5 class="modal-title" id="report_modalLabel">
                     <span class="fa fa-calendar"></span>
-                    &nbsp;Report
+                    &nbsp;Messengerial Report
                 </h5>
             </div>
             <div class="modal-body">
                 <label for="">Filter By Date:<span class="text-red">*</span></label>
                 <div class="row">
-                    <!-- <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="month_search">Month:</label>
-                            </div>
-                            <select class="custom-select" id="month_search">
-                                <option selected value="" disabled>-- select --</option>
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
-                        </div>
-                    </div> -->
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -158,23 +139,6 @@
                             <input type="date" class="form-control" name="end_date" id="end_date">
                         </div>
                     </div>
-                    <!-- <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="year_search">Year:</label>
-                            </div>
-                            @php
-                            $earliest_year = 2022;
-                            $now = date('Y');
-                            @endphp
-                            <select class="custom-select" id="year_search">
-                                <option selected value="" disabled>-- select --</option>
-                                @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}">{{ $x }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> -->
                 </div>
                 <br>
                 <div class="row">

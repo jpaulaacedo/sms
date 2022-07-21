@@ -98,10 +98,10 @@ function view_reschedAgent_modal(data) {
             $('#view_reschedA_vhl_id').val(response.id);
             $('#view_reschedA_reason').val(response.resched_reason);
             $('#view_prefA_sched').val(response.pref_sched);
-            if($('#view_prefA_sched').val() == "by_requestor"){
+            if ($('#view_prefA_sched').val() == "by_requestor") {
                 $('#view_prefA_date').val(response.pref_date);
             }
-            else{
+            else {
                 $('#view_prefA_date').disabled = true;
             }
         },
@@ -128,10 +128,10 @@ function view_resched_modal(data) {
             $('#view_resched_vhl_id').val(response.id);
             $('#view_resched_reason').val(response.resched_reason);
             $('#view_pref_sched').val(response.pref_sched);
-            if($('#view_pref_sched').val() == "by_requestor"){
+            if ($('#view_pref_sched').val() == "by_requestor") {
                 $('#view_pref_date').val(response.pref_date);
             }
-            else{
+            else {
                 $('#view_pref_date').disabled = true;
             }
         },
@@ -141,10 +141,10 @@ function view_resched_modal(data) {
     })
 }
 
-$('select').on('change', function () {
+$('#pref_sched').on('change', function () {
 
     var selected = $('#pref_sched :selected').val();
-    console.log(selected);
+    console.slog(selected);
     if (selected == 'by_requestor') {
         console.log(selected)
         document.getElementById("pref_date").disabled = false;
@@ -927,8 +927,10 @@ function _deleteVehicle(vehicle_id, purpose) {
 }
 
 // Accomplish modal  
-function _markAccomplish(data, destination) {
+function _markAccomplish() {
     var accomplished_date = $('#accomplished_date').val();
+    var destination = $('#destination').html();
+    var data = $('#vehicle_id').val();
     if (accomplished_date != "") {
         Swal.fire({
             title: 'Mark ' + destination + ' as Accomplished?',
@@ -1003,6 +1005,7 @@ function accomplish_modal(data, otw_date) {
             $('#remarks').val(response.remarks);
             $('#accomplished_date').val(response.accomplished_date);
             $('#vehicle_id').val(data);
+            $('#destination').html(response.destination);
         },
         cache: false,
         contentType: false,
@@ -1430,47 +1433,57 @@ function print_report(data) {
 }
 
 function generate_report() {
-    var my_month = $('#month_search').val();
-    var my_year = $('#year_search').val();
+    var start_date = $('#start_date').val();
+    var end_date = $('#end_date').val();
+    var driver = $('#report_driver').val();
+    console.log(driver);
 
-    if (my_month == null) {
+    if (start_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select month from dropdown.',
+            'Please select Start Date.',
             'warning'
         )
     }
-    if (my_year == null) {
+    if (end_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select year from dropdown.',
+            'Please select End Date.',
             'warning'
         )
     }
-    if (my_month == null && my_year == null) {
+    if (start_date == "" && end_date == "") {
         Swal.fire(
             'Required fields missing.',
-            'Please select moth and year from dropdown.',
+            'Please select Start and End Date.',
             'warning'
         )
     }
-    if (my_month != null && my_year != null) {
+    if (start_date > end_date) {
+        Swal.fire(
+            'Invalid Date.',
+            'End Date must be greater than Start Date.',
+            'warning'
+        )
+    }
+    if (start_date != "" && end_date != "" && start_date < end_date) {
 
         var formData = new FormData();
-        formData.append('month', my_month);
-        formData.append('year', my_year);
+        formData.append('start_date', start_date);
+        formData.append('end_date', end_date);
+        formData.append('driver', driver);
         $.ajax({
-            url: global_path + "/vehicle/check_monthly_report",
+            url: global_path + "/vehicle/check_report",
             method: 'post',
             data: formData,
             dataType: 'json',
             success: function (response) {
                 if (response >= 1) {
-                    window.open(global_path + "/vehicle/monthly_report/" + my_month + '/' + my_year, '_blank');
+                    window.open(global_path + "/vehicle/vehicle_report/" + start_date + '/' + end_date + '/' + driver, '_blank');
                 } else {
                     Swal.fire(
                         'Record not found.',
-                        'No records found for the month of ' + $('#month_search option:selected').text() + " " + $('#year_search option:selected').text(),
+                        'No records found from ' + $('#start_date').val() + " to " + $('#end_date').val(),
                         'info'
                     )
                 }
@@ -1485,7 +1498,7 @@ function generate_report() {
 function submitResched() {
     var pref_date = $('#pref_date').val();
     var data = $('#resched_vhl_id').val();
-    
+
     var missing = "";
     if ($('#pref_sched :selected').val() == "none") {
         missing = "from dropdown";

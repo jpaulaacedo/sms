@@ -159,7 +159,15 @@
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-
+                                    @if($data->pref_sched == "")
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -198,6 +206,15 @@
                                     <button onclick="_otw('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-truck"></span> On The Way
                                     </button>
+                                    @if($data->pref_sched == "")
+                                    <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
+                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-calendar"></span>
+                                    </button>
+                                    @endif
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -280,12 +297,7 @@
                                 <td>{{App\User::get_user($data->user_id)}}</td>
                                 <td>{{$data->destination}}</td>
                                 <td>
-                                    @if($data->urgency == "urgent")
                                     <span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    <span class="right badge badge-danger">{{ ucwords(strtoupper($data->urgency)) }}!</span>
-                                    @else
-                                    <span class="right badge badge-default">{{ ucwords(strtoupper($data->status)) }}</span>
-                                    @endif
                                     <br>
                                     <small>Driver: {{$data->driver}} <br> Time Departure: {{ date('F j, Y g:i A', strtotime($data->otw_date)) }}
                                         <br> Accomplished date: {{ date('F j, Y g:i A', strtotime($data->accomplished_date)) }}</small>
@@ -811,7 +823,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     @if(isset($data))
-                    <button class="btn btn-success" onclick="_markAccomplish('{{$data->id}}','{{$data->destination}}')" class="btn btn-success btn-sm">
+                    <button class="btn btn-success" onclick="_markAccomplish()" class="btn btn-success btn-sm">
                         <span class="fa fa-check"></span>
                         Submit
                     </button>

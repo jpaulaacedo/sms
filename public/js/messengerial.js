@@ -1353,7 +1353,14 @@ function generate_report() {
             'warning'
         )
     }
-    if (start_date != "" && end_date != "") {
+    if (start_date > end_date) {
+        Swal.fire(
+            'Invalid Date.',
+            'End Date must be greater than Start Date.',
+            'warning'
+        )
+    }
+    if (start_date != "" && end_date != "" && start_date < end_date) {
 
         var formData = new FormData();
         formData.append('start_date', start_date);
@@ -1365,12 +1372,13 @@ function generate_report() {
             data: formData,
             dataType: 'json',
             success: function (response) {
+               
                 if (response >= 1) {
-                    window.open(global_path + "/messengerial/messengerial_report/" + start_date + '/' + end_date  + '/' + driver, '_blank');
+                    window.open(global_path + "/messengerial/messengerial_report/" + start_date + '/' + end_date + '/' + driver, '_blank');
                 } else {
                     Swal.fire(
                         'Record not found.',
-                        'No records found from ' + $('#start_date').text() + " " + "to" + "" + $('#end_date').text(),
+                        'No records found from ' + $('#start_date').val() + " to " + $('#end_date').val(),
                         'info'
                     )
                 }
