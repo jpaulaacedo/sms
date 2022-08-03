@@ -283,20 +283,6 @@
                     @if($messengerial->status != "Filing" && $messengerial->status != "For DC Approval" && $messengerial->status != "Cancelled")
 
                     @if(App\User::get_user_type($messengerial->user_id) == 1)
-                    @if($messengerial->status == "For CAO Approval" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: right;"><img id="dc_fad_signature" src=""></span>
-                    </td>
-                    @endif
-                    @if($messengerial->status == "Confirmed" && App\User::get_division($messengerial->user_id) == "Finance and Administrative Division"))
-                    <td id="col3">
-                        <b>NOTED BY: </b>
-                        &nbsp;
-                        <span style="text-align: right;"><img id="dc_fad_signature" src="{{asset('images/dc_fad_signature.png')}}" alt="PSRTI DC signature"></span>
-                    </td>
-                    @endif
 
                     @if(App\User::get_division($messengerial->user_id) == "Knowledge Management Division")
                     <td id="col3">
@@ -583,8 +569,8 @@
                         <div class="col">
                             <td id="row1"><b>DATE OF DELIVERY</b></td>
                             @if($messengerial->status == "Out For Delivery" || $messengerial->status == "Accomplished")
-                            <td id="row1">{{ date('F j, Y', strtotime($messengerial->outfordel_pickupdate)) }}</td>
-                            <td id="row1"><b>TIME: </b> {{ date('g:i A', strtotime($messengerial->outfordel_pickupdate)) }}</td>
+                            <td id="row1">{{ date('F j, Y', strtotime($messengerial->outfordel_date)) }}</td>
+                            <td id="row1"><b>TIME: </b> {{ date('g:i A', strtotime($messengerial->outfordel_date)) }}</td>
                             @else
                             <td id="row1">&nbsp;</td>
                             <td id="row1">&nbsp;</td>

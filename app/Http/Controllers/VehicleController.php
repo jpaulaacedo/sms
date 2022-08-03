@@ -147,6 +147,7 @@ class VehicleController extends Controller
                 'purpose' => $update->purpose,
                 'destination' => $update->destination,
                 'date_needed' => $update->date_needed,
+                'old_date_needed' => $update->old_date_needed,
                 'resched_reason' => $update->resched_reason,
                 'link'  =>  URL::to('/vehicle')
             );
@@ -253,7 +254,7 @@ class VehicleController extends Controller
                 'pref_sched' => $update->pref_sched,
                 'pref_date' => $update->pref_date,
                 'old_date_needed' => $update->old_date_needed,
-                    'purpose' => $update->purpose,
+                'purpose' => $update->purpose,
                 'destination' => $update->destination,
                 'status' => $update->status,
                 'emp_name' => $employee->name,
@@ -354,26 +355,41 @@ class VehicleController extends Controller
                 $update->status = "For DC Approval"; //$update->dbcolumn = $request->input name fr blade 
             }
             $update->save();
-            $user_id = $update->user_id;
-            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
-            $agent = User::select('name', 'email')->where('user_type', '3')->first();
-
-            $data = array(
-                'dc_name' => $dc->name,
-                'agent' => $agent->name,
-                'emp_name' => $employee->name,
-                'status' => $update->status,
-                'destination' => $update->destination,
-                'purpose' => $update->purpose,
-                'agent_link'  =>  URL::to('/vehicle/accomplish'),
-                'dc_link'  =>  URL::to('/vehicle/dc/approval'),
-                'link'  =>  URL::to('/vehicle/dc/approval')
-            );
 
             if ($update->status == "For DC Approval") {
+                $user_id = $update->user_id;
+                $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+                $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->first();
+
+                $data = array(
+                    'dc_name' => $dc->name,
+                    'emp_name' => $employee->name,
+                    'status' => $update->status,
+                    'destination' => $update->destination,
+                    'purpose' => $update->purpose,
+                    'dc_link'  =>  URL::to('/vehicle/dc/approval'),
+                );
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlCreateTicket($data));
             } else {
+                $user_id = $update->user_id;
+                $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+                $cao = User::select('name', 'email')->where('user_type', '6')->first();
+                $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+                $agent = User::select('name', 'email')->where('user_type', '3')->first();
+
+                $data = array(
+                    'dc_name' => $cao->name,
+                    'agent' => $agent->name,
+                    'emp_name' => $employee->name,
+                    'destination' => $update->destination,
+                    'purpose' => $update->purpose,
+                    'status' => $update->status,
+                    'link'  =>  URL::to('/vehicle/cao/approval'),
+                    'dc' => $dc->name,
+                    'agent_link'  =>  URL::to('/vehicle/accomplish'),
+                    'dc_approved_link'  =>  URL::to('/vehicle'),
+
+                );
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlForAssignment($data));
             }
 
@@ -450,7 +466,7 @@ class VehicleController extends Controller
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $cao = User::select('name', 'email')->where('user_type', '6')->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->first();
             $agent = User::select('name', 'email')->where('user_type', '3')->first();
 
             $data = array(
@@ -535,8 +551,8 @@ class VehicleController extends Controller
 
     public function to_accomplish_vehicle()
     {
-        $status = array("For Assignment","For CAO Approval","For Rescheduling","Confirmed","Cancelled","On The Way","Accomplished","To Rate");
-        $vehicle = Vehicle::orderBy('id', 'desc')->whereIn('status',$status)->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
+        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "Cancelled", "On The Way", "Accomplished", "To Rate");
+        $vehicle = Vehicle::orderBy('id', 'desc')->whereIn('status', $status)->get(); //variable name = model_name::yourcondition(); get()=multiplerec while first()=1 row
         return view('vehicle.to_accomplish_vehicle', compact('vehicle')); //return view('folder.blade',compact('variable','variable2', 'variable....'));
 
     }
@@ -757,152 +773,152 @@ class VehicleController extends Controller
         return json_encode($load);
     }
 
-     // REPORTS
-     public function vehicle_report($start_date, $end_date, $driver)
-     {
- 
-         if ($driver == "All") {
-             $vehicle = Vehicle::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
- 
-             $avg_rating = Vehicle::whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->avg('star');
-         } else {
-             $vehicle = Vehicle::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
- 
-             $avg_rating = Vehicle::whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->avg('star');
-         }
- 
-         $my_date = date("M d, Y", strtotime($start_date)) . ' - ' . date("M d, Y", strtotime($end_date));
- 
- 
-         if ($driver == "All") {
-             $kmd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Knowledge Management Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
-         } else {
-             $kmd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Knowledge Management Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
-         }
-         $kmd_count = count($kmd_cnt);
- 
-         if ($driver == "All") {
-             $oed_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Office of the Executive Director')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
-         } else {
-             $oed_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Office of the Executive Director')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
-         }
-         $oed_count = count($oed_cnt);
- 
-         if ($driver == "All") {
-             $td_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Training Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
-         } else {
-             $td_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Training Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
-         }
-         $td_count = count($td_cnt);
- 
-         if ($driver == "All") {
-             $rd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Research Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
-         } else {
-             $rd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Research Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
-         }
-         $rd_count = count($rd_cnt);
- 
-         if ($driver == "All") {
-             $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Finance and Administrative Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->get();
-         } else {
-             $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
-                 ->leftjoin('users', 'vehicle.user_id', 'users.id')
-                 ->where('status', 'Accomplished')
-                 ->where('division', 'Finance and Administrative Division')
-                 ->whereDate('accomplished_date', '>=', $start_date)
-                 ->whereDate('accomplished_date', '<=', $end_date)
-                 ->where('driver', $driver)
-                 ->get();
-         }
-         $fad_count = count($fad_cnt);
- 
-         return view('vehicle.reportForm_vehicle', compact('vehicle', 'my_date', 'avg_rating', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
-     }
- 
-     public function report_vehicle()
-     {
- 
-         $vehicle = Vehicle::orderBy('id', 'desc')->get();
-         return view('vehicle.report_vehicle', compact('vehicle'));
-     }
- 
-     public function vehicle_check_report(Request $request)
-     {
-         if ($request->driver == "All") {
-             $vehicle = Vehicle::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)->get();
-         } else {
-             $vehicle = Vehicle::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)
-                 ->where('driver', $request->driver)
-                 ->get();
-         }
-         return json_encode(count($vehicle));
-     }
+    // REPORTS
+    public function vehicle_report($start_date, $end_date, $driver)
+    {
+
+        if ($driver == "All") {
+            $vehicle = Vehicle::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+
+            $avg_rating = Vehicle::whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->avg('star');
+        } else {
+            $vehicle = Vehicle::whereDate('accomplished_date', '>=', $start_date)->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+
+            $avg_rating = Vehicle::whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->avg('star');
+        }
+
+        $my_date = date("M d, Y", strtotime($start_date)) . ' - ' . date("M d, Y", strtotime($end_date));
+
+
+        if ($driver == "All") {
+            $kmd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Knowledge Management Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $kmd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Knowledge Management Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
+        $kmd_count = count($kmd_cnt);
+
+        if ($driver == "All") {
+            $oed_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Office of the Executive Director')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $oed_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Office of the Executive Director')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
+        $oed_count = count($oed_cnt);
+
+        if ($driver == "All") {
+            $td_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Training Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $td_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Training Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
+        $td_count = count($td_cnt);
+
+        if ($driver == "All") {
+            $rd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Research Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $rd_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Research Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
+        $rd_count = count($rd_cnt);
+
+        if ($driver == "All") {
+            $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Finance and Administrative Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->get();
+        } else {
+            $fad_cnt = Vehicle::select('vehicle.*', 'users.*', 'vehicle.id as vehicle_id')
+                ->leftjoin('users', 'vehicle.user_id', 'users.id')
+                ->where('status', 'Accomplished')
+                ->where('division', 'Finance and Administrative Division')
+                ->whereDate('accomplished_date', '>=', $start_date)
+                ->whereDate('accomplished_date', '<=', $end_date)
+                ->where('driver', $driver)
+                ->get();
+        }
+        $fad_count = count($fad_cnt);
+
+        return view('vehicle.reportForm_vehicle', compact('vehicle', 'my_date', 'avg_rating', 'kmd_count', 'oed_count', 'td_count', 'rd_count', 'fad_count'));
+    }
+
+    public function report_vehicle()
+    {
+
+        $vehicle = Vehicle::orderBy('id', 'desc')->get();
+        return view('vehicle.report_vehicle', compact('vehicle'));
+    }
+
+    public function vehicle_check_report(Request $request)
+    {
+        if ($request->driver == "All") {
+            $vehicle = Vehicle::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)->get();
+        } else {
+            $vehicle = Vehicle::whereDate('accomplished_date', '>=', $request->start_date)->whereDate('accomplished_date', '<=', $request->end_date)
+                ->where('driver', $request->driver)
+                ->get();
+        }
+        return json_encode(count($vehicle));
+    }
 
     public function resched_vehicle(Request $request)
     {
@@ -913,39 +929,6 @@ class VehicleController extends Controller
         $resched->date_needed = $due_date . "T" . $due_time;
 
         return json_encode($resched);
-    }
-
-    public function reschedule_vehicle(Request $request)
-    {
-        try {
-            $update = Vehicle::where('id', $request->resched_vhl_id)->first();
-
-            $update->resched_reason = "Rescheduled from: " . $update->date_needed . " to " . $request->due_date  . " due to " . $request->resched_reason;
-            $update->date_needed = $request->due_date;
-            $update->status = "For Rescheduling";
-            $update->save();
-
-            $user_id = $update->user_id;
-
-            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $agent = User::select('name', 'email')->where('user_type', '3')->first();
-
-            $data = array(
-                'emp_name' => $employee->name,
-                'destination' => $update->destination,
-                'purpose' => $update->purpose,
-                'date_needed' => $update->date_needed,
-                'resched_reason' => $update->resched_reason,
-                'link'  =>  URL::to('/vehicle'),
-            );
-            // Mail::to([$employee->email])->send(new vhlApproved($data));
-
-            Mail::to("paula.acedo@psrti.gov.ph")->send(new vhlResched($data));
-
-            return redirect()->back()->with('message', 'success');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('message', $e->getMessage());
-        }
     }
 
     public function add_passenger(Request $request)

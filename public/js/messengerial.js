@@ -29,70 +29,6 @@ $(function () {
     dateControl.min = output;
 });
 
-//   Messengerial Recipient Button DELETE
-// function _delete(messengerial_item_id, messengerial_id, recipient) {
-//     Swal.fire({
-//         title: 'Delete recipient "' + recipient + '" from records?',
-//         text: 'NOTE: This will permanently delete the record.',
-//         input: 'text',
-//         inputPlaceholder: 'Type "CONFIRM" to proceed',
-//         inputAttributes: {
-//             autocapitalize: 'off'
-//         },
-//         showCancelButton: true,
-//         confirmButtonColor: '#d33',
-//         confirmButtonText: 'Delete',
-//         showLoaderOnConfirm: true,
-//         preConfirm: (confirm) => {
-//             if (confirm != "CONFIRM") {
-//                 Swal.showValidationMessage(
-//                     'Type CONFIRM to proceed'
-//                 )
-//             }
-//         },
-//         allowOutsideClick: () => !Swal.isLoading()
-//     }).then((result) => {
-//         if (result.value) {
-//             var formData = new FormData();
-//             formData.append('data_id', messengerial_item_id);
-//             $.ajax({
-//                 url: "/messengerial/recipient/delete",
-//                 method: 'post',
-//                 data: formData,
-//                 dataType: 'json',
-//                 success: function () {
-//                     console.log('deleted');
-//                     let timerInterval
-//                     Swal.fire({
-//                         title: 'Record successfully deleted',
-//                         html: 'refreshing page..',
-//                         timer: 1000,
-//                         onOpen: () => {
-//                             Swal.showLoading()
-//                             timerInterval = setInterval(() => {
-//                                 const content = Swal.getContent()
-//                                 if (content) {
-//                                     const b = content.querySelector('b')
-//                                     if (b) {
-//                                         b.textContent = Swal.getTimerLeft()
-//                                     }
-//                                 }
-//                             }, 100)
-//                         },
-//                         onClose: () => {
-//                             clearInterval(timerInterval)
-//                             window.location.href = global_path + "/messengerial/recipient/" + messengerial_id;
-//                         }
-//                     })
-//                 },
-//                 cache: false,
-//                 contentType: false,
-//                 processData: false
-//             })
-//         }
-//     })
-// }
-
 //   edit Recipient Button
 function _editMessengerial(data) {
     var formData = new FormData();
@@ -274,8 +210,8 @@ function _cancelReasonMessengerial(data) {
 //   Messengerial Button DELETE
 function _deleteMessengerial(messengerial_id, recipient) {
     Swal.fire({
-        title: 'Delete ' + recipient + ' from records?',
-        text: 'NOTE: this will permanently delete the record',
+        title: 'Delete "' + recipient + '" from records?',
+        text: 'NOTE: This will permanently delete the record.',
         input: 'text',
         inputPlaceholder: 'Type "CONFIRM" to proceed',
         inputAttributes: {
@@ -1339,28 +1275,28 @@ function generate_report() {
             'warning'
         )
     }
-    if (end_date == "") {
+    else if (end_date == "") {
         Swal.fire(
             'Required fields missing.',
             'Please select End Date.',
             'warning'
         )
     }
-    if (start_date == "" && end_date == "") {
+    else if (start_date == "" && end_date == "") {
         Swal.fire(
             'Required fields missing.',
             'Please select Start and End Date.',
             'warning'
         )
     }
-    if (start_date > end_date) {
+    else if (start_date > end_date) {
         Swal.fire(
             'Invalid Date.',
             'End Date must be greater than Start Date.',
             'warning'
         )
     }
-    if (start_date != "" && end_date != "" && start_date < end_date) {
+    else if (start_date != "" && end_date != "" && start_date < end_date) {
 
         var formData = new FormData();
         formData.append('start_date', start_date);

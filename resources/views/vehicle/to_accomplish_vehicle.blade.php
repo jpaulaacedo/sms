@@ -64,15 +64,10 @@
                                         <span class="fa fa-users"></span>
                                     </button> |
 
-                                    @if($data->pref_sched == "")
                                     <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
-                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
-                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-calendar"></span>
-                                    </button>
-                                    @endif
+
                                     <button onclick="_assign_modal('{{$data->id}}')" class="btn btn-success btn-sm">
                                         <span class="fa fa-id-card"></span>
                                     </button>
@@ -159,15 +154,10 @@
                                     <button onclick="_viewVehicle('{{$data->id}}')" class="btn btn-sm btn-info">
                                         <span class="fa fa-users"></span>
                                     </button> |
-                                    @if($data->pref_sched == "")
                                     <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
-                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
-                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-calendar"></span>
-                                    </button>
-                                    @endif
+
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -206,15 +196,10 @@
                                     <button onclick="_otw('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-truck"></span> On The Way
                                     </button>
-                                    @if($data->pref_sched == "")
                                     <button onclick="reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
                                         <span class="fa fa-calendar"></span>
                                     </button>
-                                    @elseif($data->pref_sched != "" || $data->pref_sched == "by_agent")
-                                    <button onclick="view_reschedAgent_modal('{{$data->id}}')" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-calendar"></span>
-                                    </button>
-                                    @endif
+
                                     <a href="{{URL::to('/vehicle_form')}}/{{$data->id}}" target="_blank" class="btn btn-secondary btn-sm"><span class="fa fa-print"></span></a>
                                 </td>
                             </tr>
@@ -422,7 +407,7 @@
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="reschedA_modalLabel">
                     <span class="fa fa-truck"></span>
-                    &nbsp;For Rescheduling
+                    &nbsp;Reschedule Date Needed
                 </h5>
             </div>
             <input type="hidden" id="reschedA_vhl_id" name="reschedA_vhl_id">
@@ -552,7 +537,7 @@
                 <button class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#reschedAgentbyR_modal">
                     Close
                 </button>
-                <button onclick="reschedAgent_modal()" class="btn btn-primary btn">
+                <button onclick="reschedAgent_modal($('#reschedAbyR_vhl_id').val())" class="btn btn-primary btn">
                     <span class="fa fa-calendar"></span>
                     Reschedule
                 </button>

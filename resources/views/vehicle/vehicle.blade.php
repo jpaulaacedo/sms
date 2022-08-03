@@ -131,7 +131,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -235,7 +235,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -339,7 +339,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -443,7 +443,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -546,7 +546,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -649,7 +649,7 @@
 									</button> |
 									@endif
 									@if($data->status=='Accomplished' && $data->feedback != "")
-									<button class="btn btn-success btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
+									<button class="btn btn-default btn-sm" onclick="view_rate_modal('{{$data->id}}', '{{$data->feedback}}', '{{$data->star}}')">
 										<span class="fa fa-star"></span>
 									</button>
 									@elseif($data->status=='Accomplished' && $data->feedback == "")
@@ -849,12 +849,12 @@
 										<div class="col-sm-6">
 											<label>Purpose of Trip</label>
 											<span class="text-red">*</span>
-											<textarea placeholder="purpose of trip..." id="purpose" name="purpose" class="form-control" rows="4" required></textarea>
+											<textarea placeholder="....." id="purpose" name="purpose" class="form-control" rows="4" required></textarea>
 											<br>
 											<label>Destination(Address)
 												<span class="text-red">*</span>
 											</label>
-											<textarea placeholder="complete address..." class="form-control" rows="4" id="destination" required name="destination"></textarea>
+											<textarea placeholder="....." class="form-control" rows="4" id="destination" required name="destination"></textarea>
 										</div>
 										<div class="col-sm-6">
 											<div class="row">
@@ -872,7 +872,7 @@
 													<span id="psg_count"></span>
 												</small>
 												<div class="input-group">
-													<input type="text" placeholder="Type passenger name here..." class="form-control" name="passenger" id="passenger">
+													<input type="text" placeholder="Type passenger name here ..." class="form-control" name="passenger" id="passenger">
 													<div class="input-group-append">
 														<button class="btn btn-primary" name="btn_passenger" id="btn_passenger" type="button" onclick="add_psg_list($('#passenger').val(), $('#vehicle_id').val())">+</button>
 													</div>

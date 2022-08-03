@@ -1,9 +1,13 @@
 <p>Hi {{ $data['emp_name'] }}!
 
-<p>Your ticket is RESCHEDULED to {{ date('F j, Y g:i A', strtotime($data['date_needed'])) }}.
-    <br>
-    Reason for Rescheduling: {{ $data['resched_reason'] }} 
+<p>Your ticket is RESCHEDULED. <br>
 <br>
+    From: <b>{{ date('F j, Y g:i A', strtotime($data['old_date_needed'])) }}</b>
+    <br>
+    To: <b>{{ date('F j, Y g:i A', strtotime($data['date_needed'])) }}</b>
+    <br>
+    Reason for Rescheduling: <b>{{ $data['resched_reason'] }}</b>
+    <br>
 <p><b>TICKET DETAILS:</b><br>
     Request Type: <b>Messengerial</b><br>
     Recipient:<b> {{ $data['recipient'] }} </b><br>

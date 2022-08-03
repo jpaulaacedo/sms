@@ -865,8 +865,8 @@ function _cancelReasonVehicle(data) {
 //   VEHICLE Button DELETE
 function _deleteVehicle(vehicle_id, purpose) {
     Swal.fire({
-        title: 'Delete ' + purpose + ' from records?',
-        text: 'NOTE: this will permanently delete the record',
+        title: 'Delete "' + purpose + '" from records?',
+        text: 'NOTE: This will permanently delete the record.',
         input: 'text',
         inputPlaceholder: 'Type "CONFIRM" to proceed',
         inputAttributes: {
@@ -1445,28 +1445,28 @@ function generate_report() {
             'warning'
         )
     }
-    if (end_date == "") {
+    else if (end_date == "") {
         Swal.fire(
             'Required fields missing.',
             'Please select End Date.',
             'warning'
         )
     }
-    if (start_date == "" && end_date == "") {
+    else if (start_date == "" && end_date == "") {
         Swal.fire(
             'Required fields missing.',
             'Please select Start and End Date.',
             'warning'
         )
     }
-    if (start_date > end_date) {
+    else if (start_date > end_date) {
         Swal.fire(
             'Invalid Date.',
             'End Date must be greater than Start Date.',
             'warning'
         )
     }
-    if (start_date != "" && end_date != "" && start_date < end_date) {
+    else if (start_date != "" && end_date != "" && start_date < end_date) {
 
         var formData = new FormData();
         formData.append('start_date', start_date);

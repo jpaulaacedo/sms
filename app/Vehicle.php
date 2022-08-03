@@ -35,7 +35,7 @@ class Vehicle extends Model
 
     public static function agent_vehicle()
     {
-        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "Cancelled", "Out For Delivery", "Accomplished", "To Rate");
+        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "Cancelled", "On The Way", "Accomplished", "To Rate");
         $ctr = 0;
         $vehicle = Self::orderBy('id', 'desc')->whereIn('status', $status)->get();
 
@@ -90,7 +90,7 @@ class Vehicle extends Model
     {
 
         $my_date = Carbon::parse($date);
-        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "Out For Delivery");
+        $status = array("For Assignment", "For CAO Approval", "For Rescheduling", "Confirmed", "On The Way");
         $my_date_start = $my_date->format("Y-m-d");
         $vehicle = Self::whereDate('date_needed', $my_date_start)->whereIn('status', $status)->get();
         if (count($vehicle) >= 2) {

@@ -108,10 +108,8 @@ class MessengerialController extends Controller
         $countfile = count($messengerial_file);
         $messengerial->count_file = $countfile;
         $messengerial->save();
-        $recipient = MessengerialItem::where('messengerial_id', $messengerial_id)
-            ->orderBy('id', 'desc')
-            ->get();
-        return view('messengerial.print_messengerial', compact('recipient', 'messengerial_file', 'messengerial'));
+
+        return view('messengerial.print_messengerial', compact('messengerial_file', 'messengerial'));
     }
 
     public function submit_messengerial(Request $request)
@@ -129,39 +127,43 @@ class MessengerialController extends Controller
                 $update->status = "For DC Approval"; //$update->dbcolumn = $request->input name fr blade 
             }
             $update->save();
-            $user_id = $update->user_id;
-            $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
 
-            // if ($user_type == 4 && $employee->division == "Office of the Executive Director") {
-            //     $data = array(
-            //         'dc_name' => $cao->name,
-            //         'driver' => $update->driver,
-            //         'emp_name' => $employee->name,
-            //         'recipient' => $update->recipient,
-            //         'link'  =>  URL::to('/messengerial/cao/approval')
-            //     );
-            // } elseif ($employee->division != "Finance and Administrative Division") {
-            $data = array(
-                'dc_name' => $dc->name,
-                'status' => $update->status,
-                'emp_name' => $employee->name,
-                'recipient' => $update->recipient,
-                'agency' => $update->agency,
-                'delivery_item' => $update->delivery_item,
-                'dc_link'  =>  URL::to('/messengerial/dc/approval')
-            );
-            // } else {
-            //     $data = array(
-            //         'dc_name' => $cao->name,
-            //         'emp_name' => $employee->name,
-            //         'recipient' => $update->recipient,
-            //         'driver' => $update->driver,
-            //         'link'  =>  URL::to('/messengerial/cao/approval')
-            //     );
-            // }
             if ($update->status == "For DC Approval") {
+                $user_id = $update->user_id;
+                $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+                $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->first();
+
+                $data = array(
+                    'dc_name' => $dc->name,
+                    'status' => $update->status,
+                    'emp_name' => $employee->name,
+                    'recipient' => $update->recipient,
+                    'agency' => $update->agency,
+                    'delivery_item' => $update->delivery_item,
+                    'dc_link'  =>  URL::to('/messengerial/dc/approval')
+                );
                 Mail::to("paula.acedo@psrti.gov.ph")->send(new msgCreateTicket($data));
+            } else {
+                $user_id = $update->user_id;
+                $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
+                $cao = User::select('name', 'email')->where('user_type', '6')->first();
+                $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+                $agent = User::select('name', 'email')->where('user_type', '3')->first();
+    
+                $data = array(
+                    'dc_name' => $cao->name,
+                    'agent' => $agent->name,
+                    'emp_name' => $employee->name,
+                    'recipient' => $update->recipient,
+                    'agency' => $update->agency,
+                    'delivery_item' => $update->delivery_item,
+                    'status' => $update->status,
+                    'dc' => $dc->name,
+                    'agent_link'  =>  URL::to('/messengerial/accomplish'),
+                    'dc_approved_link'  =>  URL::to('/messengerial'),
+    
+                );
+                Mail::to("paula.acedo@psrti.gov.ph")->send(new msgForAssignment($data));
             }
             return json_encode('success');
         } catch (\Exception $e) {
@@ -384,6 +386,7 @@ class MessengerialController extends Controller
                 'agency' => $update->agency,
                 'delivery_item' => $update->delivery_item,
                 'date_needed' => $update->date_needed,
+                'old_date_needed' => $update->old_date_needed,
                 'resched_reason' => $update->resched_reason,
                 'link'  =>  URL::to('/messengerial'),
             );
@@ -605,7 +608,7 @@ class MessengerialController extends Controller
             $user_id = $update->user_id;
             $employee = User::select('name', 'email', 'division')->where('id', $user_id)->first();
             $cao = User::select('name', 'email')->where('user_type', '6')->first();
-            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->orwhere('user_type', '4')->first();
+            $dc = User::select('name', 'email')->where('division', $employee->division)->where('user_type', '2')->first();
             $agent = User::select('name', 'email')->where('user_type', '3')->first();
 
             $data = array(

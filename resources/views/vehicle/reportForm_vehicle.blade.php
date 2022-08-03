@@ -151,7 +151,13 @@
     <div class="row">
         <div class="col-sm">
             <div class="row">
-                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary of <br>&nbsp;&nbsp;&nbsp;Vehicle Request</small>
+                <div class="col-sm">
+                    &nbsp;&nbsp; Average Rating: <b>{{$avg_rating}}</b>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary of <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vehicle Request</small>
             </div>
             <div class="row">
                 <table>
@@ -180,15 +186,12 @@
                             <td>TD</td>
                             <td>{{$td_count}}</td>
                         </tr>
+                        <tr>
+                            <td><b>TOTAL</b></td>
+                            <td><b>{{ $td_count + $rd_count + $kmd_count + $fad_count + $oed_count }}</b></td>
+                        </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <br>
-            <div class="row">
-                <div class="col-sm">
-                    <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average Rating: {{$avg_rating}}</small>
-                </div>
             </div>
         </div>
     </div>
