@@ -2,8 +2,8 @@
   background-color: #cddada;
 }
 
-.title-header-dark {
-  background-color: #1d4680 !important;
+.title-header-dark-grey {
+  background-color: grey !important;
   color: white !important;
 }
 
@@ -37,16 +37,12 @@
   padding: 3px 3px 3px 3px !important;
 }
 
-.course-bg {
-  background-color: #92579c !important;
-  color: white !important;
+.bg-blue {
+  background-color: rgb(0, 0, 0);
 }
-
-.enroll-bg {
-  background-color: #9c5769 !important;
-  color: white !important;
+.bg-black {
+  background-color: rgb(0, 0, 0);
 }
-
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   padding: 0em 0em !important;
   margin-left: 0px !important;
@@ -196,31 +192,6 @@ table.dataTable thead td {
   border-color: #bc4899
 }
 
-/* .btn-purple.focus,
-.btn-purple:focus {
-  box-shadow: 0 0 0 .2rem #9a19bb
-}
-
-.btn-purple.disabled,
-.btn-purple:disabled {
-  color: #fff;
-  background-color: #9a19bb;
-  border-color: #9a19bb
-}
-
-.btn-purple:not(:disabled):not(.disabled).active,
-.btn-purple:not(:disabled):not(.disabled):active,
-.show>.btn-purple.dropdown-toggle {
-  color: #fff;
-  background-color: #9a19bb;
-  border-color: #9a19bb
-}
-
-.btn-purple:not(:disabled):not(.disabled).active:focus,
-.btn-purple:not(:disabled):not(.disabled):active:focus,
-.show>.btn-purple.dropdown-toggle:focus {
-  box-shadow: 0 0 0 .2rem #9a19bb
-} */
 
 #truck {
   height: 200px;

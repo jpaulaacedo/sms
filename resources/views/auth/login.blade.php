@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PSRTI | VAMRS</title>
+    <title>Finance | SMS</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
@@ -44,18 +44,18 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <center>
-                                <img src="{{asset('images/vamrs_login.png')}}" width="80%" height="80%" alt="PSRTI Logo">
+                                <img src="{{asset('images/sms_login.png')}}" width="80%" height="80%" alt="SMS Logo">
                             </center>
                         </div>
                         <div class="col-sm-6">
                             <center>
-                                <img src="{{asset('images/truck2.gif')}}"  width="160" height="100"><br>
+                                <img src="{{asset('images/sms.png')}}" width="110" height="100"><br>
                             </center>
                             <br>
                             <br>
                             <form id="submitForm" action="{{ route('login') }}" method="post" data-parsley-validate="" data-parsley-errors-messages-disabled="true" novalidate="" _lpchecked="1"><input type="hidden" name="_csrf" value="7635eb83-1f95-4b32-8788-abec2724a9a4">
                                 <div class="form-group required">
-                                    <span for="Email">Email Address</span>
+                                    <span for="username">User name</span>
                                     <input type="text" id="email" class="form-control" name="email" required autofocus>
                                     @if ($errors->has('email'))
                                     <strong><span class="text-danger">{{ $errors->first('email') }}</span></strong>
@@ -72,10 +72,7 @@
                                 <div class="form-group mt-4 mb-4">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me" data-parsley-multiple="remember-me">
-                                        <!-- <label class="custom-control-label" for="remember-me">Remember me?</label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label>Not yet registered?</label>
-                                    <a class="ml-auto border-link small-xl"> <a href="/register">Click here.</a></label> -->
+                                        <span class="custom-control-label" for="remember-me">Remember me?</span>
                                     </div>
                                 </div>
                                 <div class="form-group pt-1">
@@ -83,6 +80,9 @@
                                 </div>
                                 <center>
                                     <a class="ml-auto border-link small-xl"> <a href="/password/reset">Forgot password?</a>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span>Not yet registered?</span>
+                                        <a class="ml-auto border-link small-xl"> <a href="/register">Click here.</a></label>
                                 </center>
                                 @csrf
                             </form>
@@ -101,8 +101,8 @@
         <div class="col-sm">
             <footer>
                 <br>
-                <a style="color: white;"><strong>Copyright&copy;2022 <a style="color: white;" href="http://psrti.gov.ph">psrti.gov.ph.</a></strong>
-                    <a style="color: white;">All rights reserved.</a>
+                <a style="color: white;"><strong>SMS | Copyright&copy;2022.</a></strong>
+                <a style="color: white;">All rights reserved.</a>
             </footer>
         </div>
     </div>

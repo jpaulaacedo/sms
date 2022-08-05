@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PSRTI | VAMRS</title>
+    <title>Finance | SMS</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="icon" href="{{asset('images/psrti_logo.png')}}">
+    <link rel="icon" href="{{asset('images/sms.png')}}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
@@ -25,8 +25,8 @@
         <nav class="navbar navbar-expand-md navbar-light title-header-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand ">
-                    <img src="{{asset('images/psrti_logo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                    <span class="text-lime">PSRTI</span> | <small>Vehicle and Messengerial Request System</small>
+                    <img src="{{asset('images/sms.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span>Finance</span> | <small>Service Management System</small>
                 </a>
             </div>
         </nav>

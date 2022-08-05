@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>PSRTI - vamrs</title>
+  <title>SMS</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="icon" href="{{asset('images/psrti_logo.png')}}">
+  <link rel="icon" href="{{asset('images/sms.png')}}">
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
@@ -37,25 +37,14 @@
     @include('partials._header')
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <a href="{{ URL::to('/') }}" class="brand-link">
-        <img src="{{asset('images/psrti_logo.png')}}" alt="PSRTI Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">PSRTI | VAMRS</span>
+        <img src="{{asset('images/sms.png')}}" alt="SMS Logo" class="brand-image img-circle elevation-3">
+        <span class="brand-text font-weight-light">SMS</span>
       </a>
       <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex text-white">
           <div class="info">
             <span class="nav-icon fas fa-user"> &nbsp; </span>
             {{ucwords(strtolower(Auth::user()->name))}} |
-            @if(Auth::user()->division == "Office of the Executive Director")
-            <span class="badge badge-success">OED</span>
-            @elseif(Auth::user()->division == "Finance and Administrative Division")
-            <span class="badge badge-primary">FAD</span>
-            @elseif(Auth::user()->division == "Knowledge Management Division")
-            <span class="badge badge-warning">KMD</span>
-            @elseif(Auth::user()->division == "Research Division")
-            <span class="badge badge-info">RD</span>
-            @elseif(Auth::user()->division == "Training Division")
-            <span class="badge badge-danger">TD</span>
-            @endif
           </div>
         </div>
         @include('partials._sidebar')
@@ -84,7 +73,7 @@
       <div class="float-right d-none d-sm-block">
         <b>Version</b> 1.0.0
       </div>
-      <strong>Copyright &copy; 2022 <a href="http://psrti.gov.ph">psrti.gov.ph</a>.</strong> All rights
+      <strong>SMS | Copyright &copy; 2022.</strong> All rights
       reserved.
     </footer>
 

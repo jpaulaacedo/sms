@@ -875,6 +875,62 @@
 	</div>
 </div>
 
+<!-- View Accomplish modal -->
+<div class="modal fade" id="acc_accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="acc_accomplish_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="acc_accomplish_modalLabel">
+                    <span id="modal_header" class="fa fa-file"></span>&nbsp;
+                    <span>Attachment - </span>
+                    <span id="acc_control_num"></span>
+                </h5>
+            </div>
+            <input type="hidden" id="acc_msg_id" name="acc_msg_id">
+            <div class="modal-body modal-lg">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="acc_outfordel_date">Departure Time</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" readonly name="acc_outfordel_date" id="acc_outfordel_date">
+
+                        &nbsp;&nbsp;
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="acc_accomplished_date">Accomplished Date</label>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="acc_accomplished_date" readonly id="acc_accomplished_date">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <label>Remarks</label>
+                        <textarea class="form-control" rows="4" id="acc_remarks" name="acc_remarks" readonly></textarea>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-sm">
+                        <table class="table table-sm table-bordered table-striped">
+                            <thead>
+                                <tr class="text-center">
+                                    <th width="30%">File</th>
+                                </tr>
+                            </thead>
+                            <tbody id="acc_file_body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- View Messengerial Modal-->
 <div class="modal fade" id="view_msg_modal" tabindex="-1" aria-labelledby="view_msg_modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
@@ -1033,61 +1089,7 @@
 	</div>
 </div>
 
-<!-- View Accomplish modal -->
-<div class="modal fade" id="acc_accomplish_modal" data-toggle="modal" data-dismiss="modal" tabindex="-1" aria-labelledby="acc_accomplish_modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h5 class="modal-title" id="acc_accomplish_modalLabel">
-                    <span id="modal_header" class="fa fa-file"></span>&nbsp;
-                    <span>Attachment - </span>
-                    <span id="acc_control_num"></span>
-                </h5>
-            </div>
-            <input type="hidden" id="acc_msg_id" name="acc_msg_id">
-            <div class="modal-body modal-lg">
-                <div class="row">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="acc_outfordel_date">Departure Time</label>
-                        </div>
-                        <input type="datetime-local" class="form-control" readonly name="acc_outfordel_date" id="acc_outfordel_date">
 
-                        &nbsp;&nbsp;
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="acc_accomplished_date">Accomplished Date</label>
-                        </div>
-                        <input type="datetime-local" class="form-control" name="acc_accomplished_date" readonly id="acc_accomplished_date">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        <label>Remarks</label>
-                        <textarea class="form-control" rows="4" id="acc_remarks" name="acc_remarks" readonly></textarea>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-sm">
-                        <table class="table table-sm table-bordered table-striped">
-                            <thead>
-                                <tr class="text-center">
-                                    <th width="30%">File</th>
-                                </tr>
-                            </thead>
-                            <tbody id="acc_file_body">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!--resched modal -->

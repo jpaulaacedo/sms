@@ -8,14 +8,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PSRTI | VAMRS</title>
+    <title>SMS</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="icon" href="{{asset('images/3x3_new.png')}}">
+    <link rel="icon" href="{{asset('images/sms.png')}}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
@@ -52,7 +52,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         /* .fc-basic-view .fc-body .fc-row{
             min-height: 2em;
         } */
-
     </style>
 
 
@@ -63,25 +62,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @include('partials._header')
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="{{ URL::to('/') }}" class="brand-link">
-                <img src="{{asset('images/psrti_logo.png')}}" alt="PSRTI Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">PSRTI | VAMRS</span>
+                <img src="{{asset('images/sms.png')}}" alt="SMS Logo" class="brand-image img-circle elevation-3">
+                <span class="brand-text font-weight-light">Finance SMS</span>
             </a>
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex text-white">
                     <div class="info">
                         <span class="nav-icon fas fa-user"> &nbsp; </span>
-                        {{ucwords(strtolower(Auth::user()->name))}} |
-                        @if(Auth::user()->division == "Office of the Executive Director")
-                        <span class="badge badge-success">OED</span>
-                        @elseif(Auth::user()->division == "Finance and Administrative Division")
-                        <span class="badge badge-primary">FAD</span>
-                        @elseif(Auth::user()->division == "Knowledge Management Division")
-                        <span class="badge badge-warning">KMD</span>
-                        @elseif(Auth::user()->division == "Research Division")
-                        <span class="badge badge-info">RD</span>
-                        @elseif(Auth::user()->division == "Training Division")
-                        <span class="badge badge-danger">TD</span>
-                        @endif
+                        {{ucwords(strtolower(Auth::user()->name))}}
                     </div>
                 </div>
                 @include('partials._sidebar')
@@ -98,26 +86,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fa fa-calendar-day text-success"></i>
-                                Calendar
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <small><b>Legend:</b></small>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-success"><i class="fas fa-square"></i></a><small> Messengerial</small>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a class="text-primary"><i class="fas fa-square"></i></a><small> Vehicle</small>
                             </h3>
                         </div>
                         <div class="card-body">
-                            <div id="calendar"></div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +102,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 1.0.0
             </div>
-            <strong>Copyright &copy; 2022 <a href="http://psrti.gov.ph">psrti.gov.ph</a>.</strong> All rights
+            <strong>SMS | Copyright &copy; 2022.</strong> All rights
             reserved.
         </footer>
     </div>
@@ -202,7 +173,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
         });
-       
     </script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script src="{{asset('js/table.js')}}"></script>
